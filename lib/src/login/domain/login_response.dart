@@ -3,11 +3,10 @@ sealed class LoginResponse {}
 class LoginSuccess extends LoginResponse {}
 
 class LoginFailure extends LoginResponse {
-  int errorId;
-
   LoginFailure({
     required this.errorId,
   });
+  int errorId;
 }
 
 class ErrorGettingFlowId extends LoginResponse {}

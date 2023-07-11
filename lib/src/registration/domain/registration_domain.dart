@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:leancode_kratos_client/src/models/registration.dart';
+import 'package:leancode_kratos_client/src/registration/api/registration.dart';
 
 part 'registration_domain.freezed.dart';
 
@@ -15,7 +15,7 @@ class RegistrationFlowModel with _$RegistrationFlowModel {
   factory RegistrationFlowModel.fromRegistrationFlow(
     RegistrationFlow registrationFlow,
   ) {
-    final method = registrationFlow.ui?.nodes
+    final dynamic method = registrationFlow.ui?.nodes
         ?.cast<Node?>()
         .firstWhere(
           (node) => node?.attributes?.name == 'method',
@@ -27,7 +27,7 @@ class RegistrationFlowModel with _$RegistrationFlowModel {
     return RegistrationFlowModel(
       flowId: registrationFlow.id,
       expiresAt: registrationFlow.expiresAt,
-      method: method,
+      method: (method is String) ? method : '',
       fields: registrationFlow.ui?.nodes?.map((node) {
         return RegistrationFlowField(
           name: node.attributes?.name,

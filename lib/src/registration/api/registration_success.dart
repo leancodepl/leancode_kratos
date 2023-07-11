@@ -5,8 +5,9 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'registration_success.freezed.dart';
 part 'registration_success.g.dart';
 
-RegistrationSuccessResponse registrationSuccessResponseFromJson(String str) =>
-    RegistrationSuccessResponse.fromJson(json.decode(str));
+RegistrationSuccessResponse registrationSuccessResponseFromJson(String str) {
+  return RegistrationSuccessResponse.fromJson(json.decode(str) as Map<String, dynamic>);
+}
 
 @freezed
 class RegistrationSuccessResponse with _$RegistrationSuccessResponse {

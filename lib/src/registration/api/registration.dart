@@ -1,11 +1,12 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'dart:convert';
+
+import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'registration.freezed.dart';
 part 'registration.g.dart';
 
 RegistrationFlow registrationFlowFromJson(String str) =>
-    RegistrationFlow.fromJson(json.decode(str));
+    RegistrationFlow.fromJson(json.decode(str) as Map<String, dynamic>);
 
 @freezed
 class RegistrationFlow with _$RegistrationFlow {
@@ -29,6 +30,7 @@ class Ui with _$Ui {
     String? action,
     String? method,
     List<Node>? nodes,
+    List<Message>? messages,
   }) = _Ui;
 
   const Ui._();
@@ -36,11 +38,18 @@ class Ui with _$Ui {
   factory Ui.fromJson(Map<String, dynamic> json) => _$UiFromJson(json);
 
   String? get loginMethod {
-    final attributes = <Attributes?>[];
-    nodes?.forEach((element) {
-      attributes.add(element.attributes);
-    });
-    return attributes.firstWhere((element) => element?.name == 'method')?.value;
+    return nodes
+        ?.map(
+          (node) => switch (node.attributes) {
+            Attributes(
+              name: 'method',
+              value: final String attributeValue,
+            ) =>
+              attributeValue,
+            _ => null,
+          },
+        )
+        .firstOrNull;
   }
 }
 

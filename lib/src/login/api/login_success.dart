@@ -6,7 +6,7 @@ part 'login_success.g.dart';
 part 'login_success.freezed.dart';
 
 SuccessLoginResponse loginSuccessResponseFromJson(String str) =>
-    SuccessLoginResponse.fromJson(json.decode(str));
+    SuccessLoginResponse.fromJson(json.decode(str) as Map<String, dynamic>);
 
 @freezed
 class SuccessLoginResponse with _$SuccessLoginResponse {

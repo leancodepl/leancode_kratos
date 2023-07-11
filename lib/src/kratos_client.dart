@@ -1,22 +1,34 @@
 import 'dart:convert';
 
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:leancode_kratos_client/src/models/domain/login_response.dart';
-import 'package:leancode_kratos_client/src/models/domain/registration_domain.dart';
-import 'package:leancode_kratos_client/src/models/domain/registration_response.dart';
-import 'package:leancode_kratos_client/src/models/login_error.dart'
+import 'package:leancode_kratos_client/src/login/api/login_error.dart'
     as login_error;
-import 'package:leancode_kratos_client/src/models/login_success.dart';
-import 'package:leancode_kratos_client/src/models/registration.dart';
-import 'package:leancode_kratos_client/src/models/registration_success.dart';
+import 'package:leancode_kratos_client/src/login/api/login_success.dart';
+import 'package:leancode_kratos_client/src/login/domain/login_response.dart';
+import 'package:leancode_kratos_client/src/registration/api/registration.dart';
+import 'package:leancode_kratos_client/src/registration/api/registration_success.dart';
+import 'package:leancode_kratos_client/src/registration/domain/registration_domain.dart';
+import 'package:leancode_kratos_client/src/registration/domain/registration_response.dart';
 import 'package:logging/logging.dart';
 
 class KratosClient {
-  KratosClient({required Uri baseUri}) : _baseUri = baseUri;
+  KratosClient({
+    required Uri baseUri,
+    required FlutterSecureStorage secureStorage,
+  })  : _baseUri = baseUri,
+        _secureStorage = secureStorage;
 
   final Uri _baseUri;
+  final FlutterSecureStorage _secureStorage;
   final Logger _logger = Logger('KratosClientLogger');
-  static const _acceptHeaders = {'Accept': 'application/json'};
+  static const _commonHeaders = {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json'
+  };
+  static const _secureStorageKey = 'kratos_token';
+
+  String get secureStorageTokenKey => _secureStorageKey;
 
   Future<RegistrationFlowModel?> getRegistrationFlow() async {
     try {
@@ -30,19 +42,19 @@ class KratosClient {
     }
   }
 
-  Future<RegistrationResponse> completeRegistration(
-      {required String flowId, required Map<String, dynamic> formData}) async {
+  Future<RegistrationResponse> completeRegistration({
+    required String flowId,
+    required Map<String, dynamic> formData,
+  }) async {
     try {
       final response = await http.post(
-          _buildUri(
-            path: 'self-service/registration',
-            queryParameters: {'flow': flowId},
-          ),
-          headers: {
-            ..._acceptHeaders,
-            'Content-Type': 'application/json',
-          },
-          body: jsonEncode(formData));
+        _buildUri(
+          path: 'self-service/registration',
+          queryParameters: {'flow': flowId},
+        ),
+        headers: _commonHeaders,
+        body: jsonEncode(formData),
+      );
       if (response.statusCode == 400) {
         return _handleErrorResponse(response);
       } else if (response.statusCode == 200) {
@@ -59,7 +71,7 @@ class KratosClient {
     final loginFlow = await http.get(_buildUri(path: 'self-service/login/api'));
     try {
       final decodedResult = jsonDecode(loginFlow.body) as Map<String, dynamic>;
-      final loginFlowId = decodedResult['id'];
+      final dynamic loginFlowId = decodedResult['id'];
       switch (loginFlowId) {
         case String _:
           return loginFlowId;
@@ -87,10 +99,7 @@ class KratosClient {
           path: 'self-service/login',
           queryParameters: {'flow': flowId},
         ),
-        headers: {
-          ..._acceptHeaders,
-          'Content-Type': 'application/json',
-        },
+        headers: _commonHeaders,
         body: jsonEncode(
           {
             'method': 'password',
@@ -102,13 +111,10 @@ class KratosClient {
 
       if (loginFlowResult.statusCode == 200) {
         final loginResult = loginSuccessResponseFromJson(loginFlowResult.body);
-
-        //
-
-
-        //
-
-
+        await _secureStorage.write(
+          key: _secureStorageKey,
+          value: loginResult.sessionToken,
+        );
         return LoginSuccess();
       } else if (loginFlowResult.statusCode == 400) {
         final errorLoginResult =
@@ -125,56 +131,12 @@ class KratosClient {
 
   RegistrationResponse _handleErrorResponse(http.Response response) {
     final decodedResult = registrationFlowFromJson(response.body);
-    final nodes = decodedResult.ui?.nodes;
-    if (nodes == null) {
-      _logger.severe('Response data is not valid');
-      return FailedRegistration();
-    }
-
-    final errorNodes = nodes
-        .map((element) {
-          return switch ((element.attributes?.name, element.messages)) {
-            (final attributeName?, [Message(:final id?), ...]) => ((
-                attributeName,
-                id,
-              )),
-            _ => null
-          };
-        })
-        .nonNulls
-        .toList();
-    return ErrorResponse(errors: errorNodes);
+    return mapRegistrationErrorResponse(decodedResult);
   }
 
   RegistrationResponse _handleSuccessResponse(http.Response response) {
     final decodedResponse = registrationSuccessResponseFromJson(response.body);
-    final continueWith = decodedResponse.continueWith;
-    if (continueWith == null || continueWith.isEmpty) {
-      return SuccessResponseWithoutFurtherAction();
-    } else {
-      final responseData = continueWith
-          .map((element) {
-            return switch ((
-              element.action,
-              element.flow?.id,
-              element.flow?.verifiableAddress
-            )) {
-              (final action?, final actionId?, final emailAddress?) => ((
-                  action,
-                  actionId,
-                  emailAddress
-                )),
-              _ => null
-            };
-          })
-          .nonNulls
-          .toList();
-      return SuccessResponse(
-        action: responseData.first.$1,
-        flowId: responseData.first.$2,
-        emailToVerify: responseData.first.$3,
-      );
-    }
+    return mapRegistrationSuccessResponse(decodedResponse);
   }
 
   Uri _buildUri({

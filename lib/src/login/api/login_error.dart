@@ -6,7 +6,7 @@ part 'login_error.g.dart';
 part 'login_error.freezed.dart';
 
 LoginErrorResponse loginErrorResponseFromJson(String str) =>
-    LoginErrorResponse.fromJson(json.decode(str));
+    LoginErrorResponse.fromJson(json.decode(str) as Map<String, dynamic>);
 
 @freezed
 class LoginErrorResponse with _$LoginErrorResponse {
@@ -46,7 +46,7 @@ class Message with _$Message {
     required int id,
     required String text,
     required String type,
-    required Context context,
+    required Context? context,
   }) = _Message;
 
   factory Message.fromJson(Map<String, dynamic> json) =>
@@ -68,7 +68,7 @@ class Node with _$Node {
     required String group,
     required Attributes attributes,
     required List<dynamic> messages,
-    required Meta meta,
+    required Meta? meta,
   }) = _Node;
 
   factory Node.fromJson(Map<String, dynamic> json) => _$NodeFromJson(json);
@@ -77,13 +77,13 @@ class Node with _$Node {
 @freezed
 class Attributes with _$Attributes {
   const factory Attributes({
-    required String name,
-    required String type,
-    required String value,
-    required bool required,
-    required bool disabled,
-    required String nodeType,
-    required String autocomplete,
+    required String? name,
+    required String? type,
+    required String? value,
+    required bool? required,
+    required bool? disabled,
+    required String? nodeType,
+    required String? autocomplete,
   }) = _Attributes;
 
   factory Attributes.fromJson(Map<String, dynamic> json) =>
@@ -93,7 +93,7 @@ class Attributes with _$Attributes {
 @freezed
 class Meta with _$Meta {
   const factory Meta({
-    required Message label,
+    required Message? label,
   }) = _Meta;
 
   factory Meta.fromJson(Map<String, dynamic> json) => _$MetaFromJson(json);
