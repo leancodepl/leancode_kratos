@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:leancode_kratos_client/src/login/api/login_error.dart'
     as login_error;
@@ -10,29 +8,30 @@ import 'package:leancode_kratos_client/src/registration/api/registration.dart';
 import 'package:leancode_kratos_client/src/registration/api/registration_success.dart';
 import 'package:leancode_kratos_client/src/registration/domain/registration_domain.dart';
 import 'package:leancode_kratos_client/src/registration/domain/registration_response.dart';
+import 'package:leancode_kratos_client/src/utils/credentials_storage.dart';
 import 'package:logging/logging.dart';
 
 class KratosClient {
   KratosClient({
     required Uri baseUri,
-    required FlutterSecureStorage secureStorage,
+    required CredentialsStorage credentialsStorage,
+    http.Client? httpClient,
   })  : _baseUri = baseUri,
-        _secureStorage = secureStorage;
+        _credentialsStorage = credentialsStorage,
+        _client = httpClient ?? http.Client();
 
   final Uri _baseUri;
-  final FlutterSecureStorage _secureStorage;
+  final CredentialsStorage _credentialsStorage;
+  final http.Client _client;
   final Logger _logger = Logger('KratosClientLogger');
   static const _commonHeaders = {
     'Accept': 'application/json',
     'Content-Type': 'application/json'
   };
-  static const _secureStorageKey = 'kratos_token';
-
-  String get secureStorageTokenKey => _secureStorageKey;
 
   Future<RegistrationFlowModel?> getRegistrationFlow() async {
     try {
-      final registrationFlow = await http.get(
+      final registrationFlow = await _client.get(
         _buildUri(path: '/self-service/registration/api'),
       );
       final decodedResult = registrationFlowFromJson(registrationFlow.body);
@@ -47,7 +46,7 @@ class KratosClient {
     required Map<String, dynamic> formData,
   }) async {
     try {
-      final response = await http.post(
+      final response = await _client.post(
         _buildUri(
           path: 'self-service/registration',
           queryParameters: {'flow': flowId},
@@ -67,8 +66,9 @@ class KratosClient {
     }
   }
 
-  Future<String?> _getLoginFlow() async {
-    final loginFlow = await http.get(_buildUri(path: 'self-service/login/api'));
+  Future<String?> getLoginFlow() async {
+    final loginFlow =
+        await _client.get(_buildUri(path: 'self-service/login/api'));
     try {
       final decodedResult = jsonDecode(loginFlow.body) as Map<String, dynamic>;
       final dynamic loginFlowId = decodedResult['id'];
@@ -88,13 +88,13 @@ class KratosClient {
     required String email,
     required String password,
   }) async {
-    final flowId = await _getLoginFlow();
+    final flowId = await getLoginFlow();
     if (flowId == null) {
       // error ;
       return ErrorGettingFlowId();
     }
     try {
-      final loginFlowResult = await http.post(
+      final loginFlowResult = await _client.post(
         _buildUri(
           path: 'self-service/login',
           queryParameters: {'flow': flowId},
@@ -111,10 +111,7 @@ class KratosClient {
 
       if (loginFlowResult.statusCode == 200) {
         final loginResult = loginSuccessResponseFromJson(loginFlowResult.body);
-        await _secureStorage.write(
-          key: _secureStorageKey,
-          value: loginResult.sessionToken,
-        );
+        await _credentialsStorage.save(loginResult.sessionToken);
         return LoginSuccess();
       } else if (loginFlowResult.statusCode == 400) {
         final errorLoginResult =
