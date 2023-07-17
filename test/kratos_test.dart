@@ -1,11 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:leancode_kratos_client/leancode_kratos_client.dart';
 import 'package:leancode_kratos_client/src/registration/domain/registration_domain.dart';
 import 'package:mocktail/mocktail.dart';
 
+import 'fixtures/complete_verification_flow_fixture.dart';
 import 'fixtures/get_login_flow_fixture.dart';
 import 'fixtures/get_registration_flow_fixture.dart';
+import 'fixtures/get_verification_flow_fixture.dart';
 
 class MockHttpClient extends Mock implements http.Client {}
 
@@ -209,6 +213,179 @@ void main() {
           body: any(named: 'body'),
         ),
       );
+    });
+  });
+
+  group('get verification flow', () {
+    late MockCredentialsStorage mockStorage;
+    late KratosClient kratosClient;
+    late MockHttpClient mockHttpClient;
+
+    setUpAll(() {
+      registerFallbackValue(MockUri());
+    });
+
+    setUp(() {
+      mockHttpClient = MockHttpClient();
+      mockStorage = MockCredentialsStorage();
+      kratosClient = KratosClient(
+        baseUri: Uri(host: 'test.pl', scheme: 'https'),
+        credentialsStorage: mockStorage,
+        httpClient: mockHttpClient,
+      );
+    });
+    test('should return VerificationFlowResult when loginFlowId is valid',
+        () async {
+      const loginFlowId = 'ed1efde6-8e5a-41df-93a9-caa7f76656ff';
+      when(() => mockHttpClient.get(any(), headers: any(named: 'headers')))
+          .thenAnswer((_) async => http.Response(verificationFlowFixture, 200));
+
+      final result = await kratosClient.getVerificationFlow();
+
+      expect(
+        result,
+        isA<VerificationFlowResult>().having(
+          (result) => result.flowId,
+          'flowId',
+          loginFlowId,
+        ),
+      );
+      verify(() => mockHttpClient.get(any(), headers: any(named: 'headers')))
+          .called(1);
+    });
+
+    test(
+        'should return VerificationFlowResultError when loginFlowId is not String',
+        () async {
+      const loginFlowId = 123;
+      when(
+        () => mockHttpClient.get(
+          any(),
+          headers: any(named: 'headers'),
+        ),
+      ).thenAnswer(
+        (_) async => http.Response(jsonEncode({'id': loginFlowId}), 200),
+      );
+
+      final result = await kratosClient.getVerificationFlow();
+
+      expect(result, isA<VerificationFlowResultError>());
+      verify(
+        () => mockHttpClient.get(
+          any(),
+          headers: any(named: 'headers'),
+        ),
+      ).called(1);
+    });
+
+    test('should return VerificationFlowResultError on exception', () async {
+      when(
+        () => mockHttpClient.get(
+          any(),
+          headers: any(named: 'headers'),
+        ),
+      ).thenAnswer((_) async => http.Response('test', 200));
+
+      final result = await kratosClient.getVerificationFlow();
+
+      expect(result, isA<VerificationFlowResultError>());
+      verify(
+        () => mockHttpClient.get(
+          any(),
+          headers: any(named: 'headers'),
+        ),
+      ).called(1);
+    });
+  });
+
+  group('Verify account', () {
+    late MockCredentialsStorage mockStorage;
+    late KratosClient kratosClient;
+    late MockHttpClient mockHttpClient;
+
+    setUpAll(() {
+      registerFallbackValue(MockUri());
+    });
+
+    setUp(() {
+      mockHttpClient = MockHttpClient();
+      mockStorage = MockCredentialsStorage();
+      kratosClient = KratosClient(
+        baseUri: Uri(host: 'test.pl', scheme: 'https'),
+        credentialsStorage: mockStorage,
+        httpClient: mockHttpClient,
+      );
+    });
+    test(
+        'should return VerificationSuccessResult when state is "passed_challenge"',
+        () async {
+      when(() => mockHttpClient.get(any(), headers: any(named: 'headers')))
+          .thenAnswer((_) async => http.Response(verificationFlowFixture, 200));
+      when(
+        () => mockHttpClient.post(
+          any(),
+          headers: any(named: 'headers'),
+          body: any(named: 'body'),
+        ),
+      ).thenAnswer(
+        (_) async => http.Response(completeVerificationFlowFixture, 200),
+      );
+
+      final result = await kratosClient.verifyAccount(
+        email: 'email@test.pl',
+        code: '2145637',
+      );
+
+      expect(result, isA<VerificationSuccessResult>());
+      verify(() => mockHttpClient.get(any(), headers: any(named: 'headers')))
+          .called(1);
+      verify(
+        () => mockHttpClient.post(
+          any(),
+          headers: any(named: 'headers'),
+          body: any(named: 'body'),
+        ),
+      ).called(1);
+    });
+
+    test(
+        'should return VerificationFailedResult when state is not "passed_challenge"',
+        () async {
+      when(() => mockHttpClient.get(any(), headers: any(named: 'headers')))
+          .thenAnswer((_) async => http.Response(verificationFlowFixture, 200));
+      when(
+        () => mockHttpClient.post(
+          any(),
+          headers: any(named: 'headers'),
+          body: any(named: 'body'),
+        ),
+      ).thenAnswer(
+        (_) async => http.Response(jsonEncode({'state': 'choose_method'}), 200),
+      );
+
+      final result = await kratosClient.verifyAccount(
+        email: 'email@test.pl',
+        code: '2145637',
+      );
+
+      expect(
+        result,
+        isA<VerificationFailedResult>()
+            .having((result) => result.errorCode, 'errorCode', '4070006'),
+      );
+      verify(
+        () => mockHttpClient.get(
+          any(),
+          headers: any(named: 'headers'),
+        ),
+      ).called(1);
+      verify(
+        () => mockHttpClient.post(
+          any(),
+          headers: any(named: 'headers'),
+          body: any(named: 'body'),
+        ),
+      ).called(1);
     });
   });
 }
