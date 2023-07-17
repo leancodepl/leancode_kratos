@@ -1,23 +1,22 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:leancode_kratos_client/leancode_kratos_client.dart';
 import 'package:leancode_kratos_client/src/login/api/login_error.dart'
     as login_error;
 import 'package:leancode_kratos_client/src/login/api/login_success.dart';
-import 'package:leancode_kratos_client/src/login/domain/login_response.dart';
 import 'package:leancode_kratos_client/src/registration/api/registration.dart';
 import 'package:leancode_kratos_client/src/registration/api/registration_success.dart';
 import 'package:leancode_kratos_client/src/registration/domain/registration_domain.dart';
-import 'package:leancode_kratos_client/src/registration/domain/registration_response.dart';
-import 'package:leancode_kratos_client/src/utils/credentials_storage.dart';
 import 'package:logging/logging.dart';
 
 class KratosClient {
   KratosClient({
     required Uri baseUri,
-    required CredentialsStorage credentialsStorage,
+    CredentialsStorage? credentialsStorage,
     http.Client? httpClient,
   })  : _baseUri = baseUri,
-        _credentialsStorage = credentialsStorage,
+        _credentialsStorage =
+            credentialsStorage ?? const FlutterSecureCredentialsStorage(),
         _client = httpClient ?? http.Client();
 
   final Uri _baseUri;
@@ -90,7 +89,6 @@ class KratosClient {
   }) async {
     final flowId = await getLoginFlow();
     if (flowId == null) {
-      // error ;
       return ErrorGettingFlowId();
     }
     try {
@@ -123,6 +121,27 @@ class KratosClient {
       _logger.warning('Login failed.', e, st);
 
       return UnknownLoginError();
+    }
+  }
+
+  Future<Logout> logout() async {
+    final sessionToken = await _credentialsStorage.read();
+    if (sessionToken == null) {
+      return LogoutFail();
+    }
+    final logoutResult = await _client.delete(
+      _buildUri(path: 'self-service/logout/api'),
+      headers: _commonHeaders,
+      body: jsonEncode(
+        {
+          'session_token': sessionToken,
+        },
+      ),
+    );
+    if (logoutResult.statusCode == 204) {
+      return LogoutSuccess();
+    } else {
+      return LogoutFail();
     }
   }
 

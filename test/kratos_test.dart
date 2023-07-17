@@ -96,6 +96,16 @@ void main() {
 
       expect(registrationFlow, expectedModel);
     });
+
+    test('should return null when response body is empty', () async {
+      when(() => mockHttpClient.get(any())).thenAnswer(
+        (_) async => Future.value(http.Response('', 400)),
+      );
+      final registrationFlow = await kratosClient.getRegistrationFlow();
+
+      expect(registrationFlow, null);
+    });
+
     test('should return login flow id on success', () async {
       final mockResponse = http.Response(loginFlowResponse, 200);
       when(() => mockHttpClient.get(any()))
@@ -103,6 +113,102 @@ void main() {
 
       final result = await kratosClient.getLoginFlow();
       expect(result, loginFlowId);
+    });
+
+    test('should return null from getLoginFlow when response body is empty',
+        () async {
+      when(() => mockHttpClient.get(any())).thenAnswer(
+        (_) async => Future.value(http.Response('', 400)),
+      );
+      final registrationFlow = await kratosClient.getLoginFlow();
+
+      expect(registrationFlow, null);
+    });
+  });
+
+  group('logout', () {
+    late MockCredentialsStorage mockStorage;
+    late KratosClient kratosClient;
+    late MockHttpClient mockHttpClient;
+
+    setUpAll(() {
+      registerFallbackValue(MockUri());
+    });
+
+    setUp(() {
+      mockHttpClient = MockHttpClient();
+      mockStorage = MockCredentialsStorage();
+      kratosClient = KratosClient(
+        baseUri: Uri(host: 'test.pl', scheme: 'https'),
+        credentialsStorage: mockStorage,
+        httpClient: mockHttpClient,
+      );
+    });
+
+    const sessionToken = 'test_token';
+
+    test('should return LogoutSuccess when statusCode is 204', () async {
+      when(() => mockStorage.read()).thenAnswer((_) async => sessionToken);
+      when(
+        () => mockHttpClient.delete(
+          any(),
+          headers: any(named: 'headers'),
+          body: any(named: 'body'),
+        ),
+      ).thenAnswer(
+        (_) async => Future.value(http.Response('', 204)),
+      );
+
+      final result = await kratosClient.logout();
+
+      expect(result, isA<LogoutSuccess>());
+      verify(() => mockStorage.read()).called(1);
+      verify(
+        () => mockHttpClient.delete(
+          any(),
+          headers: any(named: 'headers'),
+          body: any(named: 'body'),
+        ),
+      ).called(1);
+    });
+
+    test('should return LogoutFail when statusCode is not 204', () async {
+      when(() => mockStorage.read()).thenAnswer((_) async => sessionToken);
+      when(
+        () => mockHttpClient.delete(
+          any(),
+          headers: any(named: 'headers'),
+          body: any(named: 'body'),
+        ),
+      ).thenAnswer((_) async => http.Response('', 300));
+
+      final result = await kratosClient.logout();
+
+      expect(result, isA<LogoutFail>());
+      verify(() => mockStorage.read()).called(1);
+      verify(
+        () => mockHttpClient.delete(
+          any(),
+          headers: any(named: 'headers'),
+          body: any(named: 'body'),
+        ),
+      ).called(1);
+    });
+
+    test('should return LogoutFail when sessionToken is null', () async {
+      when(() => mockStorage.read()).thenAnswer((_) async => null);
+
+      final result = await kratosClient.logout();
+
+      expect(result, isA<LogoutFail>());
+      verify(() => mockStorage.read()).called(1);
+      verifyNever(
+        () => mockHttpClient.delete(
+          any(),
+          headers: any(named: 'headers'),
+          body: any(named: 'body'),
+        ),
+      );
     });
   });
 }
