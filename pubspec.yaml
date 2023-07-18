@@ -1,0 +1,36 @@
+name: leancode_kratos_client
+description: A new Flutter plugin project.
+version: 0.0.1
+
+environment:
+  sdk: ">=3.0.5 <4.0.0"
+  flutter: ">=3.3.0"
+
+dependencies:
+  collection: ^1.17.1
+  flutter:
+    sdk: flutter
+  flutter_secure_storage: ^8.0.0
+  freezed: ^2.3.5
+  freezed_annotation: ^2.2.0
+  http: ^1.0.0
+  json_annotation: ^4.8.1
+  logging: ^1.2.0
+
+dev_dependencies:
+  build_runner: ^2.4.5
+  flutter_lints: ^2.0.0
+  flutter_test:
+    sdk: flutter
+  json_serializable: ^6.7.0
+  leancode_lint: ^1.2.1
+  mocktail: ^0.3.0
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: com.example.leancode_kratos_client
+        pluginClass: LeancodeKratosClientPlugin
+      ios:
+        pluginClass: LeancodeKratosClientPlugin
