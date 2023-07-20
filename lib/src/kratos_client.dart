@@ -145,6 +145,63 @@ class KratosClient {
     }
   }
 
+  Future<VerificationFlow> getVerificationFlow() async {
+    final response = await _client.get(
+      _buildUri(path: 'self-service/verification/api'),
+      headers: _commonHeaders,
+    );
+    try {
+      final decodedResult = jsonDecode(response.body) as Map<String, dynamic>;
+      final dynamic loginFlowId = decodedResult['id'];
+      switch (loginFlowId) {
+        case String _:
+          return VerificationFlowResult(flowId: loginFlowId);
+        default:
+          return VerificationFlowResultError();
+      }
+    } catch (e, st) {
+      _logger.warning('Error getting verification flow', e, st);
+      return VerificationFlowResultError();
+    }
+  }
+
+  Future<VerificationResult> verifyAccount({
+    required String email,
+    required String code,
+  }) async {
+    final verificationFlow = await getVerificationFlow();
+    if (verificationFlow is VerificationFlowResult) {
+      final flow = verificationFlow;
+      final result = await _client.post(
+        _buildUri(
+          path: 'self-service/verification',
+          queryParameters: {'flow': flow.flowId},
+        ),
+        headers: _commonHeaders,
+        body: jsonEncode(
+          {
+            'email': email,
+            'code': code,
+            'method': 'code',
+          },
+        ),
+      );
+      try {
+        final decodedResult = jsonDecode(result.body) as Map<String, dynamic>;
+        final state = decodedResult['state'] as String;
+        if (state == 'passed_challenge') {
+          return VerificationSuccessResult();
+        } else {
+          return VerificationFailedResult(errorCode: '4070006');
+        }
+      } catch (e, st) {
+        _logger.warning('Error completing verification', e, st);
+        return VerificationFailedResult();
+      }
+    }
+    return VerificationFailedResult();
+  }
+
   RegistrationResponse _handleErrorResponse(http.Response response) {
     final decodedResult = registrationFlowFromJson(response.body);
     return mapRegistrationErrorResponse(decodedResult);
