@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:leancode_kratos_client/leancode_kratos_client.dart';
-import 'package:leancode_kratos_client/src/registration/domain/registration_domain.dart';
 import 'package:mocktail/mocktail.dart';
 
 import 'fixtures/complete_verification_flow_fixture.dart';
