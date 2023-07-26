@@ -6,7 +6,6 @@ import 'package:leancode_kratos_client/src/login/api/login_error.dart'
 import 'package:leancode_kratos_client/src/login/api/login_success.dart';
 import 'package:leancode_kratos_client/src/registration/api/registration.dart';
 import 'package:leancode_kratos_client/src/registration/api/registration_success.dart';
-import 'package:leancode_kratos_client/src/registration/domain/registration_domain.dart';
 import 'package:logging/logging.dart';
 
 class KratosClient {
@@ -166,40 +165,45 @@ class KratosClient {
   }
 
   Future<VerificationResult> verifyAccount({
+    String? flowId,
     required String email,
     required String code,
   }) async {
-    final verificationFlow = await getVerificationFlow();
-    if (verificationFlow is VerificationFlowResult) {
-      final flow = verificationFlow;
-      final result = await _client.post(
-        _buildUri(
-          path: 'self-service/verification',
-          queryParameters: {'flow': flow.flowId},
-        ),
-        headers: _commonHeaders,
-        body: jsonEncode(
-          {
-            'email': email,
-            'code': code,
-            'method': 'code',
-          },
-        ),
-      );
-      try {
-        final decodedResult = jsonDecode(result.body) as Map<String, dynamic>;
-        final state = decodedResult['state'] as String;
-        if (state == 'passed_challenge') {
-          return VerificationSuccessResult();
-        } else {
-          return VerificationFailedResult(errorCode: '4070006');
-        }
-      } catch (e, st) {
-        _logger.warning('Error completing verification', e, st);
-        return VerificationFailedResult();
+    var verifyFlowId = flowId;
+    if (flowId == null) {
+      final verificationFlow = await getVerificationFlow();
+      if (verificationFlow is VerificationFlowResult) {
+        verifyFlowId = verificationFlow.flowId;
       }
     }
-    return VerificationFailedResult();
+    if (verifyFlowId == null) {
+      return VerificationFailedResult();
+    }
+    final result = await _client.post(
+      _buildUri(
+        path: 'self-service/verification',
+        queryParameters: {'code': code, 'flow': verifyFlowId},
+      ),
+      headers: _commonHeaders,
+      body: jsonEncode(
+        {
+          'email': email,
+          'method': 'code',
+        },
+      ),
+    );
+    try {
+      final decodedResult = jsonDecode(result.body) as Map<String, dynamic>;
+      final state = decodedResult['state'] as String;
+      if (state == 'passed_challenge') {
+        return VerificationSuccessResult();
+      } else {
+        return VerificationFailedResult(errorCode: '4070006');
+      }
+    } catch (e, st) {
+      _logger.warning('Error completing verification', e, st);
+      return VerificationFailedResult();
+    }
   }
 
   RegistrationResponse _handleErrorResponse(http.Response response) {
