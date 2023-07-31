@@ -108,7 +108,10 @@ class KratosClient {
 
       if (loginFlowResult.statusCode == 200) {
         final loginResult = loginSuccessResponseFromJson(loginFlowResult.body);
-        await _credentialsStorage.save(loginResult.sessionToken);
+        await _credentialsStorage.save(
+          credentials: loginResult.sessionToken,
+          expirationDate: loginResult.session.expiresAt.toString(),
+        );
         return LoginSuccess();
       } else if (loginFlowResult.statusCode == 400) {
         final errorLoginResult =
@@ -203,6 +206,48 @@ class KratosClient {
     } catch (e, st) {
       _logger.warning('Error completing verification', e, st);
       return VerificationFailedResult();
+    }
+  }
+
+  Future<void> refreshSessionToken() async {
+    final sessionToken = await _credentialsStorage.read();
+    final expirationTime = await _credentialsStorage.readExpirationDate();
+    final hasExpired =
+        expirationTime?.isBefore(DateTime.now().toLocal()) ?? true;
+
+    if (sessionToken == null || hasExpired) {
+      return;
+    }
+
+    try {
+      final refreshResult = await http.get(
+        _buildUri(
+          path: 'self-service/login/api',
+          queryParameters: {
+            'refresh': 'true',
+          },
+        ),
+        headers: {
+          'X-Session-Token': sessionToken,
+        },
+      );
+
+      final decodedResult = jsonDecode(
+        refreshResult.body,
+      ) as Map<String, dynamic>;
+
+      final dynamic newExpirationDate = decodedResult['expires_at'];
+      switch (newExpirationDate) {
+        case String _:
+          await _credentialsStorage.save(
+            credentials: sessionToken,
+            expirationDate: newExpirationDate,
+          );
+        default:
+          throw Exception('Flow id is invalid or empty.');
+      }
+    } catch (e, st) {
+      _logger.warning('Could not refresh session token.', e, st);
     }
   }
 
