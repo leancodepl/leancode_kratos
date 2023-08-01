@@ -178,7 +178,7 @@ class KratosClient {
   }) async {
     var verifyFlowId = flowId;
     if (flowId == null) {
-      final verificationFlow = await getVerificationFlow();
+      final verificationFlow = await getNewVerificationFlow(email: email);
       if (verificationFlow is VerificationFlowResult) {
         verifyFlowId = verificationFlow.flowId;
       }
