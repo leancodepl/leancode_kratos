@@ -116,6 +116,10 @@ class KratosClient {
       } else if (loginFlowResult.statusCode == 400) {
         final errorLoginResult =
             login_error.loginErrorResponseFromJson(loginFlowResult.body);
+        final messageId = errorLoginResult.ui.messages.first.id;
+        if (messageId == 4000010) {
+          return UnverifiedAccountError();
+        }
         return LoginFailure(errorId: errorLoginResult.ui.messages.first.id);
       }
       return UnknownLoginError();
@@ -207,6 +211,42 @@ class KratosClient {
       _logger.warning('Error completing verification', e, st);
       return VerificationFailedResult();
     }
+  }
+
+  /// getNewVerificationFlow
+  /// Use when old verification flow expired / verification flow interrupted on mobile
+  ///
+
+  Future<VerificationFlow> getNewVerificationFlow({
+    required String email,
+  }) async {
+    final verificationFlow = await getVerificationFlow();
+    if (verificationFlow is VerificationFlowResult) {
+      final response = await _client.post(
+        _buildUri(
+          path: 'self-service/verification',
+          queryParameters: {'flow': verificationFlow.flowId},
+        ),
+        headers: _commonHeaders,
+        body: jsonEncode(
+          {
+            'email': email,
+            'method': 'code',
+          },
+        ),
+      );
+      try {
+        final decodedResult = jsonDecode(response.body) as Map<String, dynamic>;
+        final state = decodedResult['state'] as String;
+        if (state == 'sent_email') {
+          return verificationFlow;
+        }
+      } catch (e, st) {
+        _logger.warning('Error getting verification flow', e, st);
+        return VerificationFlowResultError();
+      }
+    }
+    return VerificationFlowResultError();
   }
 
   Future<void> refreshSessionToken() async {
