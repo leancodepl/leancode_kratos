@@ -172,24 +172,14 @@ class KratosClient {
   }
 
   Future<VerificationResult> verifyAccount({
-    String? flowId,
+    required String flowId,
     required String email,
     required String code,
   }) async {
-    var verifyFlowId = flowId;
-    if (flowId == null) {
-      final verificationFlow = await getNewVerificationFlow(email: email);
-      if (verificationFlow is VerificationFlowResult) {
-        verifyFlowId = verificationFlow.flowId;
-      }
-    }
-    if (verifyFlowId == null) {
-      return VerificationFailedResult();
-    }
     final result = await _client.post(
       _buildUri(
         path: 'self-service/verification',
-        queryParameters: {'code': code, 'flow': verifyFlowId},
+        queryParameters: {'code': code, 'flow': flowId},
       ),
       headers: _commonHeaders,
       body: jsonEncode(

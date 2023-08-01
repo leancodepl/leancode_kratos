@@ -333,11 +333,10 @@ void main() {
       final result = await kratosClient.verifyAccount(
         email: 'email@test.pl',
         code: '2145637',
+        flowId: '3721',
       );
 
       expect(result, isA<VerificationSuccessResult>());
-      verify(() => mockHttpClient.get(any(), headers: any(named: 'headers')))
-          .called(1);
       verify(
         () => mockHttpClient.post(
           any(),
@@ -365,6 +364,7 @@ void main() {
       final result = await kratosClient.verifyAccount(
         email: 'email@test.pl',
         code: '2145637',
+        flowId: '3721',
       );
 
       expect(
@@ -372,12 +372,6 @@ void main() {
         isA<VerificationFailedResult>()
             .having((result) => result.errorCode, 'errorCode', '4070006'),
       );
-      verify(
-        () => mockHttpClient.get(
-          any(),
-          headers: any(named: 'headers'),
-        ),
-      ).called(1);
       verify(
         () => mockHttpClient.post(
           any(),
