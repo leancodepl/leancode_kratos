@@ -8,7 +8,7 @@ import 'package:leancode_kratos_client/src/registration/api/registration.dart';
 import 'package:leancode_kratos_client/src/registration/api/registration_success.dart';
 import 'package:logging/logging.dart';
 
-const unverifiedAccountMessageId = 4000010;
+const _unverifiedAccountMessageId = 4000010;
 
 class KratosClient {
   KratosClient({
@@ -119,7 +119,7 @@ class KratosClient {
         final errorLoginResult =
             login_error.loginErrorResponseFromJson(loginFlowResult.body);
         final messageId = errorLoginResult.ui.messages.firstOrNull?.id;
-        if (messageId == unverifiedAccountMessageId) {
+        if (messageId == _unverifiedAccountMessageId) {
           return UnverifiedAccountError();
         }
         if (messageId != null) {
