@@ -8,6 +8,8 @@ import 'package:leancode_kratos_client/src/registration/api/registration.dart';
 import 'package:leancode_kratos_client/src/registration/api/registration_success.dart';
 import 'package:logging/logging.dart';
 
+const _unverifiedAccountMessageId = 4000010;
+
 class KratosClient {
   KratosClient({
     required Uri baseUri,
@@ -116,7 +118,14 @@ class KratosClient {
       } else if (loginFlowResult.statusCode == 400) {
         final errorLoginResult =
             login_error.loginErrorResponseFromJson(loginFlowResult.body);
-        return LoginFailure(errorId: errorLoginResult.ui.messages.first.id);
+        final messageId = errorLoginResult.ui.messages.firstOrNull?.id;
+        if (messageId == _unverifiedAccountMessageId) {
+          return UnverifiedAccountError();
+        }
+        if (messageId != null) {
+          return LoginFailure(errorId: messageId);
+        }
+        return UnknownLoginError();
       }
       return UnknownLoginError();
     } catch (e, st) {
@@ -168,24 +177,14 @@ class KratosClient {
   }
 
   Future<VerificationResult> verifyAccount({
-    String? flowId,
+    required String flowId,
     required String email,
     required String code,
   }) async {
-    var verifyFlowId = flowId;
-    if (flowId == null) {
-      final verificationFlow = await getVerificationFlow();
-      if (verificationFlow is VerificationFlowResult) {
-        verifyFlowId = verificationFlow.flowId;
-      }
-    }
-    if (verifyFlowId == null) {
-      return VerificationFailedResult();
-    }
     final result = await _client.post(
       _buildUri(
         path: 'self-service/verification',
-        queryParameters: {'code': code, 'flow': verifyFlowId},
+        queryParameters: {'code': code, 'flow': flowId},
       ),
       headers: _commonHeaders,
       body: jsonEncode(
@@ -207,6 +206,42 @@ class KratosClient {
       _logger.warning('Error completing verification', e, st);
       return VerificationFailedResult();
     }
+  }
+
+  /// getNewVerificationFlow
+  /// Use when old verification flow expired / verification flow interrupted on mobile
+  ///
+
+  Future<VerificationFlow> getNewVerificationFlow({
+    required String email,
+  }) async {
+    final verificationFlow = await getVerificationFlow();
+    if (verificationFlow is VerificationFlowResult) {
+      final response = await _client.post(
+        _buildUri(
+          path: 'self-service/verification',
+          queryParameters: {'flow': verificationFlow.flowId},
+        ),
+        headers: _commonHeaders,
+        body: jsonEncode(
+          {
+            'email': email,
+            'method': 'code',
+          },
+        ),
+      );
+      try {
+        final decodedResult = jsonDecode(response.body) as Map<String, dynamic>;
+        final state = decodedResult['state'] as String;
+        if (state == 'sent_email') {
+          return verificationFlow;
+        }
+      } catch (e, st) {
+        _logger.warning('Error getting verification flow', e, st);
+        return VerificationFlowResultError();
+      }
+    }
+    return VerificationFlowResultError();
   }
 
   Future<void> refreshSessionToken() async {

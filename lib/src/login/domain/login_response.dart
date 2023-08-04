@@ -9,6 +9,8 @@ class LoginFailure extends LoginResponse {
   int errorId;
 }
 
+class UnverifiedAccountError extends LoginResponse {}
+
 class ErrorGettingFlowId extends LoginResponse {}
 
 class UnknownLoginError extends LoginResponse {}
