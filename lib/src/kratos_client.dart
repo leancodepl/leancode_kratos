@@ -8,6 +8,8 @@ import 'package:leancode_kratos_client/src/registration/api/registration.dart';
 import 'package:leancode_kratos_client/src/registration/api/registration_success.dart';
 import 'package:logging/logging.dart';
 
+const unverifiedAccountMessageId = 4000010;
+
 class KratosClient {
   KratosClient({
     required Uri baseUri,
@@ -116,11 +118,14 @@ class KratosClient {
       } else if (loginFlowResult.statusCode == 400) {
         final errorLoginResult =
             login_error.loginErrorResponseFromJson(loginFlowResult.body);
-        final messageId = errorLoginResult.ui.messages.first.id;
-        if (messageId == 4000010) {
+        final messageId = errorLoginResult.ui.messages.firstOrNull?.id;
+        if (messageId == unverifiedAccountMessageId) {
           return UnverifiedAccountError();
         }
-        return LoginFailure(errorId: errorLoginResult.ui.messages.first.id);
+        if (messageId != null) {
+          return LoginFailure(errorId: messageId);
+        }
+        return UnknownLoginError();
       }
       return UnknownLoginError();
     } catch (e, st) {
