@@ -1,3 +1,4 @@
+import 'package:leancode_kratos_client/leancode_kratos_client.dart';
 import 'package:leancode_kratos_client/src/registration/api/registration.dart';
 import 'package:leancode_kratos_client/src/registration/api/registration_success.dart';
 
@@ -18,7 +19,7 @@ class SuccessResponseWithoutFurtherAction extends RegistrationResponse {}
 
 class ErrorResponse extends RegistrationResponse {
   ErrorResponse({required this.errors});
-  List<(String fieldName, int errorId)> errors;
+  List<(String fieldName, KratosError error)> errors;
 }
 
 class UnhandledStatusCodeError extends RegistrationResponse {}
@@ -63,7 +64,8 @@ RegistrationResponse mapRegistrationErrorResponse(RegistrationFlow response) {
     return FailedRegistration();
   }
   if (generalErrors != null && generalErrors.isNotEmpty) {
-    return ErrorResponse(errors: [('general', generalErrors.first.id ?? 0)]);
+    final kratosError = KratosError.forId(generalErrors.first.id ?? 0);
+    return ErrorResponse(errors: [('general', kratosError)]);
   }
   final uiNodes = nodes!;
   final errorNodes = uiNodes
@@ -71,7 +73,7 @@ RegistrationResponse mapRegistrationErrorResponse(RegistrationFlow response) {
         return switch ((element.attributes?.name, element.messages)) {
           (final attributeName?, [Message(:final id?), ...]) => (
               attributeName,
-              id,
+              KratosError.forId(id),
             ),
           _ => null
         };
