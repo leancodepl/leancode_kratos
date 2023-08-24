@@ -123,7 +123,7 @@ class KratosClient {
           return UnverifiedAccountError();
         }
         if (messageId != null) {
-          return LoginFailure(errorId: messageId);
+          return LoginFailure(errorId: KratosError.forId(messageId));
         }
         return UnknownLoginError();
       }
