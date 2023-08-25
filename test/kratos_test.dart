@@ -36,57 +36,76 @@ void main() {
       );
     });
 
-    test('should return RegistrationFlowModel when response is successful',
+    test('should return AuthFlowModel when getRegistrationFlow is successful',
         () async {
       when(() => mockHttpClient.get(any())).thenAnswer(
         (_) async => Future.value(http.Response(registrationFlowResponse, 200)),
       );
-      final expectedModel = RegistrationFlowModel(
-        flowId: '9cff2675-a983-4b36-9957-ad722287915e',
-        expiresAt: DateTime.parse('2023-07-12 17:24:21.123581Z'),
-        method: 'password',
+      final expectedModel = AuthFlowModel(
+        id: '213e3ea0-6b7d-472a-b9bd-0d957716ff14',
+        expiresAt: DateTime.parse('2023-08-24T12:44:50.614846417Z'),
+        sessionTokenExchangeCode:
+            'A739SatzLgiz9Tu3AD2VRcM5UKk7OMPcdd8tFxVo5MINa5V3xkcnFDJK4oJB3s0C',
         fields: [
-          const RegistrationFlowField(
+          const AuthFlowField(
             name: 'csrf_token',
             type: 'hidden',
             requiredField: true,
             disabled: false,
           ),
-          const RegistrationFlowField(
+          const AuthFlowField(
+            name: 'provider',
+            type: 'submit',
+            disabled: false,
+            labelId: 1040002,
+          ),
+          const AuthFlowField(
+            name: 'provider',
+            type: 'submit',
+            disabled: false,
+            labelId: 1040002,
+          ),
+          const AuthFlowField(
+            name: 'provider',
+            type: 'submit',
+            disabled: false,
+            labelId: 1040002,
+          ),
+          const AuthFlowField(
             name: 'traits.email',
             type: 'email',
             requiredField: true,
             disabled: false,
             labelId: 1070002,
           ),
-          const RegistrationFlowField(
+          const AuthFlowField(
             name: 'password',
             type: 'password',
             requiredField: true,
             disabled: false,
             labelId: 1070001,
           ),
-          const RegistrationFlowField(
+          const AuthFlowField(
             name: 'traits.given_name',
             type: 'text',
             requiredField: true,
             disabled: false,
             labelId: 1070002,
           ),
-          const RegistrationFlowField(
+          const AuthFlowField(
             name: 'traits.family_name',
             type: 'text',
             disabled: false,
             labelId: 1070002,
           ),
-          const RegistrationFlowField(
+          const AuthFlowField(
             name: 'traits.regulations_accepted',
             type: 'checkbox',
             requiredField: true,
             disabled: false,
             labelId: 1070002,
           ),
-          const RegistrationFlowField(
+          const AuthFlowField(
             name: 'method',
             type: 'submit',
             disabled: false,
@@ -95,7 +114,8 @@ void main() {
         ],
       );
 
-      final registrationFlow = await kratosClient.getRegistrationFlow();
+      final registrationFlow =
+          await kratosClient.getRegistrationFlow(returnTo: 'com.app//callback');
 
       expect(registrationFlow, expectedModel);
     });
@@ -104,18 +124,75 @@ void main() {
       when(() => mockHttpClient.get(any())).thenAnswer(
         (_) async => Future.value(http.Response('', 400)),
       );
-      final registrationFlow = await kratosClient.getRegistrationFlow();
+      final registrationFlow =
+          await kratosClient.getRegistrationFlow(returnTo: 'com.app//callback');
 
       expect(registrationFlow, null);
     });
 
-    test('should return login flow id on success', () async {
-      final mockResponse = http.Response(loginFlowResponse, 200);
-      when(() => mockHttpClient.get(any()))
-          .thenAnswer((_) async => mockResponse);
+    test('should return AuthFlowModel when getLoginFlow is successful',
+        () async {
+      when(() => mockHttpClient.get(any())).thenAnswer(
+        (_) async => Future.value(http.Response(loginFlowResponse, 200)),
+      );
+      final expectedModel = AuthFlowModel(
+        id: loginFlowId,
+        expiresAt: DateTime.parse('2023-08-24T12:39:51.768361203Z'),
+        sessionTokenExchangeCode:
+            '4Ld6wkREE4Cw5hMvVWmhxrx6ViDiDzCXt6M2vy2GC2831l3jEnyS7Q9G8ELK1698',
+        fields: [
+          const AuthFlowField(
+            name: 'provider',
+            type: 'submit',
+            disabled: false,
+            labelId: 1010002,
+          ),
+          const AuthFlowField(
+            name: 'provider',
+            type: 'submit',
+            disabled: false,
+            labelId: 1010002,
+          ),
+          const AuthFlowField(
+            name: 'provider',
+            type: 'submit',
+            disabled: false,
+            labelId: 1010002,
+          ),
+          const AuthFlowField(
+            name: 'csrf_token',
+            type: 'hidden',
+            requiredField: true,
+            disabled: false,
+          ),
+          const AuthFlowField(
+            name: 'identifier',
+            type: 'text',
+            requiredField: true,
+            disabled: false,
+            labelId: 1070004,
+          ),
+          const AuthFlowField(
+            name: 'password',
+            type: 'password',
+            requiredField: true,
+            disabled: false,
+            labelId: 1070001,
+          ),
+          const AuthFlowField(
+            name: 'method',
+            type: 'submit',
+            disabled: false,
+            labelId: 1010001,
+          )
+        ],
+      );
 
-      final result = await kratosClient.getLoginFlow();
-      expect(result, loginFlowId);
+      final registrationFlow = await kratosClient.getLoginFlow(
+        returnTo: 'pl.leancode.template.tst://app',
+      );
+
+      expect(registrationFlow, expectedModel);
     });
 
     test('should return null from getLoginFlow when response body is empty',
@@ -123,7 +200,9 @@ void main() {
       when(() => mockHttpClient.get(any())).thenAnswer(
         (_) async => Future.value(http.Response('', 400)),
       );
-      final registrationFlow = await kratosClient.getLoginFlow();
+      final registrationFlow = await kratosClient.getLoginFlow(
+        returnTo: 'pl.leancode.template.tst://app',
+      );
 
       expect(registrationFlow, null);
     });

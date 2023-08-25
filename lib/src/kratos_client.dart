@@ -1,10 +1,11 @@
 import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 import 'package:leancode_kratos_client/leancode_kratos_client.dart';
+import 'package:leancode_kratos_client/src/common/api/auth_dtos.dart';
 import 'package:leancode_kratos_client/src/login/api/login_error.dart'
     as login_error;
 import 'package:leancode_kratos_client/src/login/api/login_success.dart';
-import 'package:leancode_kratos_client/src/registration/api/registration.dart';
 import 'package:leancode_kratos_client/src/registration/api/registration_success.dart';
 import 'package:logging/logging.dart';
 
@@ -29,14 +30,54 @@ class KratosClient {
     'Content-Type': 'application/json'
   };
 
-  Future<RegistrationFlowModel?> getRegistrationFlow() async {
+  Future<AuthFlowModel?> getRegistrationFlow({
+    String? flowId,
+    bool returnSessionTokenExchangeCode = true,
+    required String? returnTo,
+  }) async {
+    return _getAuthFlow(
+      path: '/self-service/registration/api',
+      flowId: flowId,
+      returnSessionTokenExchangeCode: returnSessionTokenExchangeCode,
+      returnTo: returnTo,
+    );
+  }
+
+  Future<AuthFlowModel?> getLoginFlow({
+    String? flowId,
+    bool returnSessionTokenExchangeCode = true,
+    required String? returnTo,
+  }) async {
+    return _getAuthFlow(
+      path: 'self-service/login/api',
+      flowId: flowId,
+      returnSessionTokenExchangeCode: returnSessionTokenExchangeCode,
+      returnTo: returnTo,
+    );
+  }
+
+  Future<AuthFlowModel?> _getAuthFlow({
+    required String path,
+    required String? flowId,
+    required bool returnSessionTokenExchangeCode,
+    required String? returnTo,
+  }) async {
     try {
       final registrationFlow = await _client.get(
-        _buildUri(path: '/self-service/registration/api'),
+        _buildUri(
+          path: path,
+          queryParameters: {
+            if (flowId != null) 'flow': flowId,
+            if (returnSessionTokenExchangeCode)
+              'return_session_token_exchange_code': 'true',
+            if (returnTo != null) 'return_to': returnTo,
+          },
+        ),
       );
-      final decodedResult = registrationFlowFromJson(registrationFlow.body);
-      return RegistrationFlowModel.fromRegistrationFlow(decodedResult);
-    } catch (e, _) {
+      final dto = authFlowDtoFromJson(registrationFlow.body);
+      return AuthFlowModel.formDto(dto);
+    } catch (e, st) {
+      _logger.warning('Error getting auth flow', e, st);
       return null;
     }
   }
@@ -66,32 +107,10 @@ class KratosClient {
     }
   }
 
-  Future<String?> getLoginFlow() async {
-    final loginFlow =
-        await _client.get(_buildUri(path: 'self-service/login/api'));
-    try {
-      final decodedResult = jsonDecode(loginFlow.body) as Map<String, dynamic>;
-      final dynamic loginFlowId = decodedResult['id'];
-      switch (loginFlowId) {
-        case String _:
-          return loginFlowId;
-        default:
-          throw Exception('Login flowId is invalid');
-      }
-    } catch (e, st) {
-      _logger.warning('Error getting login flow', e, st);
-      return null;
-    }
-  }
-
-  Future<LoginResponse> login({
-    required String email,
-    required String password,
+  Future<LoginResponse> completeLogin({
+    required String flowId,
+    required Map<String, dynamic> formData,
   }) async {
-    final flowId = await getLoginFlow();
-    if (flowId == null) {
-      return ErrorGettingFlowId();
-    }
     try {
       final loginFlowResult = await _client.post(
         _buildUri(
@@ -99,13 +118,7 @@ class KratosClient {
           queryParameters: {'flow': flowId},
         ),
         headers: _commonHeaders,
-        body: jsonEncode(
-          {
-            'method': 'password',
-            'identifier': email,
-            'password': password,
-          },
-        ),
+        body: jsonEncode(formData),
       );
 
       if (loginFlowResult.statusCode == 200) {
@@ -287,8 +300,8 @@ class KratosClient {
   }
 
   RegistrationResponse _handleErrorResponse(http.Response response) {
-    final decodedResult = registrationFlowFromJson(response.body);
-    return mapRegistrationErrorResponse(decodedResult);
+    final dto = authFlowDtoFromJson(response.body);
+    return mapRegistrationErrorResponse(dto);
   }
 
   RegistrationResponse _handleSuccessResponse(http.Response response) {

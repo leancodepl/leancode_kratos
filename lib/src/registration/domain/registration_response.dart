@@ -1,5 +1,5 @@
 import 'package:leancode_kratos_client/leancode_kratos_client.dart';
-import 'package:leancode_kratos_client/src/registration/api/registration.dart';
+import 'package:leancode_kratos_client/src/common/api/auth_dtos.dart';
 import 'package:leancode_kratos_client/src/registration/api/registration_success.dart';
 
 sealed class RegistrationResponse {}
@@ -57,21 +57,18 @@ RegistrationResponse mapRegistrationSuccessResponse(
   }
 }
 
-RegistrationResponse mapRegistrationErrorResponse(RegistrationFlow response) {
-  final generalErrors = response.ui?.messages;
-  final nodes = response.ui?.nodes;
-  if (nodes == null && generalErrors == null) {
-    return FailedRegistration();
-  }
+RegistrationResponse mapRegistrationErrorResponse(AuthFlowDto response) {
+  final generalErrors = response.ui.messages;
+  final nodes = response.ui.nodes;
+
   if (generalErrors != null && generalErrors.isNotEmpty) {
-    final kratosError = KratosError.forId(generalErrors.first.id ?? 0);
+    final kratosError = KratosError.forId(generalErrors.first.id);
     return ErrorResponse(errors: [('general', kratosError)]);
   }
-  final uiNodes = nodes!;
-  final errorNodes = uiNodes
+  final errorNodes = nodes
       .map((element) {
-        return switch ((element.attributes?.name, element.messages)) {
-          (final attributeName?, [Message(:final id?), ...]) => (
+        return switch ((element.attributes.name, element.messages)) {
+          (final attributeName?, [MessageDto(:final id), ...]) => (
               attributeName,
               KratosError.forId(id),
             ),
