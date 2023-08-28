@@ -114,20 +114,22 @@ void main() {
         ],
       );
 
-      final registrationFlow =
-          await kratosClient.getRegistrationFlow(returnTo: 'com.app//callback');
+      final flow = await kratosClient.initRegistrationFlow(
+        returnTo: 'pl.leancode.template.tst://app/',
+      );
 
-      expect(registrationFlow, expectedModel);
+      expect(flow, expectedModel);
     });
 
     test('should return null when response body is empty', () async {
       when(() => mockHttpClient.get(any())).thenAnswer(
         (_) async => Future.value(http.Response('', 400)),
       );
-      final registrationFlow =
-          await kratosClient.getRegistrationFlow(returnTo: 'com.app//callback');
+      final flow = await kratosClient.initRegistrationFlow(
+        returnTo: 'pl.leancode.template.tst://app/',
+      );
 
-      expect(registrationFlow, null);
+      expect(flow, null);
     });
 
     test('should return AuthFlowModel when getLoginFlow is successful',
@@ -188,11 +190,11 @@ void main() {
         ],
       );
 
-      final registrationFlow = await kratosClient.getLoginFlow(
+      final flow = await kratosClient.initLoginFlow(
         returnTo: 'pl.leancode.template.tst://app',
       );
 
-      expect(registrationFlow, expectedModel);
+      expect(flow, expectedModel);
     });
 
     test('should return null from getLoginFlow when response body is empty',
@@ -200,11 +202,11 @@ void main() {
       when(() => mockHttpClient.get(any())).thenAnswer(
         (_) async => Future.value(http.Response('', 400)),
       );
-      final registrationFlow = await kratosClient.getLoginFlow(
+      final flow = await kratosClient.initLoginFlow(
         returnTo: 'pl.leancode.template.tst://app',
       );
 
-      expect(registrationFlow, null);
+      expect(flow, null);
     });
   });
 
