@@ -374,6 +374,7 @@ class KratosClient {
       ),
     );
     if (logoutResult.statusCode == 204) {
+      await _credentialsStorage.clear();
       return LogoutSuccess();
     } else {
       return LogoutFail();
