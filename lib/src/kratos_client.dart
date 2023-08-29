@@ -30,35 +30,31 @@ class KratosClient {
     'Content-Type': 'application/json'
   };
 
-  Future<AuthFlowModel?> getRegistrationFlow({
+  Future<AuthFlowModel?> initRegistrationFlow({
     String? flowId,
     bool returnSessionTokenExchangeCode = true,
     required String? returnTo,
   }) async {
-    return _getAuthFlow(
-      path: '/self-service/registration/api',
-      flowId: flowId,
+    return _initAuthFlow(
+      path: 'self-service/registration/api',
       returnSessionTokenExchangeCode: returnSessionTokenExchangeCode,
       returnTo: returnTo,
     );
   }
 
-  Future<AuthFlowModel?> getLoginFlow({
-    String? flowId,
+  Future<AuthFlowModel?> initLoginFlow({
     bool returnSessionTokenExchangeCode = true,
     required String? returnTo,
   }) async {
-    return _getAuthFlow(
+    return _initAuthFlow(
       path: 'self-service/login/api',
-      flowId: flowId,
       returnSessionTokenExchangeCode: returnSessionTokenExchangeCode,
       returnTo: returnTo,
     );
   }
 
-  Future<AuthFlowModel?> _getAuthFlow({
+  Future<AuthFlowModel?> _initAuthFlow({
     required String path,
-    required String? flowId,
     required bool returnSessionTokenExchangeCode,
     required String? returnTo,
   }) async {
@@ -67,11 +63,43 @@ class KratosClient {
         _buildUri(
           path: path,
           queryParameters: {
-            if (flowId != null) 'flow': flowId,
             if (returnSessionTokenExchangeCode)
               'return_session_token_exchange_code': 'true',
             if (returnTo != null) 'return_to': returnTo,
           },
+        ),
+      );
+      final dto = authFlowDtoFromJson(registrationFlow.body);
+      return AuthFlowModel.formDto(dto);
+    } catch (e, st) {
+      _logger.warning('Error initializing auth flow', e, st);
+      return null;
+    }
+  }
+
+  Future<AuthFlowModel?> getRegistrationFlow(String id) async {
+    return _getAuthFlow(
+      path: 'self-service/registration/flows',
+      id: id,
+    );
+  }
+
+  Future<AuthFlowModel?> getLoginFlow(String id) async {
+    return _getAuthFlow(
+      path: 'self-service/login/flows',
+      id: id,
+    );
+  }
+
+  Future<AuthFlowModel?> _getAuthFlow({
+    required String path,
+    required String id,
+  }) async {
+    try {
+      final registrationFlow = await _client.get(
+        _buildUri(
+          path: path,
+          queryParameters: {'id': id},
         ),
       );
       final dto = authFlowDtoFromJson(registrationFlow.body);
