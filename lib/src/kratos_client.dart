@@ -11,17 +11,22 @@ import 'package:logging/logging.dart';
 
 const _unverifiedAccountMessageId = 4000010;
 
+typedef BrowserCallback = Future<String> Function(String url);
+
 class KratosClient {
   KratosClient({
     required Uri baseUri,
+    required BrowserCallback browserCallback,
     CredentialsStorage? credentialsStorage,
     http.Client? httpClient,
   })  : _baseUri = baseUri,
+        _browserCallback = browserCallback,
         _credentialsStorage =
             credentialsStorage ?? const FlutterSecureCredentialsStorage(),
         _client = httpClient ?? http.Client();
 
   final Uri _baseUri;
+  final BrowserCallback _browserCallback;
   final CredentialsStorage _credentialsStorage;
   final http.Client _client;
   final Logger _logger = Logger('KratosClientLogger');
@@ -77,21 +82,21 @@ class KratosClient {
     }
   }
 
-  Future<AuthFlowModel?> getRegistrationFlow(String id) async {
+  Future<AuthFlowDto?> getRegistrationFlow(String id) async {
     return _getAuthFlow(
       path: 'self-service/registration/flows',
       id: id,
     );
   }
 
-  Future<AuthFlowModel?> getLoginFlow(String id) async {
+  Future<AuthFlowDto?> getLoginFlow(String id) async {
     return _getAuthFlow(
       path: 'self-service/login/flows',
       id: id,
     );
   }
 
-  Future<AuthFlowModel?> _getAuthFlow({
+  Future<AuthFlowDto?> _getAuthFlow({
     required String path,
     required String id,
   }) async {
@@ -102,8 +107,7 @@ class KratosClient {
           queryParameters: {'id': id},
         ),
       );
-      final dto = authFlowDtoFromJson(registrationFlow.body);
-      return AuthFlowModel.formDto(dto);
+      return authFlowDtoFromJson(registrationFlow.body);
     } catch (e, st) {
       _logger.warning('Error getting auth flow', e, st);
       return null;
@@ -127,6 +131,30 @@ class KratosClient {
         return _handleErrorResponse(response);
       } else if (response.statusCode == 200) {
         return _handleSuccessResponse(response);
+      } else if (response.statusCode == 422) {
+        final browserLocationChangeRequiredResponse =
+            registrationBrowserLocationChangeRequiredResponseFromJson(
+          response.body,
+        );
+
+        final redirectBrowserTo =
+            browserLocationChangeRequiredResponse.redirectBrowserTo;
+
+        if (redirectBrowserTo == null) {
+          return FailedRegistration();
+        }
+
+        final result = await _browserCallback(redirectBrowserTo);
+
+        final resultUri = Uri.parse(result);
+
+        if (!resultUri.queryParameters.containsKey('code')) {
+          final flow = await getRegistrationFlow(flowId);
+
+          return mapRegistrationErrorResponse(flow!);
+        }
+
+        print(resultUri.queryParameters['code']);
       }
       return UnhandledStatusCodeError();
     } catch (e, st) {

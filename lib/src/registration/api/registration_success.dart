@@ -6,7 +6,8 @@ part 'registration_success.freezed.dart';
 part 'registration_success.g.dart';
 
 RegistrationSuccessResponse registrationSuccessResponseFromJson(String str) {
-  return RegistrationSuccessResponse.fromJson(json.decode(str) as Map<String, dynamic>);
+  return RegistrationSuccessResponse.fromJson(
+      json.decode(str) as Map<String, dynamic>);
 }
 
 @freezed
@@ -18,6 +19,26 @@ class RegistrationSuccessResponse with _$RegistrationSuccessResponse {
 
   factory RegistrationSuccessResponse.fromJson(Map<String, dynamic> json) =>
       _$RegistrationSuccessResponseFromJson(json);
+}
+
+RegistrationBrowserLocationChangeRequiredResponse
+    registrationBrowserLocationChangeRequiredResponseFromJson(String str) {
+  return RegistrationBrowserLocationChangeRequiredResponse.fromJson(
+    json.decode(str) as Map<String, dynamic>,
+  );
+}
+
+@freezed
+class RegistrationBrowserLocationChangeRequiredResponse
+    with _$RegistrationBrowserLocationChangeRequiredResponse {
+  const factory RegistrationBrowserLocationChangeRequiredResponse({
+    String? redirectBrowserTo,
+  }) = _RegistrationBrowserLocationChangeRequiredResponse;
+
+  factory RegistrationBrowserLocationChangeRequiredResponse.fromJson(
+    Map<String, dynamic> json,
+  ) =>
+      _$RegistrationBrowserLocationChangeRequiredResponseFromJson(json);
 }
 
 @freezed

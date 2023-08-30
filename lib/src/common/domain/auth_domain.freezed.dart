@@ -18,8 +18,9 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$AuthFlowModel {
   String get id => throw _privateConstructorUsedError;
   DateTime get expiresAt => throw _privateConstructorUsedError;
+  String? get csrfToken => throw _privateConstructorUsedError;
   String? get sessionTokenExchangeCode => throw _privateConstructorUsedError;
-  List<AuthFlowField>? get fields => throw _privateConstructorUsedError;
+  List<AuthFlowField> get fields => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $AuthFlowModelCopyWith<AuthFlowModel> get copyWith =>
@@ -35,8 +36,9 @@ abstract class $AuthFlowModelCopyWith<$Res> {
   $Res call(
       {String id,
       DateTime expiresAt,
+      String? csrfToken,
       String? sessionTokenExchangeCode,
-      List<AuthFlowField>? fields});
+      List<AuthFlowField> fields});
 }
 
 /// @nodoc
@@ -54,8 +56,9 @@ class _$AuthFlowModelCopyWithImpl<$Res, $Val extends AuthFlowModel>
   $Res call({
     Object? id = null,
     Object? expiresAt = null,
+    Object? csrfToken = freezed,
     Object? sessionTokenExchangeCode = freezed,
-    Object? fields = freezed,
+    Object? fields = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -66,14 +69,18 @@ class _$AuthFlowModelCopyWithImpl<$Res, $Val extends AuthFlowModel>
           ? _value.expiresAt
           : expiresAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      csrfToken: freezed == csrfToken
+          ? _value.csrfToken
+          : csrfToken // ignore: cast_nullable_to_non_nullable
+              as String?,
       sessionTokenExchangeCode: freezed == sessionTokenExchangeCode
           ? _value.sessionTokenExchangeCode
           : sessionTokenExchangeCode // ignore: cast_nullable_to_non_nullable
               as String?,
-      fields: freezed == fields
+      fields: null == fields
           ? _value.fields
           : fields // ignore: cast_nullable_to_non_nullable
-              as List<AuthFlowField>?,
+              as List<AuthFlowField>,
     ) as $Val);
   }
 }
@@ -89,8 +96,9 @@ abstract class _$$_AuthFlowModelCopyWith<$Res>
   $Res call(
       {String id,
       DateTime expiresAt,
+      String? csrfToken,
       String? sessionTokenExchangeCode,
-      List<AuthFlowField>? fields});
+      List<AuthFlowField> fields});
 }
 
 /// @nodoc
@@ -106,8 +114,9 @@ class __$$_AuthFlowModelCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? expiresAt = null,
+    Object? csrfToken = freezed,
     Object? sessionTokenExchangeCode = freezed,
-    Object? fields = freezed,
+    Object? fields = null,
   }) {
     return _then(_$_AuthFlowModel(
       id: null == id
@@ -118,14 +127,18 @@ class __$$_AuthFlowModelCopyWithImpl<$Res>
           ? _value.expiresAt
           : expiresAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      csrfToken: freezed == csrfToken
+          ? _value.csrfToken
+          : csrfToken // ignore: cast_nullable_to_non_nullable
+              as String?,
       sessionTokenExchangeCode: freezed == sessionTokenExchangeCode
           ? _value.sessionTokenExchangeCode
           : sessionTokenExchangeCode // ignore: cast_nullable_to_non_nullable
               as String?,
-      fields: freezed == fields
+      fields: null == fields
           ? _value._fields
           : fields // ignore: cast_nullable_to_non_nullable
-              as List<AuthFlowField>?,
+              as List<AuthFlowField>,
     ));
   }
 }
@@ -136,8 +149,9 @@ class _$_AuthFlowModel implements _AuthFlowModel {
   const _$_AuthFlowModel(
       {required this.id,
       required this.expiresAt,
+      this.csrfToken,
       this.sessionTokenExchangeCode,
-      final List<AuthFlowField>? fields})
+      required final List<AuthFlowField> fields})
       : _fields = fields;
 
   @override
@@ -145,20 +159,20 @@ class _$_AuthFlowModel implements _AuthFlowModel {
   @override
   final DateTime expiresAt;
   @override
-  final String? sessionTokenExchangeCode;
-  final List<AuthFlowField>? _fields;
+  final String? csrfToken;
   @override
-  List<AuthFlowField>? get fields {
-    final value = _fields;
-    if (value == null) return null;
+  final String? sessionTokenExchangeCode;
+  final List<AuthFlowField> _fields;
+  @override
+  List<AuthFlowField> get fields {
     if (_fields is EqualUnmodifiableListView) return _fields;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
+    return EqualUnmodifiableListView(_fields);
   }
 
   @override
   String toString() {
-    return 'AuthFlowModel(id: $id, expiresAt: $expiresAt, sessionTokenExchangeCode: $sessionTokenExchangeCode, fields: $fields)';
+    return 'AuthFlowModel(id: $id, expiresAt: $expiresAt, csrfToken: $csrfToken, sessionTokenExchangeCode: $sessionTokenExchangeCode, fields: $fields)';
   }
 
   @override
@@ -169,6 +183,8 @@ class _$_AuthFlowModel implements _AuthFlowModel {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.expiresAt, expiresAt) ||
                 other.expiresAt == expiresAt) &&
+            (identical(other.csrfToken, csrfToken) ||
+                other.csrfToken == csrfToken) &&
             (identical(
                     other.sessionTokenExchangeCode, sessionTokenExchangeCode) ||
                 other.sessionTokenExchangeCode == sessionTokenExchangeCode) &&
@@ -176,7 +192,7 @@ class _$_AuthFlowModel implements _AuthFlowModel {
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, id, expiresAt,
+  int get hashCode => Object.hash(runtimeType, id, expiresAt, csrfToken,
       sessionTokenExchangeCode, const DeepCollectionEquality().hash(_fields));
 
   @JsonKey(ignore: true)
@@ -190,17 +206,20 @@ abstract class _AuthFlowModel implements AuthFlowModel {
   const factory _AuthFlowModel(
       {required final String id,
       required final DateTime expiresAt,
+      final String? csrfToken,
       final String? sessionTokenExchangeCode,
-      final List<AuthFlowField>? fields}) = _$_AuthFlowModel;
+      required final List<AuthFlowField> fields}) = _$_AuthFlowModel;
 
   @override
   String get id;
   @override
   DateTime get expiresAt;
   @override
+  String? get csrfToken;
+  @override
   String? get sessionTokenExchangeCode;
   @override
-  List<AuthFlowField>? get fields;
+  List<AuthFlowField> get fields;
   @override
   @JsonKey(ignore: true)
   _$$_AuthFlowModelCopyWith<_$_AuthFlowModel> get copyWith =>
@@ -214,6 +233,7 @@ mixin _$AuthFlowField {
   bool? get requiredField => throw _privateConstructorUsedError;
   bool? get disabled => throw _privateConstructorUsedError;
   int? get labelId => throw _privateConstructorUsedError;
+  AuthFlowFieldValue<dynamic>? get value => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $AuthFlowFieldCopyWith<AuthFlowField> get copyWith =>
@@ -231,7 +251,8 @@ abstract class $AuthFlowFieldCopyWith<$Res> {
       String? type,
       bool? requiredField,
       bool? disabled,
-      int? labelId});
+      int? labelId,
+      AuthFlowFieldValue<dynamic>? value});
 }
 
 /// @nodoc
@@ -252,6 +273,7 @@ class _$AuthFlowFieldCopyWithImpl<$Res, $Val extends AuthFlowField>
     Object? requiredField = freezed,
     Object? disabled = freezed,
     Object? labelId = freezed,
+    Object? value = freezed,
   }) {
     return _then(_value.copyWith(
       name: freezed == name
@@ -274,6 +296,10 @@ class _$AuthFlowFieldCopyWithImpl<$Res, $Val extends AuthFlowField>
           ? _value.labelId
           : labelId // ignore: cast_nullable_to_non_nullable
               as int?,
+      value: freezed == value
+          ? _value.value
+          : value // ignore: cast_nullable_to_non_nullable
+              as AuthFlowFieldValue<dynamic>?,
     ) as $Val);
   }
 }
@@ -291,7 +317,8 @@ abstract class _$$_AuthFlowFieldCopyWith<$Res>
       String? type,
       bool? requiredField,
       bool? disabled,
-      int? labelId});
+      int? labelId,
+      AuthFlowFieldValue<dynamic>? value});
 }
 
 /// @nodoc
@@ -310,6 +337,7 @@ class __$$_AuthFlowFieldCopyWithImpl<$Res>
     Object? requiredField = freezed,
     Object? disabled = freezed,
     Object? labelId = freezed,
+    Object? value = freezed,
   }) {
     return _then(_$_AuthFlowField(
       name: freezed == name
@@ -332,6 +360,10 @@ class __$$_AuthFlowFieldCopyWithImpl<$Res>
           ? _value.labelId
           : labelId // ignore: cast_nullable_to_non_nullable
               as int?,
+      value: freezed == value
+          ? _value.value
+          : value // ignore: cast_nullable_to_non_nullable
+              as AuthFlowFieldValue<dynamic>?,
     ));
   }
 }
@@ -340,7 +372,12 @@ class __$$_AuthFlowFieldCopyWithImpl<$Res>
 
 class _$_AuthFlowField implements _AuthFlowField {
   const _$_AuthFlowField(
-      {this.name, this.type, this.requiredField, this.disabled, this.labelId});
+      {this.name,
+      this.type,
+      this.requiredField,
+      this.disabled,
+      this.labelId,
+      this.value});
 
   @override
   final String? name;
@@ -352,10 +389,12 @@ class _$_AuthFlowField implements _AuthFlowField {
   final bool? disabled;
   @override
   final int? labelId;
+  @override
+  final AuthFlowFieldValue<dynamic>? value;
 
   @override
   String toString() {
-    return 'AuthFlowField(name: $name, type: $type, requiredField: $requiredField, disabled: $disabled, labelId: $labelId)';
+    return 'AuthFlowField(name: $name, type: $type, requiredField: $requiredField, disabled: $disabled, labelId: $labelId, value: $value)';
   }
 
   @override
@@ -369,12 +408,13 @@ class _$_AuthFlowField implements _AuthFlowField {
                 other.requiredField == requiredField) &&
             (identical(other.disabled, disabled) ||
                 other.disabled == disabled) &&
-            (identical(other.labelId, labelId) || other.labelId == labelId));
+            (identical(other.labelId, labelId) || other.labelId == labelId) &&
+            (identical(other.value, value) || other.value == value));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, name, type, requiredField, disabled, labelId);
+  int get hashCode => Object.hash(
+      runtimeType, name, type, requiredField, disabled, labelId, value);
 
   @JsonKey(ignore: true)
   @override
@@ -389,7 +429,8 @@ abstract class _AuthFlowField implements AuthFlowField {
       final String? type,
       final bool? requiredField,
       final bool? disabled,
-      final int? labelId}) = _$_AuthFlowField;
+      final int? labelId,
+      final AuthFlowFieldValue<dynamic>? value}) = _$_AuthFlowField;
 
   @override
   String? get name;
@@ -401,6 +442,8 @@ abstract class _AuthFlowField implements AuthFlowField {
   bool? get disabled;
   @override
   int? get labelId;
+  @override
+  AuthFlowFieldValue<dynamic>? get value;
   @override
   @JsonKey(ignore: true)
   _$$_AuthFlowFieldCopyWith<_$_AuthFlowField> get copyWith =>
