@@ -307,6 +307,36 @@ class KratosClient {
     }
   }
 
+  Future<bool> sendEmailRecoveryFlow({
+    required String flowId,
+    required String email,
+  }) async {
+    final recoveryFlow = await _client.post(
+      _buildUri(
+        path: 'self-service/recovery/api',
+        queryParameters: {'flow': flowId},
+      ),
+      body: jsonEncode({'email': email, 'method': 'code'}),
+    );
+    return recoveryFlow.statusCode == 200;
+  }
+
+  Future<void> sendCodeRecoveryFlow({
+    required String flowId,
+    required String code,
+  }) async {
+    final recoveryFlow = await _client.post(
+      _buildUri(
+        path: 'self-service/recovery/api',
+        queryParameters: {'flow': flowId},
+      ),
+      body: jsonEncode({'code': code}),
+    );
+    if (recoveryFlow.statusCode == 422) {
+      final cookies = recoveryFlow.headers['set-cookie'];
+    }
+  }
+
   RegistrationResponse _handleErrorResponse(http.Response response) {
     final decodedResult = registrationFlowFromJson(response.body);
     return mapRegistrationErrorResponse(decodedResult);
