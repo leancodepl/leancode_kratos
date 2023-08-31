@@ -540,6 +540,7 @@ class KratosClient {
         path: 'self-service/recovery',
         queryParameters: {'flow': flowId},
       ),
+      headers: _commonHeaders,
       body: jsonEncode({'email': email, 'method': 'code'}),
     );
     return recoveryFlow.statusCode == 200;
@@ -555,6 +556,7 @@ class KratosClient {
         queryParameters: {'flow': flowId},
       ),
       body: jsonEncode({'code': code}),
+      headers: _commonHeaders,
     );
     if (recoveryFlow.statusCode == 422) {
       final cookies = recoveryFlow.headers['set-cookie'];
