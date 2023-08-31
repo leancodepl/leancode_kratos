@@ -322,7 +322,7 @@ class KratosClient {
     return recoveryFlow.statusCode == 200;
   }
 
-  Future<void> sendCodeRecoveryFlow({
+  Future<String?> sendCodeRecoveryFlow({
     required String flowId,
     required String code,
   }) async {
@@ -336,6 +336,9 @@ class KratosClient {
     );
     if (recoveryFlow.statusCode == 422) {
       final cookies = recoveryFlow.headers['set-cookie'];
+      return cookies;
+    } else {
+      return null;
     }
   }
 
