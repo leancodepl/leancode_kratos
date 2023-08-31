@@ -5,6 +5,8 @@ export 'src/common/domain/oidc_provider.dart';
 export 'src/kratos_client.dart';
 export 'src/login/domain/login_response.dart';
 export 'src/logout/logout.dart';
+export 'src/recovery/domain/recovery.dart';
+export 'src/registration/domain/registration_domain.dart';
 export 'src/registration/domain/registration_response.dart';
 export 'src/utils/credentials_storage.dart';
 export 'src/utils/kratos_errors.dart';

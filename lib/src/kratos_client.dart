@@ -511,6 +511,36 @@ class KratosClient {
     }
   }
 
+  Future<RecoveryFlowResult> getRecoveryFlow() async {
+    final recoveryFlow = await _client.get(
+      _buildUri(path: 'self-service/recovery/api'),
+    );
+    try {
+      final decodedResult =
+          jsonDecode(recoveryFlow.body) as Map<String, dynamic>;
+      final dynamic recoveryFlowId = decodedResult['id'];
+      switch (recoveryFlowId) {
+        case String _:
+          return RecoveryFlow(recoveryFlowId);
+        default:
+          return RecoveryFlowError();
+      }
+    } catch (e, st) {
+      _logger.warning('Error getting recovery flow', e, st);
+      return RecoveryFlowError();
+    }
+  }
+
+  RegistrationResponse _handleErrorResponse(http.Response response) {
+    final decodedResult = registrationFlowFromJson(response.body);
+    return mapRegistrationErrorResponse(decodedResult);
+  }
+
+  RegistrationResponse _handleSuccessResponse(http.Response response) {
+    final decodedResponse = registrationSuccessResponseFromJson(response.body);
+    return mapRegistrationSuccessResponse(decodedResponse);
+  }
+
   Uri _buildUri({
     required String path,
     Map<String, String>? queryParameters,
