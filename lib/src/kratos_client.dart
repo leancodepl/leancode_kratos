@@ -313,7 +313,7 @@ class KratosClient {
   }) async {
     final recoveryFlow = await _client.post(
       _buildUri(
-        path: 'self-service/recovery/api',
+        path: 'self-service/recovery',
         queryParameters: {'flow': flowId},
       ),
       body: jsonEncode({'email': email, 'method': 'code'}),
@@ -327,7 +327,7 @@ class KratosClient {
   }) async {
     final recoveryFlow = await _client.post(
       _buildUri(
-        path: 'self-service/recovery/api',
+        path: 'self-service/recovery',
         queryParameters: {'flow': flowId},
       ),
       body: jsonEncode({'code': code}),
