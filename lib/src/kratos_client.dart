@@ -403,7 +403,6 @@ class KratosClient {
 
   Future<VerificationResult> verifyAccount({
     required String flowId,
-    required String email,
     required String code,
   }) async {
     final result = await _client.post(
@@ -414,7 +413,6 @@ class KratosClient {
       headers: _commonHeaders,
       body: jsonEncode(
         {
-          'email': email,
           'method': 'code',
         },
       ),
