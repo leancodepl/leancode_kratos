@@ -2,36 +2,56 @@ import 'package:leancode_kratos_client/leancode_kratos_client.dart';
 import 'package:leancode_kratos_client/src/common/api/auth_dtos.dart';
 import 'package:leancode_kratos_client/src/registration/api/registration_success.dart';
 
-sealed class RegistrationResponse {}
+sealed class RegistrationResponse {
+  const RegistrationResponse();
+}
 
-class SuccessResponse extends RegistrationResponse {
-  SuccessResponse({
+class VerifyEmailResponse extends RegistrationResponse {
+  const VerifyEmailResponse({
     required this.action,
     required this.flowId,
     required this.emailToVerify,
   });
-  String action;
-  String flowId;
-  String emailToVerify;
+
+  final String action;
+  final String flowId;
+  final String emailToVerify;
 }
 
-class SuccessResponseWithoutFurtherAction extends RegistrationResponse {}
+class SuccessResponse extends RegistrationResponse {
+  const SuccessResponse();
+}
+
+class SocialRegisterFinishResponse extends RegistrationResponse {
+  const SocialRegisterFinishResponse({
+    required this.flowInfo,
+    required this.values,
+  });
+
+  final AuthFlowInfo flowInfo;
+  final List<(String fieldName, dynamic value)> values;
+}
 
 class ErrorResponse extends RegistrationResponse {
-  ErrorResponse({required this.errors});
-  List<(String fieldName, KratosError error)> errors;
+  const ErrorResponse({required this.errors});
+
+  final List<(String fieldName, KratosError error)> errors;
 }
 
-class UnhandledStatusCodeError extends RegistrationResponse {}
+class UnhandledStatusCodeError extends RegistrationResponse {
+  const UnhandledStatusCodeError();
+}
 
-class FailedRegistration extends RegistrationResponse {}
+class FailedRegistration extends RegistrationResponse {
+  const FailedRegistration();
+}
 
 RegistrationResponse mapRegistrationSuccessResponse(
   RegistrationSuccessResponse response,
 ) {
   final continueWith = response.continueWith;
   if (continueWith == null || continueWith.isEmpty) {
-    return SuccessResponseWithoutFurtherAction();
+    return const SuccessResponse();
   } else {
     final responseData = continueWith
         .map((element) {
@@ -49,7 +69,7 @@ RegistrationResponse mapRegistrationSuccessResponse(
         })
         .nonNulls
         .toList();
-    return SuccessResponse(
+    return VerifyEmailResponse(
       action: responseData.first.$1,
       flowId: responseData.first.$2,
       emailToVerify: responseData.first.$3,
@@ -65,9 +85,33 @@ RegistrationResponse mapRegistrationErrorResponse(AuthFlowDto response) {
     final kratosError = KratosError.forId(generalErrors.first.id);
     return ErrorResponse(errors: [('general', kratosError)]);
   }
-  final errorNodes = nodes
-      .map((element) {
-        return switch ((element.attributes.name, element.messages)) {
+
+  if (nodes.any((node) => node.meta.label?.id == 1040003)) {
+    final values = nodes
+        .map(
+          (node) {
+            final name = node.attributes.name;
+            final dynamic value = node.attributes.value;
+
+            if (name == null || value == null) {
+              return null;
+            }
+
+            return (name, value);
+          },
+        )
+        .nonNulls
+        .toList();
+
+    return SocialRegisterFinishResponse(
+      flowInfo: response.info,
+      values: values,
+    );
+  }
+
+  final errors = nodes
+      .map((node) {
+        return switch ((node.attributes.name, node.messages)) {
           (final attributeName?, [MessageDto(:final id), ...]) => (
               attributeName,
               KratosError.forId(id),
@@ -77,5 +121,6 @@ RegistrationResponse mapRegistrationErrorResponse(AuthFlowDto response) {
       })
       .nonNulls
       .toList();
-  return ErrorResponse(errors: errorNodes);
+
+  return ErrorResponse(errors: errors);
 }

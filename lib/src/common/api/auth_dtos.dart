@@ -1,12 +1,11 @@
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:leancode_kratos_client/src/common/domain/auth_flow_info.dart';
 
 part 'auth_dtos.freezed.dart';
 part 'auth_dtos.g.dart';
-
-AuthFlowDto authFlowDtoFromJson(String str) =>
-    AuthFlowDto.fromJson(json.decode(str) as Map<String, dynamic>);
 
 @freezed
 class AuthFlowDto with _$AuthFlowDto {
@@ -22,8 +21,25 @@ class AuthFlowDto with _$AuthFlowDto {
     String? sessionTokenExchangeCode,
   }) = _AuthFlowDto;
 
+  factory AuthFlowDto.fromString(String string) =>
+      AuthFlowDto.fromJson(json.decode(string) as Map<String, dynamic>);
+
   factory AuthFlowDto.fromJson(Map<String, dynamic> json) =>
       _$AuthFlowDtoFromJson(json);
+
+  const AuthFlowDto._();
+
+  String? get csrfToken => ui.nodes
+      .firstWhereOrNull((node) => node.attributes.name == 'csrf_token')
+      ?.attributes
+      .value as String?;
+
+  AuthFlowInfo get info => AuthFlowInfo(
+        id: id,
+        expiresAt: expiresAt,
+        csrfToken: csrfToken,
+        sessionTokenExchangeCode: sessionTokenExchangeCode,
+      );
 }
 
 @freezed

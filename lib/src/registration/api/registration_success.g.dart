@@ -24,6 +24,20 @@ Map<String, dynamic> _$$_RegistrationSuccessResponseToJson(
       'continue_with': instance.continueWith?.map((e) => e.toJson()).toList(),
     };
 
+_$_RegistrationBrowserLocationChangeRequiredResponse
+    _$$_RegistrationBrowserLocationChangeRequiredResponseFromJson(
+            Map<String, dynamic> json) =>
+        _$_RegistrationBrowserLocationChangeRequiredResponse(
+          redirectBrowserTo: json['redirect_browser_to'] as String?,
+        );
+
+Map<String, dynamic>
+    _$$_RegistrationBrowserLocationChangeRequiredResponseToJson(
+            _$_RegistrationBrowserLocationChangeRequiredResponse instance) =>
+        <String, dynamic>{
+          'redirect_browser_to': instance.redirectBrowserTo,
+        };
+
 _$_ContinueWith _$$_ContinueWithFromJson(Map<String, dynamic> json) =>
     _$_ContinueWith(
       action: json['action'] as String?,

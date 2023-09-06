@@ -150,14 +150,20 @@ Map<String, dynamic> _$$_TraitsToJson(_$_Traits instance) => <String, dynamic>{
 
 _$_VerifiableAddress _$$_VerifiableAddressFromJson(Map<String, dynamic> json) =>
     _$_VerifiableAddress(
-      id: json['id'] as String,
+      id: json['id'] as String?,
       value: json['value'] as String,
       verified: json['verified'] as bool,
       via: json['via'] as String,
       status: json['status'] as String,
-      verifiedAt: DateTime.parse(json['verified_at'] as String),
-      createdAt: DateTime.parse(json['created_at'] as String),
-      updatedAt: DateTime.parse(json['updated_at'] as String),
+      verifiedAt: json['verified_at'] == null
+          ? null
+          : DateTime.parse(json['verified_at'] as String),
+      createdAt: json['created_at'] == null
+          ? null
+          : DateTime.parse(json['created_at'] as String),
+      updatedAt: json['updated_at'] == null
+          ? null
+          : DateTime.parse(json['updated_at'] as String),
     );
 
 Map<String, dynamic> _$$_VerifiableAddressToJson(
@@ -168,7 +174,7 @@ Map<String, dynamic> _$$_VerifiableAddressToJson(
       'verified': instance.verified,
       'via': instance.via,
       'status': instance.status,
-      'verified_at': instance.verifiedAt.toIso8601String(),
-      'created_at': instance.createdAt.toIso8601String(),
-      'updated_at': instance.updatedAt.toIso8601String(),
+      'verified_at': instance.verifiedAt?.toIso8601String(),
+      'created_at': instance.createdAt?.toIso8601String(),
+      'updated_at': instance.updatedAt?.toIso8601String(),
     };

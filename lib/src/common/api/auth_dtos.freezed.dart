@@ -215,7 +215,7 @@ class __$$_AuthFlowDtoCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_AuthFlowDto implements _AuthFlowDto {
+class _$_AuthFlowDto extends _AuthFlowDto {
   const _$_AuthFlowDto(
       {required this.id,
       this.oauth2LoginChallenge,
@@ -225,7 +225,8 @@ class _$_AuthFlowDto implements _AuthFlowDto {
       required this.requestUrl,
       this.returnTo,
       required this.ui,
-      this.sessionTokenExchangeCode});
+      this.sessionTokenExchangeCode})
+      : super._();
 
   factory _$_AuthFlowDto.fromJson(Map<String, dynamic> json) =>
       _$$_AuthFlowDtoFromJson(json);
@@ -296,7 +297,7 @@ class _$_AuthFlowDto implements _AuthFlowDto {
   }
 }
 
-abstract class _AuthFlowDto implements AuthFlowDto {
+abstract class _AuthFlowDto extends AuthFlowDto {
   const factory _AuthFlowDto(
       {required final String id,
       final String? oauth2LoginChallenge,
@@ -307,6 +308,7 @@ abstract class _AuthFlowDto implements AuthFlowDto {
       final String? returnTo,
       required final UiDto ui,
       final String? sessionTokenExchangeCode}) = _$_AuthFlowDto;
+  const _AuthFlowDto._() : super._();
 
   factory _AuthFlowDto.fromJson(Map<String, dynamic> json) =
       _$_AuthFlowDto.fromJson;

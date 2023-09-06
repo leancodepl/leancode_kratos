@@ -1706,14 +1706,14 @@ VerifiableAddress _$VerifiableAddressFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$VerifiableAddress {
-  String get id => throw _privateConstructorUsedError;
+  String? get id => throw _privateConstructorUsedError;
   String get value => throw _privateConstructorUsedError;
   bool get verified => throw _privateConstructorUsedError;
   String get via => throw _privateConstructorUsedError;
   String get status => throw _privateConstructorUsedError;
-  DateTime get verifiedAt => throw _privateConstructorUsedError;
-  DateTime get createdAt => throw _privateConstructorUsedError;
-  DateTime get updatedAt => throw _privateConstructorUsedError;
+  DateTime? get verifiedAt => throw _privateConstructorUsedError;
+  DateTime? get createdAt => throw _privateConstructorUsedError;
+  DateTime? get updatedAt => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -1728,14 +1728,14 @@ abstract class $VerifiableAddressCopyWith<$Res> {
       _$VerifiableAddressCopyWithImpl<$Res, VerifiableAddress>;
   @useResult
   $Res call(
-      {String id,
+      {String? id,
       String value,
       bool verified,
       String via,
       String status,
-      DateTime verifiedAt,
-      DateTime createdAt,
-      DateTime updatedAt});
+      DateTime? verifiedAt,
+      DateTime? createdAt,
+      DateTime? updatedAt});
 }
 
 /// @nodoc
@@ -1751,20 +1751,20 @@ class _$VerifiableAddressCopyWithImpl<$Res, $Val extends VerifiableAddress>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
+    Object? id = freezed,
     Object? value = null,
     Object? verified = null,
     Object? via = null,
     Object? status = null,
-    Object? verifiedAt = null,
-    Object? createdAt = null,
-    Object? updatedAt = null,
+    Object? verifiedAt = freezed,
+    Object? createdAt = freezed,
+    Object? updatedAt = freezed,
   }) {
     return _then(_value.copyWith(
-      id: null == id
+      id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       value: null == value
           ? _value.value
           : value // ignore: cast_nullable_to_non_nullable
@@ -1781,18 +1781,18 @@ class _$VerifiableAddressCopyWithImpl<$Res, $Val extends VerifiableAddress>
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as String,
-      verifiedAt: null == verifiedAt
+      verifiedAt: freezed == verifiedAt
           ? _value.verifiedAt
           : verifiedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      createdAt: null == createdAt
+              as DateTime?,
+      createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      updatedAt: null == updatedAt
+              as DateTime?,
+      updatedAt: freezed == updatedAt
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+              as DateTime?,
     ) as $Val);
   }
 }
@@ -1806,14 +1806,14 @@ abstract class _$$_VerifiableAddressCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String id,
+      {String? id,
       String value,
       bool verified,
       String via,
       String status,
-      DateTime verifiedAt,
-      DateTime createdAt,
-      DateTime updatedAt});
+      DateTime? verifiedAt,
+      DateTime? createdAt,
+      DateTime? updatedAt});
 }
 
 /// @nodoc
@@ -1827,20 +1827,20 @@ class __$$_VerifiableAddressCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
+    Object? id = freezed,
     Object? value = null,
     Object? verified = null,
     Object? via = null,
     Object? status = null,
-    Object? verifiedAt = null,
-    Object? createdAt = null,
-    Object? updatedAt = null,
+    Object? verifiedAt = freezed,
+    Object? createdAt = freezed,
+    Object? updatedAt = freezed,
   }) {
     return _then(_$_VerifiableAddress(
-      id: null == id
+      id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       value: null == value
           ? _value.value
           : value // ignore: cast_nullable_to_non_nullable
@@ -1857,18 +1857,18 @@ class __$$_VerifiableAddressCopyWithImpl<$Res>
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as String,
-      verifiedAt: null == verifiedAt
+      verifiedAt: freezed == verifiedAt
           ? _value.verifiedAt
           : verifiedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      createdAt: null == createdAt
+              as DateTime?,
+      createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      updatedAt: null == updatedAt
+              as DateTime?,
+      updatedAt: freezed == updatedAt
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+              as DateTime?,
     ));
   }
 }
@@ -1877,20 +1877,20 @@ class __$$_VerifiableAddressCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_VerifiableAddress implements _VerifiableAddress {
   const _$_VerifiableAddress(
-      {required this.id,
+      {this.id,
       required this.value,
       required this.verified,
       required this.via,
       required this.status,
-      required this.verifiedAt,
-      required this.createdAt,
-      required this.updatedAt});
+      this.verifiedAt,
+      this.createdAt,
+      this.updatedAt});
 
   factory _$_VerifiableAddress.fromJson(Map<String, dynamic> json) =>
       _$$_VerifiableAddressFromJson(json);
 
   @override
-  final String id;
+  final String? id;
   @override
   final String value;
   @override
@@ -1900,11 +1900,11 @@ class _$_VerifiableAddress implements _VerifiableAddress {
   @override
   final String status;
   @override
-  final DateTime verifiedAt;
+  final DateTime? verifiedAt;
   @override
-  final DateTime createdAt;
+  final DateTime? createdAt;
   @override
-  final DateTime updatedAt;
+  final DateTime? updatedAt;
 
   @override
   String toString() {
@@ -1952,20 +1952,20 @@ class _$_VerifiableAddress implements _VerifiableAddress {
 
 abstract class _VerifiableAddress implements VerifiableAddress {
   const factory _VerifiableAddress(
-      {required final String id,
+      {final String? id,
       required final String value,
       required final bool verified,
       required final String via,
       required final String status,
-      required final DateTime verifiedAt,
-      required final DateTime createdAt,
-      required final DateTime updatedAt}) = _$_VerifiableAddress;
+      final DateTime? verifiedAt,
+      final DateTime? createdAt,
+      final DateTime? updatedAt}) = _$_VerifiableAddress;
 
   factory _VerifiableAddress.fromJson(Map<String, dynamic> json) =
       _$_VerifiableAddress.fromJson;
 
   @override
-  String get id;
+  String? get id;
   @override
   String get value;
   @override
@@ -1975,11 +1975,11 @@ abstract class _VerifiableAddress implements VerifiableAddress {
   @override
   String get status;
   @override
-  DateTime get verifiedAt;
+  DateTime? get verifiedAt;
   @override
-  DateTime get createdAt;
+  DateTime? get createdAt;
   @override
-  DateTime get updatedAt;
+  DateTime? get updatedAt;
   @override
   @JsonKey(ignore: true)
   _$$_VerifiableAddressCopyWith<_$_VerifiableAddress> get copyWith =>
