@@ -6,6 +6,7 @@ export 'src/kratos_client.dart';
 export 'src/login/domain/login_response.dart';
 export 'src/logout/logout.dart';
 export 'src/recovery/domain/recovery.dart';
+export 'src/recovery/domain/settings_flow.dart';
 export 'src/registration/domain/registration_domain.dart';
 export 'src/registration/domain/registration_response.dart';
 export 'src/utils/credentials_storage.dart';
