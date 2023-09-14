@@ -1,6 +1,7 @@
 library leancode_kratos_client;
 
-export 'src/common/domain/auth_domain.dart';
+export 'src/common/domain/auth_flow_info.dart';
+export 'src/common/domain/oidc_provider.dart';
 export 'src/kratos_client.dart';
 export 'src/login/domain/login_response.dart';
 export 'src/logout/logout.dart';

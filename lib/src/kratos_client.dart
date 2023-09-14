@@ -7,21 +7,27 @@ import 'package:leancode_kratos_client/src/login/api/login_error.dart'
     as login_error;
 import 'package:leancode_kratos_client/src/login/api/login_success.dart';
 import 'package:leancode_kratos_client/src/registration/api/registration_success.dart';
+import 'package:leancode_kratos_client/src/registration/api/token_exchange_success.dart';
 import 'package:logging/logging.dart';
 
 const _unverifiedAccountMessageId = 4000010;
 
+typedef BrowserCallback = Future<String> Function(String url);
+
 class KratosClient {
   KratosClient({
     required Uri baseUri,
+    required BrowserCallback browserCallback,
     CredentialsStorage? credentialsStorage,
     http.Client? httpClient,
   })  : _baseUri = baseUri,
+        _browserCallback = browserCallback,
         _credentialsStorage =
             credentialsStorage ?? const FlutterSecureCredentialsStorage(),
         _client = httpClient ?? http.Client();
 
   final Uri _baseUri;
+  final BrowserCallback _browserCallback;
   final CredentialsStorage _credentialsStorage;
   final http.Client _client;
   final Logger _logger = Logger('KratosClientLogger');
@@ -30,10 +36,9 @@ class KratosClient {
     'Content-Type': 'application/json'
   };
 
-  Future<AuthFlowModel?> initRegistrationFlow({
-    String? flowId,
-    bool returnSessionTokenExchangeCode = true,
-    required String? returnTo,
+  Future<AuthFlowDto?> _initRegistrationFlow({
+    required bool returnSessionTokenExchangeCode,
+    String? returnTo,
   }) async {
     return _initAuthFlow(
       path: 'self-service/registration/api',
@@ -42,7 +47,7 @@ class KratosClient {
     );
   }
 
-  Future<AuthFlowModel?> initLoginFlow({
+  Future<AuthFlowDto?> _initLoginFlow({
     bool returnSessionTokenExchangeCode = true,
     required String? returnTo,
   }) async {
@@ -53,7 +58,7 @@ class KratosClient {
     );
   }
 
-  Future<AuthFlowModel?> _initAuthFlow({
+  Future<AuthFlowDto?> _initAuthFlow({
     required String path,
     required bool returnSessionTokenExchangeCode,
     required String? returnTo,
@@ -69,29 +74,22 @@ class KratosClient {
           },
         ),
       );
-      final dto = authFlowDtoFromJson(registrationFlow.body);
-      return AuthFlowModel.formDto(dto);
+
+      return AuthFlowDto.fromString(registrationFlow.body);
     } catch (e, st) {
       _logger.warning('Error initializing auth flow', e, st);
       return null;
     }
   }
 
-  Future<AuthFlowModel?> getRegistrationFlow(String id) async {
+  Future<AuthFlowDto?> _getRegistrationFlow(String id) async {
     return _getAuthFlow(
       path: 'self-service/registration/flows',
       id: id,
     );
   }
 
-  Future<AuthFlowModel?> getLoginFlow(String id) async {
-    return _getAuthFlow(
-      path: 'self-service/login/flows',
-      id: id,
-    );
-  }
-
-  Future<AuthFlowModel?> _getAuthFlow({
+  Future<AuthFlowDto?> _getAuthFlow({
     required String path,
     required String id,
   }) async {
@@ -102,48 +100,233 @@ class KratosClient {
           queryParameters: {'id': id},
         ),
       );
-      final dto = authFlowDtoFromJson(registrationFlow.body);
-      return AuthFlowModel.formDto(dto);
+      return AuthFlowDto.fromString(registrationFlow.body);
     } catch (e, st) {
       _logger.warning('Error getting auth flow', e, st);
       return null;
     }
   }
 
-  Future<RegistrationResponse> completeRegistration({
-    required String flowId,
-    required Map<String, dynamic> formData,
+  Future<RegistrationResponse> registerWithPassword({
+    required String password,
+    Map<String, dynamic> traits = const <String, dynamic>{},
   }) async {
+    final flow =
+        await _initRegistrationFlow(returnSessionTokenExchangeCode: false);
+
+    if (flow == null) {
+      return const FailedRegistration();
+    }
+
     try {
       final response = await _client.post(
         _buildUri(
           path: 'self-service/registration',
-          queryParameters: {'flow': flowId},
+          queryParameters: {'flow': flow.id},
         ),
         headers: _commonHeaders,
-        body: jsonEncode(formData),
+        body: jsonEncode(
+          {
+            'method': 'password',
+            'csrf_token': flow.csrfToken,
+            'password': password,
+            'traits': traits,
+          },
+        ),
       );
+
       if (response.statusCode == 400) {
         return _handleErrorResponse(response);
       } else if (response.statusCode == 200) {
         return _handleSuccessResponse(response);
       }
-      return UnhandledStatusCodeError();
+
+      return const UnhandledStatusCodeError();
     } catch (e, st) {
       _logger.severe('Error completing registration flow', e, st);
-      return FailedRegistration();
+      return const FailedRegistration();
+    }
+  }
+
+  Future<RegistrationResponse> registerWithOidc({
+    required OidcProvider provider,
+    required String returnTo,
+    Map<String, dynamic> traits = const <String, dynamic>{},
+    AuthFlowInfo? flowInfo,
+  }) async {
+    final AuthFlowInfo? effectiveFlowInfo;
+
+    if (flowInfo != null) {
+      effectiveFlowInfo = flowInfo;
+    } else {
+      final newFlow = await _initRegistrationFlow(
+        returnSessionTokenExchangeCode: true,
+        returnTo: returnTo,
+      );
+
+      effectiveFlowInfo = newFlow?.info;
+    }
+
+    if (effectiveFlowInfo == null) {
+      return const FailedRegistration();
+    }
+
+    try {
+      final streamedResponse = await _client.send(
+        http.Request(
+          'POST',
+          _buildUri(
+            path: 'self-service/registration',
+            queryParameters: {'flow': effectiveFlowInfo.id},
+          ),
+        )
+          ..headers.addAll(_commonHeaders)
+          ..body = jsonEncode(
+            {
+              'method': 'oidc',
+              'provider': provider.name,
+              'csrf_token': effectiveFlowInfo.csrfToken,
+              'traits': traits,
+            },
+          )
+          ..followRedirects = false,
+      );
+
+      final response = await http.Response.fromStream(streamedResponse);
+
+      if (response.statusCode == 400) {
+        return _handleErrorResponse(response);
+      } else if (response.statusCode == 200) {
+        return _handleSuccessResponse(response);
+      } else if (response.statusCode == 422) {
+        return await _handleBrowserLocationChangeRequiredResponse(
+          response,
+          effectiveFlowInfo,
+        );
+      } else if (response.statusCode == 303) {
+        return await _handleRedirectResponse(response, effectiveFlowInfo);
+      }
+
+      return const UnhandledStatusCodeError();
+    } catch (e, st) {
+      _logger.severe('Error completing registration flow', e, st);
+      return const FailedRegistration();
+    }
+  }
+
+  RegistrationResponse _handleErrorResponse(http.Response response) {
+    final dto = AuthFlowDto.fromString(response.body);
+    return mapRegistrationErrorResponse(dto);
+  }
+
+  RegistrationResponse _handleSuccessResponse(http.Response response) {
+    final decodedResponse =
+        RegistrationSuccessResponse.fromString(response.body);
+    return mapRegistrationSuccessResponse(decodedResponse);
+  }
+
+  Future<RegistrationResponse> _handleBrowserLocationChangeRequiredResponse(
+    http.Response response,
+    AuthFlowInfo info,
+  ) async {
+    final browserLocationChangeRequiredResponse =
+        RegistrationBrowserLocationChangeRequiredResponse.fromString(
+      response.body,
+    );
+
+    final redirectBrowserTo =
+        browserLocationChangeRequiredResponse.redirectBrowserTo;
+
+    if (redirectBrowserTo == null) {
+      return const FailedRegistration();
+    }
+
+    final result = await _browserCallback(redirectBrowserTo);
+
+    final returnToCode = Uri.parse(result).queryParameters['code'];
+    final initCode = info.sessionTokenExchangeCode;
+
+    if (initCode == null) {
+      return const FailedRegistration();
+    }
+
+    if (returnToCode == null) {
+      final newFlow = await _getRegistrationFlow(info.id);
+
+      if (newFlow == null) {
+        return const FailedRegistration();
+      }
+
+      return mapRegistrationErrorResponse(
+        newFlow.copyWith(sessionTokenExchangeCode: initCode),
+      );
+    }
+
+    return _exchangeSessionToken(initCode, returnToCode);
+  }
+
+  Future<RegistrationResponse> _handleRedirectResponse(
+    http.Response response,
+    AuthFlowInfo info,
+  ) async {
+    final location = response.headers['location'];
+
+    if (location == null) {
+      return const FailedRegistration();
+    }
+
+    final returnToCode = Uri.parse(location).queryParameters['code'];
+    final initCode = info.sessionTokenExchangeCode;
+
+    if (initCode == null || returnToCode == null) {
+      return const FailedRegistration();
+    }
+
+    return _exchangeSessionToken(initCode, returnToCode);
+  }
+
+  Future<RegistrationResponse> _exchangeSessionToken(
+    String initCode,
+    String returnToCode,
+  ) async {
+    final response = await _client.get(
+      _buildUri(
+        path: 'sessions/token-exchange',
+        queryParameters: {
+          'init_code': initCode,
+          'return_to_code': returnToCode,
+        },
+      ),
+    );
+
+    if (response.statusCode == 200) {
+      final parsedResponse = TokenExchangeSuccess.fromString(response.body);
+
+      await _credentialsStorage.save(
+        credentials: parsedResponse.sessionToken!,
+        expirationDate: parsedResponse.session.expiresAt.toString(),
+      );
+
+      return const SuccessResponse();
+    } else {
+      return const FailedRegistration();
     }
   }
 
   Future<LoginResponse> completeLogin({
-    required String flowId,
     required Map<String, dynamic> formData,
   }) async {
     try {
+      final flow = await _initLoginFlow(returnTo: null);
+
+      if (flow == null) {
+        return UnknownLoginError();
+      }
+
       final loginFlowResult = await _client.post(
         _buildUri(
           path: 'self-service/login',
-          queryParameters: {'flow': flowId},
+          queryParameters: {'flow': flow.id},
         ),
         headers: _commonHeaders,
         body: jsonEncode(formData),
@@ -325,16 +508,6 @@ class KratosClient {
     } catch (e, st) {
       _logger.warning('Could not refresh session token.', e, st);
     }
-  }
-
-  RegistrationResponse _handleErrorResponse(http.Response response) {
-    final dto = authFlowDtoFromJson(response.body);
-    return mapRegistrationErrorResponse(dto);
-  }
-
-  RegistrationResponse _handleSuccessResponse(http.Response response) {
-    final decodedResponse = registrationSuccessResponseFromJson(response.body);
-    return mapRegistrationSuccessResponse(decodedResponse);
   }
 
   Uri _buildUri({

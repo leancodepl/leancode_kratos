@@ -75,7 +75,8 @@ class Identity with _$Identity {
     required DateTime updatedAt,
   }) = _Identity;
 
-    factory Identity.fromJson(Map<String, dynamic> json) => _$IdentityFromJson(json);
+  factory Identity.fromJson(Map<String, dynamic> json) =>
+      _$IdentityFromJson(json);
 }
 
 @freezed
@@ -87,7 +88,8 @@ class RecoveryAddress with _$RecoveryAddress {
     required DateTime createdAt,
     required DateTime updatedAt,
   }) = _RecoveryAddress;
-  factory RecoveryAddress.fromJson(Map<String, dynamic> json) => _$RecoveryAddressFromJson(json);
+  factory RecoveryAddress.fromJson(Map<String, dynamic> json) =>
+      _$RecoveryAddressFromJson(json);
 }
 
 @freezed
@@ -105,15 +107,16 @@ class Traits with _$Traits {
 @freezed
 class VerifiableAddress with _$VerifiableAddress {
   const factory VerifiableAddress({
-    required String id,
+    String? id,
     required String value,
     required bool verified,
     required String via,
     required String status,
-    required DateTime verifiedAt,
-    required DateTime createdAt,
-    required DateTime updatedAt,
+    DateTime? verifiedAt,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   }) = _VerifiableAddress;
 
-  factory VerifiableAddress.fromJson(Map<String, dynamic> json) => _$VerifiableAddressFromJson(json);
+  factory VerifiableAddress.fromJson(Map<String, dynamic> json) =>
+      _$VerifiableAddressFromJson(json);
 }

@@ -206,6 +206,172 @@ abstract class _RegistrationSuccessResponse
       get copyWith => throw _privateConstructorUsedError;
 }
 
+RegistrationBrowserLocationChangeRequiredResponse
+    _$RegistrationBrowserLocationChangeRequiredResponseFromJson(
+        Map<String, dynamic> json) {
+  return _RegistrationBrowserLocationChangeRequiredResponse.fromJson(json);
+}
+
+/// @nodoc
+mixin _$RegistrationBrowserLocationChangeRequiredResponse {
+  String? get redirectBrowserTo => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $RegistrationBrowserLocationChangeRequiredResponseCopyWith<
+          RegistrationBrowserLocationChangeRequiredResponse>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $RegistrationBrowserLocationChangeRequiredResponseCopyWith<
+    $Res> {
+  factory $RegistrationBrowserLocationChangeRequiredResponseCopyWith(
+          RegistrationBrowserLocationChangeRequiredResponse value,
+          $Res Function(RegistrationBrowserLocationChangeRequiredResponse)
+              then) =
+      _$RegistrationBrowserLocationChangeRequiredResponseCopyWithImpl<$Res,
+          RegistrationBrowserLocationChangeRequiredResponse>;
+  @useResult
+  $Res call({String? redirectBrowserTo});
+}
+
+/// @nodoc
+class _$RegistrationBrowserLocationChangeRequiredResponseCopyWithImpl<$Res,
+        $Val extends RegistrationBrowserLocationChangeRequiredResponse>
+    implements
+        $RegistrationBrowserLocationChangeRequiredResponseCopyWith<$Res> {
+  _$RegistrationBrowserLocationChangeRequiredResponseCopyWithImpl(
+      this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? redirectBrowserTo = freezed,
+  }) {
+    return _then(_value.copyWith(
+      redirectBrowserTo: freezed == redirectBrowserTo
+          ? _value.redirectBrowserTo
+          : redirectBrowserTo // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$_RegistrationBrowserLocationChangeRequiredResponseCopyWith<
+        $Res>
+    implements
+        $RegistrationBrowserLocationChangeRequiredResponseCopyWith<$Res> {
+  factory _$$_RegistrationBrowserLocationChangeRequiredResponseCopyWith(
+          _$_RegistrationBrowserLocationChangeRequiredResponse value,
+          $Res Function(_$_RegistrationBrowserLocationChangeRequiredResponse)
+              then) =
+      __$$_RegistrationBrowserLocationChangeRequiredResponseCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String? redirectBrowserTo});
+}
+
+/// @nodoc
+class __$$_RegistrationBrowserLocationChangeRequiredResponseCopyWithImpl<$Res>
+    extends _$RegistrationBrowserLocationChangeRequiredResponseCopyWithImpl<
+        $Res, _$_RegistrationBrowserLocationChangeRequiredResponse>
+    implements
+        _$$_RegistrationBrowserLocationChangeRequiredResponseCopyWith<$Res> {
+  __$$_RegistrationBrowserLocationChangeRequiredResponseCopyWithImpl(
+      _$_RegistrationBrowserLocationChangeRequiredResponse _value,
+      $Res Function(_$_RegistrationBrowserLocationChangeRequiredResponse) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? redirectBrowserTo = freezed,
+  }) {
+    return _then(_$_RegistrationBrowserLocationChangeRequiredResponse(
+      redirectBrowserTo: freezed == redirectBrowserTo
+          ? _value.redirectBrowserTo
+          : redirectBrowserTo // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$_RegistrationBrowserLocationChangeRequiredResponse
+    implements _RegistrationBrowserLocationChangeRequiredResponse {
+  const _$_RegistrationBrowserLocationChangeRequiredResponse(
+      {this.redirectBrowserTo});
+
+  factory _$_RegistrationBrowserLocationChangeRequiredResponse.fromJson(
+          Map<String, dynamic> json) =>
+      _$$_RegistrationBrowserLocationChangeRequiredResponseFromJson(json);
+
+  @override
+  final String? redirectBrowserTo;
+
+  @override
+  String toString() {
+    return 'RegistrationBrowserLocationChangeRequiredResponse(redirectBrowserTo: $redirectBrowserTo)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_RegistrationBrowserLocationChangeRequiredResponse &&
+            (identical(other.redirectBrowserTo, redirectBrowserTo) ||
+                other.redirectBrowserTo == redirectBrowserTo));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, redirectBrowserTo);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$_RegistrationBrowserLocationChangeRequiredResponseCopyWith<
+          _$_RegistrationBrowserLocationChangeRequiredResponse>
+      get copyWith =>
+          __$$_RegistrationBrowserLocationChangeRequiredResponseCopyWithImpl<
+                  _$_RegistrationBrowserLocationChangeRequiredResponse>(
+              this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$_RegistrationBrowserLocationChangeRequiredResponseToJson(
+      this,
+    );
+  }
+}
+
+abstract class _RegistrationBrowserLocationChangeRequiredResponse
+    implements RegistrationBrowserLocationChangeRequiredResponse {
+  const factory _RegistrationBrowserLocationChangeRequiredResponse(
+          {final String? redirectBrowserTo}) =
+      _$_RegistrationBrowserLocationChangeRequiredResponse;
+
+  factory _RegistrationBrowserLocationChangeRequiredResponse.fromJson(
+          Map<String, dynamic> json) =
+      _$_RegistrationBrowserLocationChangeRequiredResponse.fromJson;
+
+  @override
+  String? get redirectBrowserTo;
+  @override
+  @JsonKey(ignore: true)
+  _$$_RegistrationBrowserLocationChangeRequiredResponseCopyWith<
+          _$_RegistrationBrowserLocationChangeRequiredResponse>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
 ContinueWith _$ContinueWithFromJson(Map<String, dynamic> json) {
   return _ContinueWith.fromJson(json);
 }

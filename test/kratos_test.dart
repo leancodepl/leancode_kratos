@@ -1,3 +1,5 @@
+// ignore_for_file: discarded_futures
+
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -6,7 +8,6 @@ import 'package:leancode_kratos_client/leancode_kratos_client.dart';
 import 'package:mocktail/mocktail.dart';
 
 import 'fixtures/complete_verification_flow_fixture.dart';
-import 'fixtures/get_login_flow_fixture.dart';
 import 'fixtures/get_registration_flow_fixture.dart';
 import 'fixtures/get_verification_flow_fixture.dart';
 
@@ -17,198 +18,94 @@ class MockCredentialsStorage extends Mock implements CredentialsStorage {}
 class MockUri extends Fake implements Uri {}
 
 void main() {
-  group('get Flows', () {
-    late MockCredentialsStorage mockStorage;
-    late KratosClient kratosClient;
-    late MockHttpClient mockHttpClient;
+  group(
+    'KratosClient',
+    () {
+      const password = 'password';
+      const traits = {
+        'email': 'email@email.com',
+        'given_name': 'Givenname',
+      };
 
-    setUpAll(() {
-      registerFallbackValue(MockUri());
-    });
+      late MockCredentialsStorage mockStorage;
+      late KratosClient kratosClient;
+      late MockHttpClient mockHttpClient;
 
-    setUp(() {
-      mockHttpClient = MockHttpClient();
-      mockStorage = MockCredentialsStorage();
-      kratosClient = KratosClient(
-        baseUri: Uri(host: 'test.pl', scheme: 'https'),
-        credentialsStorage: mockStorage,
-        httpClient: mockHttpClient,
+      setUpAll(() {
+        registerFallbackValue(MockUri());
+      });
+
+      setUp(() {
+        mockHttpClient = MockHttpClient();
+        mockStorage = MockCredentialsStorage();
+        kratosClient = KratosClient(
+          baseUri: Uri(host: 'test.pl', scheme: 'https'),
+          browserCallback: (url) async => url,
+          credentialsStorage: mockStorage,
+          httpClient: mockHttpClient,
+        );
+      });
+
+      group(
+        'registerWithPassword',
+        () {
+          setUp(
+            () {
+              when<Future<http.Response>>(() => mockHttpClient.get(any()))
+                  .thenAnswer(
+                (_) async => http.Response(registrationFlowResponse, 200),
+              );
+            },
+          );
+
+          test(
+            'initializes new auth flow',
+            () async {
+              await kratosClient.registerWithPassword(password: password);
+
+              final uri = verify(() => mockHttpClient.get(captureAny<Uri>()))
+                  .captured
+                  .single as Uri;
+              expect(
+                uri.path,
+                '/self-service/registration/api',
+              );
+            },
+          );
+
+          test(
+            'submits registration flow with correct data',
+            () async {
+              await kratosClient.registerWithPassword(
+                password: password,
+                traits: traits,
+              );
+
+              final captured = verify(
+                () => mockHttpClient.post(
+                  captureAny(),
+                  headers: any(named: 'headers'),
+                  body: captureAny(named: 'body'),
+                ),
+              ).captured;
+
+              final uri = captured.first as Uri;
+              final body =
+                  json.decode(captured[1] as String) as Map<String, dynamic>;
+
+              expect(
+                uri.path,
+                '/self-service/registration',
+              );
+              expect(body['method'], 'password');
+              expect(body['password'], password);
+              expect(body['traits'], equals(traits));
+            },
+          );
+        },
       );
-    });
-
-    test('should return AuthFlowModel when getRegistrationFlow is successful',
-        () async {
-      when(() => mockHttpClient.get(any())).thenAnswer(
-        (_) async => Future.value(http.Response(registrationFlowResponse, 200)),
-      );
-      final expectedModel = AuthFlowModel(
-        id: '213e3ea0-6b7d-472a-b9bd-0d957716ff14',
-        expiresAt: DateTime.parse('2023-08-24T12:44:50.614846417Z'),
-        sessionTokenExchangeCode:
-            'A739SatzLgiz9Tu3AD2VRcM5UKk7OMPcdd8tFxVo5MINa5V3xkcnFDJK4oJB3s0C',
-        fields: [
-          const AuthFlowField(
-            name: 'csrf_token',
-            type: 'hidden',
-            requiredField: true,
-            disabled: false,
-          ),
-          const AuthFlowField(
-            name: 'provider',
-            type: 'submit',
-            disabled: false,
-            labelId: 1040002,
-          ),
-          const AuthFlowField(
-            name: 'provider',
-            type: 'submit',
-            disabled: false,
-            labelId: 1040002,
-          ),
-          const AuthFlowField(
-            name: 'provider',
-            type: 'submit',
-            disabled: false,
-            labelId: 1040002,
-          ),
-          const AuthFlowField(
-            name: 'traits.email',
-            type: 'email',
-            requiredField: true,
-            disabled: false,
-            labelId: 1070002,
-          ),
-          const AuthFlowField(
-            name: 'password',
-            type: 'password',
-            requiredField: true,
-            disabled: false,
-            labelId: 1070001,
-          ),
-          const AuthFlowField(
-            name: 'traits.given_name',
-            type: 'text',
-            requiredField: true,
-            disabled: false,
-            labelId: 1070002,
-          ),
-          const AuthFlowField(
-            name: 'traits.family_name',
-            type: 'text',
-            disabled: false,
-            labelId: 1070002,
-          ),
-          const AuthFlowField(
-            name: 'traits.regulations_accepted',
-            type: 'checkbox',
-            requiredField: true,
-            disabled: false,
-            labelId: 1070002,
-          ),
-          const AuthFlowField(
-            name: 'method',
-            type: 'submit',
-            disabled: false,
-            labelId: 1040001,
-          )
-        ],
-      );
-
-      final flow = await kratosClient.initRegistrationFlow(
-        returnTo: 'pl.leancode.template.tst://app/',
-      );
-
-      expect(flow, expectedModel);
-    });
-
-    test('should return null when response body is empty', () async {
-      when(() => mockHttpClient.get(any())).thenAnswer(
-        (_) async => Future.value(http.Response('', 400)),
-      );
-      final flow = await kratosClient.initRegistrationFlow(
-        returnTo: 'pl.leancode.template.tst://app/',
-      );
-
-      expect(flow, null);
-    });
-
-    test('should return AuthFlowModel when getLoginFlow is successful',
-        () async {
-      when(() => mockHttpClient.get(any())).thenAnswer(
-        (_) async => Future.value(http.Response(loginFlowResponse, 200)),
-      );
-      final expectedModel = AuthFlowModel(
-        id: loginFlowId,
-        expiresAt: DateTime.parse('2023-08-24T12:39:51.768361203Z'),
-        sessionTokenExchangeCode:
-            '4Ld6wkREE4Cw5hMvVWmhxrx6ViDiDzCXt6M2vy2GC2831l3jEnyS7Q9G8ELK1698',
-        fields: [
-          const AuthFlowField(
-            name: 'provider',
-            type: 'submit',
-            disabled: false,
-            labelId: 1010002,
-          ),
-          const AuthFlowField(
-            name: 'provider',
-            type: 'submit',
-            disabled: false,
-            labelId: 1010002,
-          ),
-          const AuthFlowField(
-            name: 'provider',
-            type: 'submit',
-            disabled: false,
-            labelId: 1010002,
-          ),
-          const AuthFlowField(
-            name: 'csrf_token',
-            type: 'hidden',
-            requiredField: true,
-            disabled: false,
-          ),
-          const AuthFlowField(
-            name: 'identifier',
-            type: 'text',
-            requiredField: true,
-            disabled: false,
-            labelId: 1070004,
-          ),
-          const AuthFlowField(
-            name: 'password',
-            type: 'password',
-            requiredField: true,
-            disabled: false,
-            labelId: 1070001,
-          ),
-          const AuthFlowField(
-            name: 'method',
-            type: 'submit',
-            disabled: false,
-            labelId: 1010001,
-          )
-        ],
-      );
-
-      final flow = await kratosClient.initLoginFlow(
-        returnTo: 'pl.leancode.template.tst://app',
-      );
-
-      expect(flow, expectedModel);
-    });
-
-    test('should return null from getLoginFlow when response body is empty',
-        () async {
-      when(() => mockHttpClient.get(any())).thenAnswer(
-        (_) async => Future.value(http.Response('', 400)),
-      );
-      final flow = await kratosClient.initLoginFlow(
-        returnTo: 'pl.leancode.template.tst://app',
-      );
-
-      expect(flow, null);
-    });
-  });
+    },
+  );
 
   group('logout', () {
     late MockCredentialsStorage mockStorage;
@@ -224,6 +121,7 @@ void main() {
       mockStorage = MockCredentialsStorage();
       kratosClient = KratosClient(
         baseUri: Uri(host: 'test.pl', scheme: 'https'),
+        browserCallback: (url) async => url,
         credentialsStorage: mockStorage,
         httpClient: mockHttpClient,
       );
@@ -310,6 +208,7 @@ void main() {
       mockStorage = MockCredentialsStorage();
       kratosClient = KratosClient(
         baseUri: Uri(host: 'test.pl', scheme: 'https'),
+        browserCallback: (url) async => url,
         credentialsStorage: mockStorage,
         httpClient: mockHttpClient,
       );
@@ -392,6 +291,7 @@ void main() {
       mockStorage = MockCredentialsStorage();
       kratosClient = KratosClient(
         baseUri: Uri(host: 'test.pl', scheme: 'https'),
+        browserCallback: (url) async => url,
         credentialsStorage: mockStorage,
         httpClient: mockHttpClient,
       );
