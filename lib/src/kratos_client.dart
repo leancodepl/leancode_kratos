@@ -33,8 +33,12 @@ class KratosClient {
   final Logger _logger = Logger('KratosClientLogger');
   static const _commonHeaders = {
     'Accept': 'application/json',
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
   };
+  static final _csrfTokenRegExp =
+      RegExp(r'(csrf_token_[A-Fa-f0-9]+=[^;]+)(;|$)');
+  static final _oryKratosSessionRegExp =
+      RegExp(r'(ory_kratos_session=[^;]+)(;|$)');
 
   Future<AuthFlowDto?> _initRegistrationFlow({
     required bool returnSessionTokenExchangeCode,
@@ -374,6 +378,7 @@ class KratosClient {
       ),
     );
     if (logoutResult.statusCode == 204) {
+      await _credentialsStorage.clear();
       return LogoutSuccess();
     } else {
       return LogoutFail();
@@ -388,12 +393,12 @@ class KratosClient {
     try {
       final decodedResult = jsonDecode(response.body) as Map<String, dynamic>;
       final dynamic loginFlowId = decodedResult['id'];
-      switch (loginFlowId) {
-        case String _:
-          return VerificationFlowResult(flowId: loginFlowId);
-        default:
-          return VerificationFlowResultError();
+
+      if (loginFlowId is! String) {
+        return VerificationFlowResultError();
       }
+      
+      return VerificationFlowResult(flowId: loginFlowId);
     } catch (e, st) {
       _logger.warning('Error getting verification flow', e, st);
       return VerificationFlowResultError();
@@ -402,7 +407,6 @@ class KratosClient {
 
   Future<VerificationResult> verifyAccount({
     required String flowId,
-    required String email,
     required String code,
   }) async {
     final result = await _client.post(
@@ -413,7 +417,6 @@ class KratosClient {
       headers: _commonHeaders,
       body: jsonEncode(
         {
-          'email': email,
           'method': 'code',
         },
       ),
@@ -508,6 +511,141 @@ class KratosClient {
     } catch (e, st) {
       _logger.warning('Could not refresh session token.', e, st);
     }
+  }
+
+  Future<RecoveryFlowResult> getRecoveryFlow() async {
+    final recoveryFlow = await _client.get(
+      _buildUri(path: 'self-service/recovery/api'),
+    );
+    try {
+      final decodedResult =
+          jsonDecode(recoveryFlow.body) as Map<String, dynamic>;
+      final dynamic recoveryFlowId = decodedResult['id'];
+      switch (recoveryFlowId) {
+        case String _:
+          return RecoveryFlow(recoveryFlowId);
+        default:
+          return RecoveryFlowError();
+      }
+    } catch (e, st) {
+      _logger.warning('Error getting recovery flow', e, st);
+      return RecoveryFlowError();
+    }
+  }
+
+  Future<bool> sendEmailRecoveryFlow({
+    required String flowId,
+    required String email,
+  }) async {
+    final recoveryFlow = await _client.post(
+      _buildUri(
+        path: 'self-service/recovery',
+        queryParameters: {'flow': flowId},
+      ),
+      headers: _commonHeaders,
+      body: jsonEncode({'email': email, 'method': 'code'}),
+    );
+    return recoveryFlow.statusCode == 200;
+  }
+
+  Future<SettingsFlowResult> sendCodeRecoveryFlow({
+    required String flowId,
+    required String code,
+  }) async {
+    final recoveryFlow = await _client.post(
+      _buildUri(
+        path: 'self-service/recovery',
+        queryParameters: {'flow': flowId},
+      ),
+      body: jsonEncode({'code': code, 'method': 'code'}),
+      headers: _commonHeaders,
+    );
+    if (recoveryFlow.statusCode == 422) {
+      final setCookieHeader = recoveryFlow.headers['set-cookie'];
+      final cookieHeader = _parseCookie(setCookieHeader);
+      if (cookieHeader == null) {
+        return SettingsFlowResultError();
+      }
+      final browserSettingsFlow = await _client.get(
+        _buildUri(path: '/self-service/settings/browser'),
+        headers: {
+          'Accept': 'application/json',
+          'Cookie': cookieHeader,
+        },
+      );
+      if (browserSettingsFlow.statusCode == 200) {
+        final dynamic decodedResult = jsonDecode(browserSettingsFlow.body);
+        String? csrfTokenNode;
+        if (decodedResult
+            case {
+              'id': final String settingsFlowId,
+              'ui': {
+                'nodes': final List<dynamic> nodes,
+              }
+            }) {
+          for (final node in nodes) {
+            if (node
+                case {
+                  'attributes': {
+                    'name': 'csrf_token',
+                    'value': final String value,
+                  },
+                }) {
+              csrfTokenNode = value;
+              break;
+            }
+          }
+          if (csrfTokenNode == null) {
+            return SettingsFlowResultError();
+          }
+
+          return SettingsFlowResultData(
+            cookie: cookieHeader,
+            flowId: settingsFlowId,
+            csrfToken: csrfTokenNode,
+          );
+        }
+      }
+    }
+    return SettingsFlowResultError();
+  }
+
+  Future<bool> sendNewPasswordSettingsFlow({
+    required String flowId,
+    required String newPassword,
+    required String cookieHeader,
+    required String csrfToken,
+  }) async {
+    final settingsFlow = await _client.post(
+      _buildUri(
+        path: 'self-service/settings',
+        queryParameters: {'flow': flowId},
+      ),
+      body: jsonEncode({
+        'method': 'password',
+        'password': newPassword,
+        'csrf_token': csrfToken,
+      }),
+      headers: {
+        'Accept': 'application/json',
+        'Cookie': cookieHeader,
+        'Content-Type': 'application/json',
+      },
+    );
+    return settingsFlow.statusCode == 200;
+  }
+
+  String? _parseCookie(String? cookieHeader) {
+    if (cookieHeader == null) {
+      return null;
+    }
+    final csrfToken = _csrfTokenRegExp.firstMatch(cookieHeader)?.group(1);
+    final oryKratosToken =
+        _oryKratosSessionRegExp.firstMatch(cookieHeader)?.group(1);
+    if (csrfToken == null || oryKratosToken == null) {
+      return null;
+    }
+    return [csrfToken, oryKratosToken].join('; ');
   }
 
   Uri _buildUri({

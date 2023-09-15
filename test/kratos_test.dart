@@ -312,7 +312,6 @@ void main() {
       );
 
       final result = await kratosClient.verifyAccount(
-        email: 'email@test.pl',
         code: '2145637',
         flowId: '3721',
       );
@@ -343,7 +342,6 @@ void main() {
       );
 
       final result = await kratosClient.verifyAccount(
-        email: 'email@test.pl',
         code: '2145637',
         flowId: '3721',
       );
