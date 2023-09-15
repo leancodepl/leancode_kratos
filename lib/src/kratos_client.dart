@@ -35,6 +35,10 @@ class KratosClient {
     'Accept': 'application/json',
     'Content-Type': 'application/json',
   };
+  static final _csrfTokenRegExp =
+      RegExp(r'(csrf_token_[A-Fa-f0-9]+=[^;]+)(;|$)');
+  static final _oryKratosSessionRegExp =
+      RegExp(r'(ory_kratos_session=[^;]+)(;|$)');
 
   Future<AuthFlowDto?> _initRegistrationFlow({
     required bool returnSessionTokenExchangeCode,
@@ -389,12 +393,12 @@ class KratosClient {
     try {
       final decodedResult = jsonDecode(response.body) as Map<String, dynamic>;
       final dynamic loginFlowId = decodedResult['id'];
-      switch (loginFlowId) {
-        case String _:
-          return VerificationFlowResult(flowId: loginFlowId);
-        default:
-          return VerificationFlowResultError();
+
+      if (loginFlowId is! String) {
+        return VerificationFlowResultError();
       }
+      
+      return VerificationFlowResult(flowId: loginFlowId);
     } catch (e, st) {
       _logger.warning('Error getting verification flow', e, st);
       return VerificationFlowResultError();
@@ -557,12 +561,11 @@ class KratosClient {
       headers: _commonHeaders,
     );
     if (recoveryFlow.statusCode == 422) {
-      final cookiesHeaders = recoveryFlow.headers['set-cookie'];
-      final cookies = cookiesHeaders?.split(',')?..removeLast();
-      if (cookies == null) {
+      final setCookieHeader = recoveryFlow.headers['set-cookie'];
+      final cookieHeader = _parseCookie(setCookieHeader);
+      if (cookieHeader == null) {
         return SettingsFlowResultError();
       }
-      final cookieHeader = _parseCookie(cookies);
       final browserSettingsFlow = await _client.get(
         _buildUri(path: '/self-service/settings/browser'),
         headers: {
@@ -571,8 +574,7 @@ class KratosClient {
         },
       );
       if (browserSettingsFlow.statusCode == 200) {
-        final dynamic decodedResult =
-            jsonDecode(browserSettingsFlow.body);
+        final dynamic decodedResult = jsonDecode(browserSettingsFlow.body);
         String? csrfTokenNode;
         if (decodedResult
             case {
@@ -633,26 +635,17 @@ class KratosClient {
     return settingsFlow.statusCode == 200;
   }
 
-  String _parseCookie(List<String> cookies) {
-    final cookiesValues = <String>[];
-    for (final cookie in cookies) {
-      final index = cookie.indexOf(';');
-      if (cookie.contains('=')) {
-        cookiesValues.add((index == -1) ? cookie : cookie.substring(0, index));
-      }
+  String? _parseCookie(String? cookieHeader) {
+    if (cookieHeader == null) {
+      return null;
     }
-    final cookieHeader = cookiesValues.join(';');
-    return cookieHeader;
-  }
-
-  RegistrationResponse _handleErrorResponse(http.Response response) {
-    final decodedResult = registrationFlowFromJson(response.body);
-    return mapRegistrationErrorResponse(decodedResult);
-  }
-
-  RegistrationResponse _handleSuccessResponse(http.Response response) {
-    final decodedResponse = registrationSuccessResponseFromJson(response.body);
-    return mapRegistrationSuccessResponse(decodedResponse);
+    final csrfToken = _csrfTokenRegExp.firstMatch(cookieHeader)?.group(1);
+    final oryKratosToken =
+        _oryKratosSessionRegExp.firstMatch(cookieHeader)?.group(1);
+    if (csrfToken == null || oryKratosToken == null) {
+      return null;
+    }
+    return [csrfToken, oryKratosToken].join('; ');
   }
 
   Uri _buildUri({
