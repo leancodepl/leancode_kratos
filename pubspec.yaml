@@ -27,10 +27,3 @@ dev_dependencies:
   mocktail: ^0.3.0
 
 flutter:
-  plugin:
-    platforms:
-      android:
-        package: com.example.leancode_kratos_client
-        pluginClass: LeancodeKratosClientPlugin
-      ios:
-        pluginClass: LeancodeKratosClientPlugin
