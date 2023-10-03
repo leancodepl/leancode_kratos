@@ -1,18 +1,33 @@
 import 'package:leancode_kratos_client/leancode_kratos_client.dart';
 
-sealed class LoginResponse {}
-
-class LoginSuccess extends LoginResponse {}
-
-class LoginFailure extends LoginResponse {
-  LoginFailure({
-    required this.errorId,
-  });
-  KratosError errorId;
+sealed class LoginResponse {
+  const LoginResponse();
 }
 
-class UnverifiedAccountError extends LoginResponse {}
+class LoginSuccess extends LoginResponse {
+  const LoginSuccess();
+}
 
-class ErrorGettingFlowId extends LoginResponse {}
+class LoginFailure extends LoginResponse {
+  const LoginFailure({required this.error});
 
-class UnknownLoginError extends LoginResponse {}
+  final KratosError error;
+}
+
+class UnverifiedAccountError extends LoginResponse {
+  const UnverifiedAccountError({
+    required this.flowId,
+    required this.emailToVerify,
+  });
+
+  final String? flowId;
+  final String? emailToVerify;
+}
+
+class ErrorGettingFlowId extends LoginResponse {
+  const ErrorGettingFlowId();
+}
+
+class UnknownLoginError extends LoginResponse {
+  const UnknownLoginError();
+}
