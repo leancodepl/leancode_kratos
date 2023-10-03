@@ -317,14 +317,15 @@ class KratosClient {
     }
   }
 
-  Future<LoginResponse> completeLogin({
-    required Map<String, dynamic> formData,
-  }) async {
+  Future<LoginResponse> loginWithPassword(String email, String password) async {
     try {
-      final flow = await _initLoginFlow(returnTo: null);
+      final flow = await _initLoginFlow(
+        returnSessionTokenExchangeCode: false,
+        returnTo: null,
+      );
 
       if (flow == null) {
-        return UnknownLoginError();
+        return const UnknownLoginError();
       }
 
       final loginFlowResult = await _client.post(
@@ -333,7 +334,13 @@ class KratosClient {
           queryParameters: {'flow': flow.id},
         ),
         headers: _commonHeaders,
-        body: jsonEncode(formData),
+        body: jsonEncode(
+          {
+            'method': 'password',
+            'identifier': email,
+            'password': password,
+          },
+        ),
       );
 
       if (loginFlowResult.statusCode == 200) {
@@ -342,24 +349,27 @@ class KratosClient {
           credentials: loginResult.sessionToken,
           expirationDate: loginResult.session.expiresAt.toString(),
         );
-        return LoginSuccess();
+        return const LoginSuccess();
       } else if (loginFlowResult.statusCode == 400) {
         final errorLoginResult =
             login_error.loginErrorResponseFromJson(loginFlowResult.body);
         final messageId = errorLoginResult.ui.messages.firstOrNull?.id;
         if (messageId == _unverifiedAccountMessageId) {
-          return UnverifiedAccountError();
+          return UnverifiedAccountError(
+            flowId: flow.id,
+            emailToVerify: email,
+          );
         }
         if (messageId != null) {
-          return LoginFailure(errorId: KratosError.forId(messageId));
+          return LoginFailure(error: KratosError.forId(messageId));
         }
-        return UnknownLoginError();
+        return const UnknownLoginError();
       }
-      return UnknownLoginError();
+      return const UnknownLoginError();
     } catch (e, st) {
       _logger.warning('Login failed.', e, st);
 
-      return UnknownLoginError();
+      return const UnknownLoginError();
     }
   }
 
@@ -397,7 +407,7 @@ class KratosClient {
       if (loginFlowId is! String) {
         return VerificationFlowResultError();
       }
-      
+
       return VerificationFlowResult(flowId: loginFlowId);
     } catch (e, st) {
       _logger.warning('Error getting verification flow', e, st);
