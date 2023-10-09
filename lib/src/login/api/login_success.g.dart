@@ -86,7 +86,9 @@ _$_Identity _$$_IdentityFromJson(Map<String, dynamic> json) => _$_Identity(
       schemaId: json['schema_id'] as String,
       schemaUrl: json['schema_url'] as String,
       state: json['state'] as String,
-      stateChangedAt: DateTime.parse(json['state_changed_at'] as String),
+      stateChangedAt: json['state_changed_at'] == null
+          ? null
+          : DateTime.parse(json['state_changed_at'] as String),
       traits: Traits.fromJson(json['traits'] as Map<String, dynamic>),
       verifiableAddresses: (json['verifiable_addresses'] as List<dynamic>)
           .map((e) => VerifiableAddress.fromJson(e as Map<String, dynamic>))
@@ -105,7 +107,7 @@ Map<String, dynamic> _$$_IdentityToJson(_$_Identity instance) =>
       'schema_id': instance.schemaId,
       'schema_url': instance.schemaUrl,
       'state': instance.state,
-      'state_changed_at': instance.stateChangedAt.toIso8601String(),
+      'state_changed_at': instance.stateChangedAt?.toIso8601String(),
       'traits': instance.traits.toJson(),
       'verifiable_addresses':
           instance.verifiableAddresses.map((e) => e.toJson()).toList(),

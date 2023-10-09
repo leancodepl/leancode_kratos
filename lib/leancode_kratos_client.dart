@@ -8,6 +8,7 @@ export 'src/logout/logout.dart';
 export 'src/profile/domain/profile.dart';
 export 'src/profile/domain/trait.dart';
 export 'src/profile/domain/update_password.dart';
+export 'src/profile/domain/update_profile.dart';
 export 'src/recovery/domain/recovery.dart';
 export 'src/recovery/domain/settings_flow.dart';
 export 'src/registration/domain/registration_response.dart';

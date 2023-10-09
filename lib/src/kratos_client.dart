@@ -322,11 +322,16 @@ class KratosClient {
     }
   }
 
-  Future<LoginResponse> loginWithPassword(String email, String password) async {
+  Future<LoginResponse> loginWithPassword(
+    String email,
+    String password, {
+    bool refresh = false,
+  }) async {
     try {
       final flow = await _initLoginFlow(
         returnSessionTokenExchangeCode: false,
         returnTo: null,
+        refresh: refresh,
       );
 
       if (flow == null) {
@@ -696,14 +701,14 @@ class KratosClient {
     return ErrorGettingProfile();
   }
 
-  Future<bool> updateTraits({
+  Future<UpdateProfile> updateTraits({
     required List<ProfileTrait> traits,
     required String flowId,
   }) async {
     final kratosToken = await _credentialsStorage.read();
 
     if (kratosToken == null) {
-      return false;
+      return ProfileUpdateFailure();
     }
 
     final traitsMap = Map<String, dynamic>.fromEntries(
@@ -724,7 +729,11 @@ class KratosClient {
       headers: _buildHeaders({'X-Session-Token': kratosToken}),
     );
 
-    return settingsFlow.statusCode == 200;
+    return switch (settingsFlow.statusCode) {
+      200 => ProfileUpdateSuccess(),
+      403 => ProfileUpdateRequiresReauthorization(),
+      _ => ProfileUpdateFailure(),
+    };
   }
 
   Future<UpdatePassword> updatePassword({

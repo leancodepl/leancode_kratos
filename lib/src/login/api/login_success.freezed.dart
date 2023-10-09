@@ -901,7 +901,7 @@ mixin _$Identity {
   String get schemaId => throw _privateConstructorUsedError;
   String get schemaUrl => throw _privateConstructorUsedError;
   String get state => throw _privateConstructorUsedError;
-  DateTime get stateChangedAt => throw _privateConstructorUsedError;
+  DateTime? get stateChangedAt => throw _privateConstructorUsedError;
   Traits get traits => throw _privateConstructorUsedError;
   List<VerifiableAddress> get verifiableAddresses =>
       throw _privateConstructorUsedError;
@@ -927,7 +927,7 @@ abstract class $IdentityCopyWith<$Res> {
       String schemaId,
       String schemaUrl,
       String state,
-      DateTime stateChangedAt,
+      DateTime? stateChangedAt,
       Traits traits,
       List<VerifiableAddress> verifiableAddresses,
       List<RecoveryAddress> recoveryAddresses,
@@ -955,7 +955,7 @@ class _$IdentityCopyWithImpl<$Res, $Val extends Identity>
     Object? schemaId = null,
     Object? schemaUrl = null,
     Object? state = null,
-    Object? stateChangedAt = null,
+    Object? stateChangedAt = freezed,
     Object? traits = null,
     Object? verifiableAddresses = null,
     Object? recoveryAddresses = null,
@@ -980,10 +980,10 @@ class _$IdentityCopyWithImpl<$Res, $Val extends Identity>
           ? _value.state
           : state // ignore: cast_nullable_to_non_nullable
               as String,
-      stateChangedAt: null == stateChangedAt
+      stateChangedAt: freezed == stateChangedAt
           ? _value.stateChangedAt
           : stateChangedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+              as DateTime?,
       traits: null == traits
           ? _value.traits
           : traits // ignore: cast_nullable_to_non_nullable
@@ -1032,7 +1032,7 @@ abstract class _$$_IdentityCopyWith<$Res> implements $IdentityCopyWith<$Res> {
       String schemaId,
       String schemaUrl,
       String state,
-      DateTime stateChangedAt,
+      DateTime? stateChangedAt,
       Traits traits,
       List<VerifiableAddress> verifiableAddresses,
       List<RecoveryAddress> recoveryAddresses,
@@ -1059,7 +1059,7 @@ class __$$_IdentityCopyWithImpl<$Res>
     Object? schemaId = null,
     Object? schemaUrl = null,
     Object? state = null,
-    Object? stateChangedAt = null,
+    Object? stateChangedAt = freezed,
     Object? traits = null,
     Object? verifiableAddresses = null,
     Object? recoveryAddresses = null,
@@ -1084,10 +1084,10 @@ class __$$_IdentityCopyWithImpl<$Res>
           ? _value.state
           : state // ignore: cast_nullable_to_non_nullable
               as String,
-      stateChangedAt: null == stateChangedAt
+      stateChangedAt: freezed == stateChangedAt
           ? _value.stateChangedAt
           : stateChangedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+              as DateTime?,
       traits: null == traits
           ? _value.traits
           : traits // ignore: cast_nullable_to_non_nullable
@@ -1146,7 +1146,7 @@ class _$_Identity implements _Identity {
   @override
   final String state;
   @override
-  final DateTime stateChangedAt;
+  final DateTime? stateChangedAt;
   @override
   final Traits traits;
   final List<VerifiableAddress> _verifiableAddresses;
@@ -1241,7 +1241,7 @@ abstract class _Identity implements Identity {
       required final String schemaId,
       required final String schemaUrl,
       required final String state,
-      required final DateTime stateChangedAt,
+      required final DateTime? stateChangedAt,
       required final Traits traits,
       required final List<VerifiableAddress> verifiableAddresses,
       required final List<RecoveryAddress> recoveryAddresses,
@@ -1260,7 +1260,7 @@ abstract class _Identity implements Identity {
   @override
   String get state;
   @override
-  DateTime get stateChangedAt;
+  DateTime? get stateChangedAt;
   @override
   Traits get traits;
   @override
