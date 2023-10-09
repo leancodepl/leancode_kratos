@@ -66,7 +66,7 @@ class Identity with _$Identity {
     required String schemaId,
     required String schemaUrl,
     required String state,
-    required DateTime stateChangedAt,
+    required DateTime? stateChangedAt,
     required Traits traits,
     required List<VerifiableAddress> verifiableAddresses,
     required List<RecoveryAddress> recoveryAddresses,

@@ -48,17 +48,20 @@ class KratosClient {
       path: 'self-service/registration/api',
       returnSessionTokenExchangeCode: returnSessionTokenExchangeCode,
       returnTo: returnTo,
+      refresh: false,
     );
   }
 
   Future<AuthFlowDto?> _initLoginFlow({
     bool returnSessionTokenExchangeCode = true,
     required String? returnTo,
+    required bool refresh,
   }) async {
     return _initAuthFlow(
       path: 'self-service/login/api',
       returnSessionTokenExchangeCode: returnSessionTokenExchangeCode,
       returnTo: returnTo,
+      refresh: refresh,
     );
   }
 
@@ -66,6 +69,7 @@ class KratosClient {
     required String path,
     required bool returnSessionTokenExchangeCode,
     required String? returnTo,
+    required bool refresh,
   }) async {
     try {
       final registrationFlow = await _client.get(
@@ -75,6 +79,7 @@ class KratosClient {
             if (returnSessionTokenExchangeCode)
               'return_session_token_exchange_code': 'true',
             if (returnTo != null) 'return_to': returnTo,
+            if (refresh) 'refresh': 'true',
           },
         ),
       );
@@ -317,11 +322,16 @@ class KratosClient {
     }
   }
 
-  Future<LoginResponse> loginWithPassword(String email, String password) async {
+  Future<LoginResponse> loginWithPassword(
+    String email,
+    String password, {
+    bool refresh = false,
+  }) async {
     try {
       final flow = await _initLoginFlow(
         returnSessionTokenExchangeCode: false,
         returnTo: null,
+        refresh: refresh,
       );
 
       if (flow == null) {
@@ -658,6 +668,103 @@ class KratosClient {
     return [csrfToken, oryKratosToken].join('; ');
   }
 
+  Future<Profile> getSettingsFlow() async {
+    final kratosToken = await _credentialsStorage.read();
+    if (kratosToken == null) {
+      return ErrorGettingProfile();
+    }
+    final settingsFlow = await _client.get(
+      _buildUri(path: 'self-service/settings/api'),
+      headers: _buildHeaders({'X-Session-Token': kratosToken}),
+    );
+    if (settingsFlow.statusCode == 200) {
+      try {
+        final decodedResult =
+            jsonDecode(settingsFlow.body) as Map<String, dynamic>;
+        final dynamic flowId = decodedResult['id'];
+        switch (flowId) {
+          case String _:
+            final identity = decodedResult['identity'] as Map<String, dynamic>;
+            final traits = identity['traits'] as Map<String, dynamic>;
+            final traitsList = traits.entries.map((entry) {
+              return ProfileTrait(traitName: entry.key, value: entry.value);
+            }).toList();
+            return ProfileData(traits: traitsList, flowId: flowId);
+          default:
+            return ErrorGettingProfile();
+        }
+      } catch (e, st) {
+        _logger.warning('Error getting recovery flow', e, st);
+        return ErrorGettingProfile();
+      }
+    }
+    return ErrorGettingProfile();
+  }
+
+  Future<UpdateProfile> updateTraits({
+    required List<ProfileTrait> traits,
+    required String flowId,
+  }) async {
+    final kratosToken = await _credentialsStorage.read();
+
+    if (kratosToken == null) {
+      return ProfileUpdateFailure();
+    }
+
+    final traitsMap = Map<String, dynamic>.fromEntries(
+      traits.map(
+        (trait) => MapEntry<String, dynamic>(trait.traitName, trait.value),
+      ),
+    );
+
+    final settingsFlow = await _client.post(
+      _buildUri(
+        path: 'self-service/settings',
+        queryParameters: {'flow': flowId},
+      ),
+      body: jsonEncode({
+        'method': 'profile',
+        'traits': jsonEncode(traitsMap),
+      }),
+      headers: _buildHeaders({'X-Session-Token': kratosToken}),
+    );
+
+    return switch (settingsFlow.statusCode) {
+      200 => ProfileUpdateSuccess(),
+      403 => ProfileUpdateRequiresReauthorization(),
+      _ => ProfileUpdateFailure(),
+    };
+  }
+
+  Future<UpdatePassword> updatePassword({
+    required String password,
+    required String flowId,
+  }) async {
+    final kratosToken = await _credentialsStorage.read();
+
+    if (kratosToken == null) {
+      return UpdateRequiresReauthorization();
+    }
+
+    final settingsFlow = await _client.post(
+      _buildUri(
+        path: 'self-service/settings',
+        queryParameters: {'flow': flowId},
+      ),
+      body: jsonEncode({
+        'method': 'password',
+        'password': password,
+      }),
+      headers: _buildHeaders({'X-Session-Token': kratosToken}),
+    );
+
+    return switch (settingsFlow.statusCode) {
+      200 => UpdateSuccess(),
+      403 => UpdateRequiresReauthorization(),
+      _ => UpdateFailure(),
+    };
+  }
+
   Uri _buildUri({
     required String path,
     Map<String, String>? queryParameters,
@@ -668,4 +775,11 @@ class KratosClient {
         path: path,
         queryParameters: queryParameters,
       );
+
+  Map<String, String> _buildHeaders(Map<String, String>? additionalHeaders) {
+    if (additionalHeaders == null) {
+      return _commonHeaders;
+    }
+    return {..._commonHeaders, ...additionalHeaders};
+  }
 }

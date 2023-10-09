@@ -1,5 +1,5 @@
 sealed class Logout {}
 
-class LogoutSuccess implements Logout {}
+class LogoutSuccess extends Logout {}
 
-class LogoutFail implements Logout {}
+class LogoutFail extends Logout {}
