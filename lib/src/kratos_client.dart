@@ -689,7 +689,8 @@ class KratosClient {
             final traitsList = traits.entries.map((entry) {
               return ProfileTrait(traitName: entry.key, value: entry.value);
             }).toList();
-            return ProfileData(traits: traitsList, flowId: flowId);
+            final userId = identity['id'] as String;
+            return ProfileData(traits: traitsList, flowId: flowId, userId: userId);
           default:
             return ErrorGettingProfile();
         }
