@@ -25,10 +25,12 @@ class SuccessResponse extends RegistrationResponse {
 class SocialRegisterFinishResponse extends RegistrationResponse {
   const SocialRegisterFinishResponse({
     required this.flowInfo,
+    required this.idToken,
     required this.values,
   });
 
   final AuthFlowInfo flowInfo;
+  final String? idToken;
   final List<(String fieldName, dynamic value)> values;
 }
 
@@ -105,6 +107,7 @@ RegistrationResponse mapRegistrationErrorResponse(AuthFlowDto response) {
 
     return SocialRegisterFinishResponse(
       flowInfo: response.info,
+      idToken: null,
       values: values,
     );
   }

@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:leancode_kratos_client/leancode_kratos_client.dart';
 import 'package:leancode_kratos_client/src/common/api/auth_dtos.dart';
@@ -162,6 +164,7 @@ class KratosClient {
     required String returnTo,
     Map<String, dynamic> traits = const <String, dynamic>{},
     AuthFlowInfo? flowInfo,
+    String? idToken,
   }) async {
     final AuthFlowInfo? effectiveFlowInfo;
 
@@ -180,6 +183,29 @@ class KratosClient {
       return const FailedRegistration();
     }
 
+    String? effectiveIdToken = idToken;
+
+    if (effectiveIdToken == null &&
+        Platform.isAndroid &&
+        provider == OidcProvider.google) {
+      final googleSignIn = GoogleSignIn(
+        // FIXME
+        scopes: [
+          'email',
+        ],
+      );
+
+      final account = await googleSignIn.signIn();
+
+      if (account == null) {
+        return const FailedRegistration();
+      }
+
+      final authentication = await account.authentication;
+
+      effectiveIdToken = authentication.idToken;
+    }
+
     try {
       final streamedResponse = await _client.send(
         http.Request(
@@ -194,6 +220,7 @@ class KratosClient {
             {
               'method': 'oidc',
               'provider': provider.name,
+              'id_token': effectiveIdToken,
               'csrf_token': effectiveFlowInfo.csrfToken,
               'traits': traits,
             },
@@ -213,7 +240,11 @@ class KratosClient {
           effectiveFlowInfo,
         );
       } else if (response.statusCode == 303) {
-        return await _handleRedirectResponse(response, effectiveFlowInfo);
+        return await _handleRedirectResponse(
+          response: response,
+          info: effectiveFlowInfo,
+          idToken: effectiveIdToken,
+        );
       }
 
       return const UnhandledStatusCodeError();
@@ -274,15 +305,23 @@ class KratosClient {
     return _exchangeSessionToken(initCode, returnToCode);
   }
 
-  Future<RegistrationResponse> _handleRedirectResponse(
-    http.Response response,
-    AuthFlowInfo info,
-  ) async {
+  Future<RegistrationResponse> _handleRedirectResponse({
+    required http.Response response,
+    required AuthFlowInfo info,
+    required String? idToken,
+  }) async {
     final location = response.headers['location'];
 
     if (location == null) {
       return const FailedRegistration();
     }
+
+    return SocialRegisterFinishResponse(
+      // FIXME
+      flowInfo: info,
+      idToken: idToken,
+      values: [],
+    );
 
     final returnToCode = Uri.parse(location).queryParameters['code'];
     final initCode = info.sessionTokenExchangeCode;
@@ -690,7 +729,8 @@ class KratosClient {
               return ProfileTrait(traitName: entry.key, value: entry.value);
             }).toList();
             final userId = identity['id'] as String;
-            return ProfileData(traits: traitsList, flowId: flowId, userId: userId);
+            return ProfileData(
+                traits: traitsList, flowId: flowId, userId: userId);
           default:
             return ErrorGettingProfile();
         }
