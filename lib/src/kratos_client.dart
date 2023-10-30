@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:leancode_kratos_client/leancode_kratos_client.dart';
@@ -13,21 +14,19 @@ import 'package:logging/logging.dart';
 const _unverifiedAccountMessageId = 4000010;
 
 typedef BrowserCallback = Future<String> Function(String url);
+typedef SdkCallback = Future<SdkResult?> Function();
 
 class KratosClient {
   KratosClient({
     required Uri baseUri,
-    required BrowserCallback browserCallback,
     CredentialsStorage? credentialsStorage,
     http.Client? httpClient,
   })  : _baseUri = baseUri,
-        _browserCallback = browserCallback,
         _credentialsStorage =
             credentialsStorage ?? const FlutterSecureCredentialsStorage(),
         _client = httpClient ?? http.Client();
 
   final Uri _baseUri;
-  final BrowserCallback _browserCallback;
   final CredentialsStorage _credentialsStorage;
   final http.Client _client;
   final Logger _logger = Logger('KratosClientLogger');
@@ -160,8 +159,12 @@ class KratosClient {
   Future<RegistrationResponse> registerWithOidc({
     required OidcProvider provider,
     required String returnTo,
+    required BrowserCallback browserCallback,
+    SdkCallback? appleSdkCallback,
+    SdkCallback? googleSdkCallback,
     Map<String, dynamic> traits = const <String, dynamic>{},
     AuthFlowInfo? flowInfo,
+    String? idToken,
   }) async {
     final AuthFlowInfo? effectiveFlowInfo;
 
@@ -180,6 +183,41 @@ class KratosClient {
       return const FailedRegistration();
     }
 
+    var effectiveIdToken = idToken;
+    var effectiveTraits = traits;
+
+    if (effectiveIdToken == null) {
+      if (Platform.isAndroid &&
+          provider == OidcProvider.google &&
+          googleSdkCallback != null) {
+        final sdkResult = await googleSdkCallback();
+
+        if (sdkResult == null) {
+          return const FailedRegistration();
+        }
+
+        effectiveIdToken = sdkResult.idToken;
+        effectiveTraits = <String, dynamic>{
+          ...effectiveTraits,
+          ...sdkResult.traits,
+        };
+      } else if (Platform.isIOS &&
+          provider == OidcProvider.apple &&
+          appleSdkCallback != null) {
+        final sdkResult = await appleSdkCallback();
+
+        if (sdkResult == null) {
+          return const FailedRegistration();
+        }
+
+        effectiveIdToken = sdkResult.idToken;
+        effectiveTraits = <String, dynamic>{
+          ...effectiveTraits,
+          ...sdkResult.traits,
+        };
+      }
+    }
+
     try {
       final streamedResponse = await _client.send(
         http.Request(
@@ -194,8 +232,9 @@ class KratosClient {
             {
               'method': 'oidc',
               'provider': provider.name,
+              'id_token': effectiveIdToken,
               'csrf_token': effectiveFlowInfo.csrfToken,
-              'traits': traits,
+              'traits': effectiveTraits,
             },
           )
           ..followRedirects = false,
@@ -209,11 +248,17 @@ class KratosClient {
         return _handleSuccessResponse(response);
       } else if (response.statusCode == 422) {
         return await _handleBrowserLocationChangeRequiredResponse(
-          response,
-          effectiveFlowInfo,
+          response: response,
+          info: effectiveFlowInfo,
+          browserCallback: browserCallback,
         );
       } else if (response.statusCode == 303) {
-        return await _handleRedirectResponse(response, effectiveFlowInfo);
+        return await _handleRedirectResponse(
+          response: response,
+          info: effectiveFlowInfo,
+          idToken: effectiveIdToken,
+          traits: effectiveTraits,
+        );
       }
 
       return const UnhandledStatusCodeError();
@@ -228,16 +273,30 @@ class KratosClient {
     return mapRegistrationErrorResponse(dto);
   }
 
-  RegistrationResponse _handleSuccessResponse(http.Response response) {
+  Future<RegistrationResponse> _handleSuccessResponse(
+    http.Response response,
+  ) async {
     final decodedResponse =
         RegistrationSuccessResponse.fromString(response.body);
-    return mapRegistrationSuccessResponse(decodedResponse);
+    final result = mapRegistrationSuccessResponse(decodedResponse);
+
+    if (result is SuccessResponse &&
+        decodedResponse.sessionToken != null &&
+        decodedResponse.session != null) {
+      await _credentialsStorage.save(
+        credentials: decodedResponse.sessionToken!,
+        expirationDate: decodedResponse.session!.expiresAt.toString(),
+      );
+    }
+
+    return result;
   }
 
-  Future<RegistrationResponse> _handleBrowserLocationChangeRequiredResponse(
-    http.Response response,
-    AuthFlowInfo info,
-  ) async {
+  Future<RegistrationResponse> _handleBrowserLocationChangeRequiredResponse({
+    required http.Response response,
+    required AuthFlowInfo info,
+    required BrowserCallback browserCallback,
+  }) async {
     final browserLocationChangeRequiredResponse =
         RegistrationBrowserLocationChangeRequiredResponse.fromString(
       response.body,
@@ -250,7 +309,7 @@ class KratosClient {
       return const FailedRegistration();
     }
 
-    final result = await _browserCallback(redirectBrowserTo);
+    final result = await browserCallback(redirectBrowserTo);
 
     final returnToCode = Uri.parse(result).queryParameters['code'];
     final initCode = info.sessionTokenExchangeCode;
@@ -274,10 +333,12 @@ class KratosClient {
     return _exchangeSessionToken(initCode, returnToCode);
   }
 
-  Future<RegistrationResponse> _handleRedirectResponse(
-    http.Response response,
-    AuthFlowInfo info,
-  ) async {
+  Future<RegistrationResponse> _handleRedirectResponse({
+    required http.Response response,
+    required AuthFlowInfo info,
+    required String? idToken,
+    required Map<String, dynamic> traits,
+  }) async {
     final location = response.headers['location'];
 
     if (location == null) {
@@ -287,11 +348,21 @@ class KratosClient {
     final returnToCode = Uri.parse(location).queryParameters['code'];
     final initCode = info.sessionTokenExchangeCode;
 
-    if (initCode == null || returnToCode == null) {
-      return const FailedRegistration();
+    if (initCode != null && returnToCode != null) {
+      return _exchangeSessionToken(initCode, returnToCode);
     }
 
-    return _exchangeSessionToken(initCode, returnToCode);
+    if (initCode != null && idToken != null) {
+      return SocialRegisterFinishResponse(
+        flowInfo: info,
+        idToken: idToken,
+        values: traits.entries
+            .map((entry) => ('traits.${entry.key}', entry.value))
+            .toList(),
+      );
+    }
+
+    return const FailedRegistration();
   }
 
   Future<RegistrationResponse> _exchangeSessionToken(
@@ -690,7 +761,11 @@ class KratosClient {
               return ProfileTrait(traitName: entry.key, value: entry.value);
             }).toList();
             final userId = identity['id'] as String;
-            return ProfileData(traits: traitsList, flowId: flowId, userId: userId);
+            return ProfileData(
+              traits: traitsList,
+              flowId: flowId,
+              userId: userId,
+            );
           default:
             return ErrorGettingProfile();
         }

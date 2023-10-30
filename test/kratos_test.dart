@@ -40,7 +40,6 @@ void main() {
         mockStorage = MockCredentialsStorage();
         kratosClient = KratosClient(
           baseUri: Uri(host: 'test.pl', scheme: 'https'),
-          browserCallback: (url) async => url,
           credentialsStorage: mockStorage,
           httpClient: mockHttpClient,
         );
@@ -121,7 +120,6 @@ void main() {
       mockStorage = MockCredentialsStorage();
       kratosClient = KratosClient(
         baseUri: Uri(host: 'test.pl', scheme: 'https'),
-        browserCallback: (url) async => url,
         credentialsStorage: mockStorage,
         httpClient: mockHttpClient,
       );
@@ -208,7 +206,6 @@ void main() {
       mockStorage = MockCredentialsStorage();
       kratosClient = KratosClient(
         baseUri: Uri(host: 'test.pl', scheme: 'https'),
-        browserCallback: (url) async => url,
         credentialsStorage: mockStorage,
         httpClient: mockHttpClient,
       );
@@ -291,7 +288,6 @@ void main() {
       mockStorage = MockCredentialsStorage();
       kratosClient = KratosClient(
         baseUri: Uri(host: 'test.pl', scheme: 'https'),
-        browserCallback: (url) async => url,
         credentialsStorage: mockStorage,
         httpClient: mockHttpClient,
       );
