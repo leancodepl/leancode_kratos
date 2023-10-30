@@ -8,12 +8,10 @@ sealed class RegistrationResponse {
 
 class VerifyEmailResponse extends RegistrationResponse {
   const VerifyEmailResponse({
-    required this.action,
     required this.flowId,
     required this.emailToVerify,
   });
 
-  final String action;
   final String flowId;
   final String emailToVerify;
 }
@@ -52,31 +50,31 @@ RegistrationResponse mapRegistrationSuccessResponse(
   RegistrationSuccessResponse response,
 ) {
   final continueWith = response.continueWith;
-  if (continueWith == null || continueWith.isEmpty) {
-    return const SuccessResponse();
-  } else {
-    final responseData = continueWith
-        .map((element) {
+
+  return continueWith?.map(
+        (element) {
           return switch (element) {
             ContinueWith(
-              :final action?,
+              action: 'show_verification_ui',
               flow: Flow(
-                id: final actionId?,
-                verifiableAddress: final emailAddress?
+                id: final flowId?,
+                verifiableAddress: final emailToVerify?
               )
             ) =>
-              (action, actionId, emailAddress),
-            _ => null,
+              VerifyEmailResponse(
+                flowId: flowId,
+                emailToVerify: emailToVerify,
+              ),
+            ContinueWith(
+              action: 'set_ory_session_token',
+              flow: null,
+            ) =>
+              const SuccessResponse(),
+            _ => const FailedRegistration(),
           };
-        })
-        .nonNulls
-        .toList();
-    return VerifyEmailResponse(
-      action: responseData.first.$1,
-      flowId: responseData.first.$2,
-      emailToVerify: responseData.first.$3,
-    );
-  }
+        },
+      ).firstOrNull ??
+      const SuccessResponse();
 }
 
 RegistrationResponse mapRegistrationErrorResponse(AuthFlowDto response) {

@@ -21,8 +21,10 @@ RegistrationSuccessResponse _$RegistrationSuccessResponseFromJson(
 
 /// @nodoc
 mixin _$RegistrationSuccessResponse {
-  Identity? get identity => throw _privateConstructorUsedError;
   List<ContinueWith>? get continueWith => throw _privateConstructorUsedError;
+  Identity? get identity => throw _privateConstructorUsedError;
+  Session? get session => throw _privateConstructorUsedError;
+  String? get sessionToken => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -38,9 +40,14 @@ abstract class $RegistrationSuccessResponseCopyWith<$Res> {
       _$RegistrationSuccessResponseCopyWithImpl<$Res,
           RegistrationSuccessResponse>;
   @useResult
-  $Res call({Identity? identity, List<ContinueWith>? continueWith});
+  $Res call(
+      {List<ContinueWith>? continueWith,
+      Identity? identity,
+      Session? session,
+      String? sessionToken});
 
   $IdentityCopyWith<$Res>? get identity;
+  $SessionCopyWith<$Res>? get session;
 }
 
 /// @nodoc
@@ -57,18 +64,28 @@ class _$RegistrationSuccessResponseCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? identity = freezed,
     Object? continueWith = freezed,
+    Object? identity = freezed,
+    Object? session = freezed,
+    Object? sessionToken = freezed,
   }) {
     return _then(_value.copyWith(
-      identity: freezed == identity
-          ? _value.identity
-          : identity // ignore: cast_nullable_to_non_nullable
-              as Identity?,
       continueWith: freezed == continueWith
           ? _value.continueWith
           : continueWith // ignore: cast_nullable_to_non_nullable
               as List<ContinueWith>?,
+      identity: freezed == identity
+          ? _value.identity
+          : identity // ignore: cast_nullable_to_non_nullable
+              as Identity?,
+      session: freezed == session
+          ? _value.session
+          : session // ignore: cast_nullable_to_non_nullable
+              as Session?,
+      sessionToken: freezed == sessionToken
+          ? _value.sessionToken
+          : sessionToken // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 
@@ -83,6 +100,18 @@ class _$RegistrationSuccessResponseCopyWithImpl<$Res,
       return _then(_value.copyWith(identity: value) as $Val);
     });
   }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $SessionCopyWith<$Res>? get session {
+    if (_value.session == null) {
+      return null;
+    }
+
+    return $SessionCopyWith<$Res>(_value.session!, (value) {
+      return _then(_value.copyWith(session: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -94,10 +123,16 @@ abstract class _$$_RegistrationSuccessResponseCopyWith<$Res>
       __$$_RegistrationSuccessResponseCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({Identity? identity, List<ContinueWith>? continueWith});
+  $Res call(
+      {List<ContinueWith>? continueWith,
+      Identity? identity,
+      Session? session,
+      String? sessionToken});
 
   @override
   $IdentityCopyWith<$Res>? get identity;
+  @override
+  $SessionCopyWith<$Res>? get session;
 }
 
 /// @nodoc
@@ -113,18 +148,28 @@ class __$$_RegistrationSuccessResponseCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? identity = freezed,
     Object? continueWith = freezed,
+    Object? identity = freezed,
+    Object? session = freezed,
+    Object? sessionToken = freezed,
   }) {
     return _then(_$_RegistrationSuccessResponse(
-      identity: freezed == identity
-          ? _value.identity
-          : identity // ignore: cast_nullable_to_non_nullable
-              as Identity?,
       continueWith: freezed == continueWith
           ? _value._continueWith
           : continueWith // ignore: cast_nullable_to_non_nullable
               as List<ContinueWith>?,
+      identity: freezed == identity
+          ? _value.identity
+          : identity // ignore: cast_nullable_to_non_nullable
+              as Identity?,
+      session: freezed == session
+          ? _value.session
+          : session // ignore: cast_nullable_to_non_nullable
+              as Session?,
+      sessionToken: freezed == sessionToken
+          ? _value.sessionToken
+          : sessionToken // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -133,14 +178,15 @@ class __$$_RegistrationSuccessResponseCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_RegistrationSuccessResponse implements _RegistrationSuccessResponse {
   const _$_RegistrationSuccessResponse(
-      {this.identity, final List<ContinueWith>? continueWith})
+      {final List<ContinueWith>? continueWith,
+      this.identity,
+      this.session,
+      this.sessionToken})
       : _continueWith = continueWith;
 
   factory _$_RegistrationSuccessResponse.fromJson(Map<String, dynamic> json) =>
       _$$_RegistrationSuccessResponseFromJson(json);
 
-  @override
-  final Identity? identity;
   final List<ContinueWith>? _continueWith;
   @override
   List<ContinueWith>? get continueWith {
@@ -152,8 +198,15 @@ class _$_RegistrationSuccessResponse implements _RegistrationSuccessResponse {
   }
 
   @override
+  final Identity? identity;
+  @override
+  final Session? session;
+  @override
+  final String? sessionToken;
+
+  @override
   String toString() {
-    return 'RegistrationSuccessResponse(identity: $identity, continueWith: $continueWith)';
+    return 'RegistrationSuccessResponse(continueWith: $continueWith, identity: $identity, session: $session, sessionToken: $sessionToken)';
   }
 
   @override
@@ -161,16 +214,23 @@ class _$_RegistrationSuccessResponse implements _RegistrationSuccessResponse {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_RegistrationSuccessResponse &&
+            const DeepCollectionEquality()
+                .equals(other._continueWith, _continueWith) &&
             (identical(other.identity, identity) ||
                 other.identity == identity) &&
-            const DeepCollectionEquality()
-                .equals(other._continueWith, _continueWith));
+            (identical(other.session, session) || other.session == session) &&
+            (identical(other.sessionToken, sessionToken) ||
+                other.sessionToken == sessionToken));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, identity,
-      const DeepCollectionEquality().hash(_continueWith));
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(_continueWith),
+      identity,
+      session,
+      sessionToken);
 
   @JsonKey(ignore: true)
   @override
@@ -190,16 +250,22 @@ class _$_RegistrationSuccessResponse implements _RegistrationSuccessResponse {
 abstract class _RegistrationSuccessResponse
     implements RegistrationSuccessResponse {
   const factory _RegistrationSuccessResponse(
-      {final Identity? identity,
-      final List<ContinueWith>? continueWith}) = _$_RegistrationSuccessResponse;
+      {final List<ContinueWith>? continueWith,
+      final Identity? identity,
+      final Session? session,
+      final String? sessionToken}) = _$_RegistrationSuccessResponse;
 
   factory _RegistrationSuccessResponse.fromJson(Map<String, dynamic> json) =
       _$_RegistrationSuccessResponse.fromJson;
 
   @override
+  List<ContinueWith>? get continueWith;
+  @override
   Identity? get identity;
   @override
-  List<ContinueWith>? get continueWith;
+  Session? get session;
+  @override
+  String? get sessionToken;
   @override
   @JsonKey(ignore: true)
   _$$_RegistrationSuccessResponseCopyWith<_$_RegistrationSuccessResponse>

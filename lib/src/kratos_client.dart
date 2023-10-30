@@ -11,6 +11,7 @@ import 'package:leancode_kratos_client/src/login/api/login_success.dart';
 import 'package:leancode_kratos_client/src/registration/api/registration_success.dart';
 import 'package:leancode_kratos_client/src/registration/api/token_exchange_success.dart';
 import 'package:logging/logging.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 const _unverifiedAccountMessageId = 4000010;
 
@@ -185,25 +186,34 @@ class KratosClient {
 
     String? effectiveIdToken = idToken;
 
-    if (effectiveIdToken == null &&
-        Platform.isAndroid &&
-        provider == OidcProvider.google) {
-      final googleSignIn = GoogleSignIn(
-        // FIXME
-        scopes: [
-          'email',
-        ],
-      );
+    if (effectiveIdToken == null) {
+      if (Platform.isAndroid && provider == OidcProvider.google) {
+        final googleSignIn = GoogleSignIn(
+          // FIXME
+          scopes: [
+            'email',
+          ],
+        );
 
-      final account = await googleSignIn.signIn();
+        final account = await googleSignIn.signIn();
 
-      if (account == null) {
-        return const FailedRegistration();
+        if (account == null) {
+          return const FailedRegistration();
+        }
+
+        final authentication = await account.authentication;
+
+        effectiveIdToken = authentication.idToken;
+      } else if (Platform.isIOS && provider == OidcProvider.apple) {
+        final credential = await SignInWithApple.getAppleIDCredential(
+          scopes: [
+            AppleIDAuthorizationScopes.email,
+            AppleIDAuthorizationScopes.fullName,
+          ],
+        );
+
+        effectiveIdToken = credential.identityToken;
       }
-
-      final authentication = await account.authentication;
-
-      effectiveIdToken = authentication.idToken;
     }
 
     try {
@@ -259,10 +269,22 @@ class KratosClient {
     return mapRegistrationErrorResponse(dto);
   }
 
-  RegistrationResponse _handleSuccessResponse(http.Response response) {
+  Future<RegistrationResponse> _handleSuccessResponse(
+      http.Response response) async {
     final decodedResponse =
         RegistrationSuccessResponse.fromString(response.body);
-    return mapRegistrationSuccessResponse(decodedResponse);
+    final result = mapRegistrationSuccessResponse(decodedResponse);
+
+    if (result is SuccessResponse &&
+        decodedResponse.sessionToken != null &&
+        decodedResponse.session != null) {
+      await _credentialsStorage.save(
+        credentials: decodedResponse.sessionToken!,
+        expirationDate: decodedResponse.session!.expiresAt.toString(),
+      );
+    }
+
+    return result;
   }
 
   Future<RegistrationResponse> _handleBrowserLocationChangeRequiredResponse(
@@ -316,21 +338,22 @@ class KratosClient {
       return const FailedRegistration();
     }
 
-    return SocialRegisterFinishResponse(
-      // FIXME
-      flowInfo: info,
-      idToken: idToken,
-      values: [],
-    );
-
     final returnToCode = Uri.parse(location).queryParameters['code'];
     final initCode = info.sessionTokenExchangeCode;
 
-    if (initCode == null || returnToCode == null) {
-      return const FailedRegistration();
+    if (initCode != null && returnToCode != null) {
+      return _exchangeSessionToken(initCode, returnToCode);
     }
 
-    return _exchangeSessionToken(initCode, returnToCode);
+    if (initCode != null && idToken != null) {
+      return SocialRegisterFinishResponse(
+        flowInfo: info,
+        idToken: idToken,
+        values: [], // FIXME
+      );
+    }
+
+    return const FailedRegistration();
   }
 
   Future<RegistrationResponse> _exchangeSessionToken(
