@@ -4,7 +4,7 @@ The KratosClient provides an API client for interacting with an Ory Kratos serve
 
 ## Usage
 
-To create a client:
+### To create a client:
 
 ```dart
 final client = KratosClient(
@@ -14,36 +14,36 @@ final client = KratosClient(
   },
 );
 ```
+## Features
+### The main available APIs are:
 
-The main APIs available are:
-
-### Registration
+### [Registration](documentation/registration.md)
 
 - `registerWithPassword` - Register using email and password
 - `registerWithOidc` - Register using OpenID Connect provider
 
-### Login
+### [Login](documentation/login.md)
 
 - `loginWithPassword` - Login with email and password
 
-### Verification
+### [Verification](documentation/verification.md)
 
 - `getVerificationFlow` - Get verification flow
 - `verifyAccount` - Complete email verification
 
-### Recovery
+### [Recovery](documentation/recovery.md)
 
 - `getRecoveryFlow` - Get account recovery flow
 - `sendEmailRecoveryFlow` - Initiate email account recovery
 - `sendCodeRecoveryFlow` - Submit recovery code
 
-### Profile
+### [Profile](documentation/profile.md)
 
 - `getSettingsFlow` - Get user profile
 - `updateTraits` - Update user profile traits
 - `updatePassword` - Update user password
 
-### Other
+### [Other](documentation/others.md)
 
 - `logout` - Logout user
 - `refreshSessionToken` - Refresh session token

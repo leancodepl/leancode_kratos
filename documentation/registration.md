@@ -6,5 +6,3 @@
   
 2. When the user submits the registration form, call `registerWithPassword` on the client, passing the user password and map of traits.
   
-
-## Registration with OIDC
