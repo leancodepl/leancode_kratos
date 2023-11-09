@@ -94,6 +94,8 @@ enum KratosError {
   errorValidationSettingsNoStrategyFound,
   errorValidationRecoveryNoStrategyFound,
   errorValidationVerificationNoStrategyFound,
+  errorValidationPasswordTooSimilar,
+  errorValidationPasswordLeaked,
   errorValidationRegistration,
   errorValidationRegistrationFlowExpired,
   errorValidationSettings,
@@ -160,8 +162,7 @@ enum KratosError {
       1050010 => KratosError.infoSelfServiceSettingsLookupSecretLabel,
       1050011 => KratosError.infoSelfServiceSettingsLookupConfirm,
       1050012 => KratosError.infoSelfServiceSettingsRegisterWebAuthn,
-      1050013 =>
-        KratosError.infoSelfServiceSettingsRegisterWebAuthnDisplayName,
+      1050013 => KratosError.infoSelfServiceSettingsRegisterWebAuthnDisplayName,
       1050014 => KratosError.infoSelfServiceSettingsLookupSecretUsed,
       1050015 => KratosError.infoSelfServiceSettingsLookupSecretList,
       1050016 => KratosError.infoSelfServiceSettingsDisableLookup,
@@ -223,6 +224,8 @@ enum KratosError {
       4000025 => KratosError.errorValidationUniqueItems,
       4000026 => KratosError.errorValidationWrongType,
       4000027 => KratosError.errorValidationDuplicateCredentialsOnOIDCLink,
+      4000031 => KratosError.errorValidationPasswordTooSimilar,
+      4000034 => KratosError.errorValidationPasswordLeaked,
 
       // Login Validation Error
       4010000 => KratosError.errorValidationLogin,
