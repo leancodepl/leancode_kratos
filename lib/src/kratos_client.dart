@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:collection/collection.dart';
 import 'package:http/http.dart' as http;
 import 'package:leancode_kratos_client/leancode_kratos_client.dart';
 import 'package:leancode_kratos_client/src/common/api/auth_dtos.dart';
@@ -782,6 +783,8 @@ class KratosClient {
     required String flowId,
   }) async {
     final kratosToken = await _credentialsStorage.read();
+    final emailUpdate =
+        traits.firstWhereOrNull((trait) => trait.traitName == 'email') != null;
 
     if (kratosToken == null) {
       return ProfileUpdateFailure();
@@ -806,7 +809,7 @@ class KratosClient {
     );
 
     return switch (settingsFlow.statusCode) {
-      200 => ProfileUpdateSuccess(),
+      200 => emailUpdate ? ProfileNeedsVerification() : ProfileUpdateSuccess(),
       403 => ProfileUpdateRequiresReauthorization(),
       _ => ProfileUpdateFailure(),
     };
