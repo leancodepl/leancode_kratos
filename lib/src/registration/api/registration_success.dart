@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:leancode_kratos_client/src/login/api/login_success.dart';
 
 part 'registration_success.freezed.dart';
 part 'registration_success.g.dart';
@@ -8,8 +9,10 @@ part 'registration_success.g.dart';
 @freezed
 class RegistrationSuccessResponse with _$RegistrationSuccessResponse {
   const factory RegistrationSuccessResponse({
-    Identity? identity,
     List<ContinueWith>? continueWith,
+    Identity? identity,
+    Session? session,
+    String? sessionToken,
   }) = _RegistrationSuccessResponse;
 
   factory RegistrationSuccessResponse.fromJson(Map<String, dynamic> json) =>

@@ -9,19 +9,25 @@ part of 'registration_success.dart';
 _$_RegistrationSuccessResponse _$$_RegistrationSuccessResponseFromJson(
         Map<String, dynamic> json) =>
     _$_RegistrationSuccessResponse(
-      identity: json['identity'] == null
-          ? null
-          : Identity.fromJson(json['identity'] as Map<String, dynamic>),
       continueWith: (json['continue_with'] as List<dynamic>?)
           ?.map((e) => ContinueWith.fromJson(e as Map<String, dynamic>))
           .toList(),
+      identity: json['identity'] == null
+          ? null
+          : Identity.fromJson(json['identity'] as Map<String, dynamic>),
+      session: json['session'] == null
+          ? null
+          : Session.fromJson(json['session'] as Map<String, dynamic>),
+      sessionToken: json['session_token'] as String?,
     );
 
 Map<String, dynamic> _$$_RegistrationSuccessResponseToJson(
         _$_RegistrationSuccessResponse instance) =>
     <String, dynamic>{
-      'identity': instance.identity?.toJson(),
       'continue_with': instance.continueWith?.map((e) => e.toJson()).toList(),
+      'identity': instance.identity?.toJson(),
+      'session': instance.session?.toJson(),
+      'session_token': instance.sessionToken,
     };
 
 _$_RegistrationBrowserLocationChangeRequiredResponse
