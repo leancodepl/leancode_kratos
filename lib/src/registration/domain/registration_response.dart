@@ -35,7 +35,7 @@ class SocialRegisterFinishResponse extends RegistrationResponse {
 class ErrorResponse extends RegistrationResponse {
   const ErrorResponse({required this.errors});
 
-  final List<(String fieldName, KratosError error)> errors;
+  final List<(String fieldName, KratosMessage error)> errors;
 }
 
 class UnhandledStatusCodeError extends RegistrationResponse {
@@ -82,11 +82,15 @@ RegistrationResponse mapRegistrationErrorResponse(AuthFlowDto response) {
   final nodes = response.ui.nodes;
 
   if (generalErrors != null && generalErrors.isNotEmpty) {
-    final kratosError = KratosError.forId(generalErrors.first.id);
+    final kratosError = KratosMessage.forId(generalErrors.first.id);
     return ErrorResponse(errors: [('general', kratosError)]);
   }
 
-  if (nodes.any((node) => node.meta.label?.id == 1040003)) {
+  if (nodes.any(
+    (node) =>
+        node.meta.label?.id ==
+        KratosMessage.infoSelfServiceRegistrationContinue.id,
+  )) {
     final values = nodes
         .map(
           (node) {
@@ -115,7 +119,7 @@ RegistrationResponse mapRegistrationErrorResponse(AuthFlowDto response) {
         return switch ((node.attributes.name, node.messages)) {
           (final attributeName?, [MessageDto(:final id), ...]) => (
               attributeName,
-              KratosError.forId(id),
+              KratosMessage.forId(id),
             ),
           _ => null
         };

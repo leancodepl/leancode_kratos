@@ -12,8 +12,6 @@ import 'package:leancode_kratos_client/src/registration/api/registration_success
 import 'package:leancode_kratos_client/src/registration/api/token_exchange_success.dart';
 import 'package:logging/logging.dart';
 
-const _unverifiedAccountMessageId = 4000010;
-
 typedef BrowserCallback = Future<String> Function(String url);
 typedef SdkCallback = Future<SdkResult?> Function();
 
@@ -274,7 +272,7 @@ class KratosClient {
     return mapRegistrationErrorResponse(dto);
   }
 
-  KratosError? _handleChangePasswordError(http.Response response) {
+  KratosMessage? _handleChangePasswordError(http.Response response) {
     final dto = AuthFlowDto.fromString(response.body);
     final nodes = dto.ui.nodes;
     final errors = nodes
@@ -282,7 +280,7 @@ class KratosClient {
           return switch ((node.attributes.name, node.messages)) {
             (final attributeName?, [MessageDto(:final id), ...]) => (
                 attributeName,
-                KratosError.forId(id),
+                KratosMessage.forId(id),
               ),
             _ => null
           };
@@ -454,15 +452,17 @@ class KratosClient {
         final errorLoginResult =
             login_error.loginErrorResponseFromJson(loginFlowResult.body);
         final messageId = errorLoginResult.ui.messages.firstOrNull?.id;
-        if (messageId == _unverifiedAccountMessageId) {
+
+        if (messageId == KratosMessage.errorValidationAddressNotVerified.id) {
           return UnverifiedAccountError(
             flowId: flow.id,
             emailToVerify: email,
           );
         }
         if (messageId != null) {
-          return LoginFailure(error: KratosError.forId(messageId));
+          return LoginFailure(error: KratosMessage.forId(messageId));
         }
+
         return const UnknownLoginError();
       }
       return const UnknownLoginError();
@@ -537,7 +537,10 @@ class KratosClient {
       if (state == 'passed_challenge') {
         return VerificationSuccessResult();
       } else {
-        return VerificationFailedResult(errorCode: '4070006');
+        return VerificationFailedResult(
+          error:
+              KratosMessage.errorValidationVerificationCodeInvalidOrAlreadyUsed,
+        );
       }
     } catch (e, st) {
       _logger.warning('Error completing verification', e, st);
