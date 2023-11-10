@@ -5,7 +5,8 @@ sealed class Profile {}
 class ErrorGettingProfile extends Profile {}
 
 class ProfileData extends Profile {
-  ProfileData({required this.flowId, required this.traits, required this.userId});
+  ProfileData(
+      {required this.flowId, required this.traits, required this.userId});
 
   final String flowId;
   final List<ProfileTrait> traits;

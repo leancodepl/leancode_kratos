@@ -274,6 +274,24 @@ class KratosClient {
     return mapRegistrationErrorResponse(dto);
   }
 
+  KratosError? _handleChangePasswordError(http.Response response) {
+    final dto = AuthFlowDto.fromString(response.body);
+    final nodes = dto.ui.nodes;
+    final errors = nodes
+        .map((node) {
+          return switch ((node.attributes.name, node.messages)) {
+            (final attributeName?, [MessageDto(:final id), ...]) => (
+                attributeName,
+                KratosError.forId(id),
+              ),
+            _ => null
+          };
+        })
+        .nonNulls
+        .toList();
+    return errors.firstOrNull?.$2;
+  }
+
   Future<RegistrationResponse> _handleSuccessResponse(
     http.Response response,
   ) async {
@@ -840,7 +858,8 @@ class KratosClient {
     return switch (settingsFlow.statusCode) {
       200 => UpdateSuccess(),
       403 => UpdateRequiresReauthorization(),
-      _ => UpdateFailure(),
+      400 => UpdateFailure(error: _handleChangePasswordError(settingsFlow)),
+      _ => UpdateFailure(error: null),
     };
   }
 
