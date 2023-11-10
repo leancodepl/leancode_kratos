@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 
+// https://raw.githubusercontent.com/ory/docs/master/docs/kratos/concepts/messages.json
 enum KratosMessage {
   // Login
   infoSelfServiceLoginRoot(1010000),
@@ -16,6 +17,11 @@ enum KratosMessage {
   infoSelfServiceLoginContinueWebAuthn(1010011),
   infoSelfServiceLoginWebAuthnPasswordless(1010012),
   infoSelfServiceLoginContinue(1010013),
+  infoSelfServiceEmailHasBeenSent(1010014),
+  infoSelfServiceSignInWithCode(1010015),
+  infoSelfServiceSigningInWillLinkYourAccount(1010016),
+  infoSelfServiceSignInAndLink(1010017),
+  infoSelfserviceSignInAndLinkCredential(1010018),
 
   // Logout
   infoSelfServiceLogout(1020000),
@@ -27,6 +33,8 @@ enum KratosMessage {
   infoSelfServiceRegistrationWith(1040002),
   infoSelfServiceRegistrationContinue(1040003),
   infoSelfServiceRegistrationRegisterWebAuthn(1040004),
+  infoSelfServiceRegistrationEmailHasBeenSent(1040005),
+  infoSelfServiceRegistrationRegisterWithCode(1040006),
   infoSelfServiceSettings(1050000),
   infoSelfServiceSettingsUpdateSuccess(1050001),
   infoSelfServiceSettingsUpdateLinkOidc(1050002),
@@ -66,6 +74,9 @@ enum KratosMessage {
   infoNodeLabelContinue(1070009),
   infoNodeLabelRecoveryCode(1070010),
   infoNodeLabelVerificationCode(1070011),
+  infoNodeLabelRegistrationCode(1070012),
+  infoNodeLabelLoginCode(1070013),
+  infoNodeLabelLoginAndLinkCredential(1070014),
 
   // Verification
   infoSelfServiceVerification(1080000),
@@ -102,6 +113,15 @@ enum KratosMessage {
   errorValidationUniqueItems(4000025),
   errorValidationWrongType(4000026),
   errorValidationDuplicateCredentialsOnOIDCLink(4000027),
+  errorValidationCredentialAlreadyUsedByAnotherAccount(4000028),
+  errorValidationMustBeEqualToConstant(4000029),
+  errorValidationConstFailed(4000030),
+  errorValidationPasswordTooSimilarToIdentifier(4000031),
+  errorValidationPasswordTooShort(4000032),
+  errorValidationPasswordTooLong(4000033),
+  errorValidationPasswordFoundInDataBreaches(4000034),
+  errorValidationNoAccountOrNoCodeSignInSetUp(4000035),
+  errorValidationTraitsDontMatchPreviouslyAssociated(4000036),
 
   // Login Validation Error
   errorValidationLogin(4010000),
@@ -111,10 +131,15 @@ enum KratosMessage {
   errorValidationSettingsNoStrategyFound(4010004),
   errorValidationRecoveryNoStrategyFound(4010005),
   errorValidationVerificationNoStrategyFound(4010006),
+  errorValidationLoginRequestAlreadyCompleted(4010007),
+  errorValidationLoginCodeInvalidOrAlreadyUsed(4010008),
+  errorValidationLinkedCredentialsDoNotMatch(4010009),
 
   // Registration Validation Error
   errorValidationRegistration(4040000),
   errorValidationRegistrationFlowExpired(4040001),
+  errorValidationRegistrationRequestAlreadyCompleted(4040002),
+  errorValidationRegistrationCodeInvalidOrAlreadyUsed(4040003),
 
   // Settings Validation Error
   errorValidationSettings(4050000),
