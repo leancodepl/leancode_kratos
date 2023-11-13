@@ -9,5 +9,5 @@ class UpdateRequiresReauthorization extends UpdatePassword {}
 class UpdateFailure extends UpdatePassword {
   UpdateFailure({required this.error});
 
-  final KratosError? error;
+  final KratosMessage? error;
 }

@@ -123,6 +123,7 @@ void main() {
         credentialsStorage: mockStorage,
         httpClient: mockHttpClient,
       );
+      when(() => mockStorage.clear()).thenAnswer((_) async {});
     });
 
     const sessionToken = 'test_token';
@@ -344,8 +345,11 @@ void main() {
 
       expect(
         result,
-        isA<VerificationFailedResult>()
-            .having((result) => result.errorCode, 'errorCode', '4070006'),
+        isA<VerificationFailedResult>().having(
+          (result) => result.error,
+          'error',
+          KratosMessage.errorValidationVerificationCodeInvalidOrAlreadyUsed,
+        ),
       );
       verify(
         () => mockHttpClient.post(

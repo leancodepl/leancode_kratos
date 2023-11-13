@@ -11,7 +11,7 @@ class LoginSuccess extends LoginResponse {
 class LoginFailure extends LoginResponse {
   const LoginFailure({required this.error});
 
-  final KratosError error;
+  final KratosMessage error;
 }
 
 class UnverifiedAccountError extends LoginResponse {
