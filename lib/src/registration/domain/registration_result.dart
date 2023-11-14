@@ -2,12 +2,16 @@ import 'package:leancode_kratos_client/leancode_kratos_client.dart';
 import 'package:leancode_kratos_client/src/common/api/auth_dtos.dart';
 import 'package:leancode_kratos_client/src/registration/api/registration_success.dart';
 
-sealed class RegistrationResponse {
-  const RegistrationResponse();
+sealed class RegistrationResult {
+  const RegistrationResult();
 }
 
-class VerifyEmailResponse extends RegistrationResponse {
-  const VerifyEmailResponse({
+class RegistrationSuccessResult extends RegistrationResult {
+  const RegistrationSuccessResult();
+}
+
+class RegistrationVerifyEmailResult extends RegistrationResult {
+  const RegistrationVerifyEmailResult({
     required this.flowId,
     required this.emailToVerify,
   });
@@ -16,12 +20,8 @@ class VerifyEmailResponse extends RegistrationResponse {
   final String emailToVerify;
 }
 
-class SuccessResponse extends RegistrationResponse {
-  const SuccessResponse();
-}
-
-class SocialRegisterFinishResponse extends RegistrationResponse {
-  const SocialRegisterFinishResponse({
+class RegistrationSocialFinishResult extends RegistrationResult {
+  const RegistrationSocialFinishResult({
     required this.flowInfo,
     required this.idToken,
     required this.values,
@@ -32,21 +32,21 @@ class SocialRegisterFinishResponse extends RegistrationResponse {
   final List<(String fieldName, dynamic value)> values;
 }
 
-class ErrorResponse extends RegistrationResponse {
-  const ErrorResponse({required this.errors});
+class RegistrationErrorResult extends RegistrationResult {
+  const RegistrationErrorResult({
+    required this.generalErrors,
+    required this.fieldErrors,
+  });
 
-  final List<(String fieldName, KratosMessage error)> errors;
+  final List<KratosMessage> generalErrors;
+  final List<(String fieldName, KratosMessage error)> fieldErrors;
 }
 
-class UnhandledStatusCodeError extends RegistrationResponse {
-  const UnhandledStatusCodeError();
+class RegistrationUnknownErrorResult extends RegistrationResult {
+  const RegistrationUnknownErrorResult();
 }
 
-class FailedRegistration extends RegistrationResponse {
-  const FailedRegistration();
-}
-
-RegistrationResponse mapRegistrationSuccessResponse(
+RegistrationResult mapRegistrationSuccessResponse(
   RegistrationSuccessResponse response,
 ) {
   final continueWith = response.continueWith;
@@ -61,7 +61,7 @@ RegistrationResponse mapRegistrationSuccessResponse(
                 verifiableAddress: final emailToVerify?
               )
             ) =>
-              VerifyEmailResponse(
+              RegistrationVerifyEmailResult(
                 flowId: flowId,
                 emailToVerify: emailToVerify,
               ),
@@ -69,22 +69,16 @@ RegistrationResponse mapRegistrationSuccessResponse(
               action: 'set_ory_session_token',
               flow: null,
             ) =>
-              const SuccessResponse(),
-            _ => const FailedRegistration(),
+              const RegistrationSuccessResult(),
+            _ => const RegistrationUnknownErrorResult(),
           };
         },
       ).firstOrNull ??
-      const SuccessResponse();
+      const RegistrationSuccessResult();
 }
 
-RegistrationResponse mapRegistrationErrorResponse(AuthFlowDto response) {
-  final generalErrors = response.ui.messages;
+RegistrationResult mapRegistrationErrorResponse(AuthFlowDto response) {
   final nodes = response.ui.nodes;
-
-  if (generalErrors != null && generalErrors.isNotEmpty) {
-    final kratosError = KratosMessage.forId(generalErrors.first.id);
-    return ErrorResponse(errors: [('general', kratosError)]);
-  }
 
   if (nodes.any(
     (node) =>
@@ -107,25 +101,15 @@ RegistrationResponse mapRegistrationErrorResponse(AuthFlowDto response) {
         .nonNulls
         .toList();
 
-    return SocialRegisterFinishResponse(
+    return RegistrationSocialFinishResult(
       flowInfo: response.info,
       idToken: null,
       values: values,
     );
   }
 
-  final errors = nodes
-      .map((node) {
-        return switch ((node.attributes.name, node.messages)) {
-          (final attributeName?, [MessageDto(:final id), ...]) => (
-              attributeName,
-              KratosMessage.forId(id),
-            ),
-          _ => null
-        };
-      })
-      .nonNulls
-      .toList();
-
-  return ErrorResponse(errors: errors);
+  return RegistrationErrorResult(
+    generalErrors: response.ui.getGeneralMessages(),
+    fieldErrors: response.ui.getFieldMessages(),
+  );
 }
