@@ -708,14 +708,15 @@ class __$$_NodeDtoCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_NodeDto implements _NodeDto {
+class _$_NodeDto extends _NodeDto {
   const _$_NodeDto(
       {required this.type,
       required this.group,
       required this.attributes,
       required final List<MessageDto> messages,
       required this.meta})
-      : _messages = messages;
+      : _messages = messages,
+        super._();
 
   factory _$_NodeDto.fromJson(Map<String, dynamic> json) =>
       _$$_NodeDtoFromJson(json);
@@ -774,13 +775,14 @@ class _$_NodeDto implements _NodeDto {
   }
 }
 
-abstract class _NodeDto implements NodeDto {
+abstract class _NodeDto extends NodeDto {
   const factory _NodeDto(
       {required final String type,
       required final String group,
       required final AttributesDto attributes,
       required final List<MessageDto> messages,
       required final MetaDto meta}) = _$_NodeDto;
+  const _NodeDto._() : super._();
 
   factory _NodeDto.fromJson(Map<String, dynamic> json) = _$_NodeDto.fromJson;
 
@@ -1204,9 +1206,10 @@ class __$$_MessageDtoCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_MessageDto implements _MessageDto {
+class _$_MessageDto extends _MessageDto {
   const _$_MessageDto(
-      {required this.id, required this.text, required this.type, this.context});
+      {required this.id, required this.text, required this.type, this.context})
+      : super._();
 
   factory _$_MessageDto.fromJson(Map<String, dynamic> json) =>
       _$$_MessageDtoFromJson(json);
@@ -1254,12 +1257,13 @@ class _$_MessageDto implements _MessageDto {
   }
 }
 
-abstract class _MessageDto implements MessageDto {
+abstract class _MessageDto extends MessageDto {
   const factory _MessageDto(
       {required final int id,
       required final String text,
       required final String type,
       final MessageContextDto? context}) = _$_MessageDto;
+  const _MessageDto._() : super._();
 
   factory _MessageDto.fromJson(Map<String, dynamic> json) =
       _$_MessageDto.fromJson;

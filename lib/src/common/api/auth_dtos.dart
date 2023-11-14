@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:leancode_kratos_client/src/common/domain/auth_flow_info.dart';
+import 'package:leancode_kratos_client/src/utils/kratos_message.dart';
 
 part 'auth_dtos.freezed.dart';
 part 'auth_dtos.g.dart';
@@ -55,19 +56,14 @@ class UiDto with _$UiDto {
 
   factory UiDto.fromJson(Map<String, dynamic> json) => _$UiDtoFromJson(json);
 
-  String? get loginMethod {
-    return nodes
-        .map(
-          (node) => switch (node.attributes) {
-            AttributesDto(
-              name: 'method',
-              value: final String attributeValue,
-            ) =>
-              attributeValue,
-            _ => null,
-          },
-        )
-        .firstOrNull;
+  List<KratosMessage> getGeneralMessages() {
+    return (messages ?? [])
+        .map((message) => message.toKratosMessage())
+        .toList();
+  }
+
+  List<(String, KratosMessage)> getFieldMessages() {
+    return nodes.expand((node) => node.getKratosMessages()).toList();
   }
 }
 
@@ -83,6 +79,20 @@ class NodeDto with _$NodeDto {
 
   factory NodeDto.fromJson(Map<String, dynamic> json) =>
       _$NodeDtoFromJson(json);
+
+  const NodeDto._();
+
+  List<(String, KratosMessage)> getKratosMessages() {
+    final name = attributes.name;
+
+    if (name == null) {
+      return [];
+    }
+
+    return messages
+        .map((message) => (name, message.toKratosMessage()))
+        .toList();
+  }
 }
 
 @freezed
@@ -112,6 +122,10 @@ class MessageDto with _$MessageDto {
 
   factory MessageDto.fromJson(Map<String, dynamic> json) =>
       _$MessageDtoFromJson(json);
+
+  const MessageDto._();
+
+  KratosMessage toKratosMessage() => KratosMessage.forId(id);
 }
 
 @freezed
