@@ -32,6 +32,10 @@ class RegistrationSocialFinishResult extends RegistrationResult {
   final List<(String fieldName, dynamic value)> values;
 }
 
+class RegistrationCancelledResult extends RegistrationResult {
+  const RegistrationCancelledResult();
+}
+
 class RegistrationErrorResult extends RegistrationResult {
   const RegistrationErrorResult({
     required this.generalErrors,
