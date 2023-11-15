@@ -13,7 +13,7 @@ import 'package:leancode_kratos_client/src/registration/api/token_exchange_succe
 import 'package:logging/logging.dart';
 
 typedef BrowserCallback = Future<String> Function(String url);
-typedef SdkCallback = Future<SdkResult?> Function();
+typedef SdkCallback = Future<SdkResult> Function();
 
 class KratosClient {
   KratosClient({
@@ -186,27 +186,25 @@ class KratosClient {
     var effectiveTraits = traits;
 
     if (effectiveIdToken == null) {
+      SdkResult? sdkResult;
+
       if (Platform.isAndroid &&
           provider == OidcProvider.google &&
           googleSdkCallback != null) {
-        final sdkResult = await googleSdkCallback();
-
-        if (sdkResult == null) {
-          return const RegistrationUnknownErrorResult();
-        }
-
-        effectiveIdToken = sdkResult.idToken;
-        effectiveTraits = <String, dynamic>{
-          ...effectiveTraits,
-          ...sdkResult.traits,
-        };
+        sdkResult = await googleSdkCallback();
       } else if (Platform.isIOS &&
           provider == OidcProvider.apple &&
           appleSdkCallback != null) {
-        final sdkResult = await appleSdkCallback();
+        sdkResult = await appleSdkCallback();
+      }
 
-        if (sdkResult == null) {
-          return const RegistrationUnknownErrorResult();
+      if (sdkResult != null) {
+        switch (sdkResult) {
+          case SdkCancelledResult():
+            return const RegistrationCancelledResult();
+          case SdkErrorResult():
+            return const RegistrationUnknownErrorResult();
+          case SdkSuccessResult():
         }
 
         effectiveIdToken = sdkResult.idToken;
