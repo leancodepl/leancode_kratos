@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:leancode_kratos_client/leancode_kratos_client.dart';
+import 'package:leancode_kratos_client/src/common/api/verification_flow_dto.dart';
 import 'package:mocktail/mocktail.dart';
 
 import 'fixtures/complete_verification_flow_fixture.dart';
@@ -128,7 +129,7 @@ void main() {
 
     const sessionToken = 'test_token';
 
-    test('should return LogoutSuccess when statusCode is 204', () async {
+    test('should return LogoutSuccessResult when statusCode is 204', () async {
       when(() => mockStorage.read()).thenAnswer((_) async => sessionToken);
       when(
         () => mockHttpClient.delete(
@@ -142,7 +143,7 @@ void main() {
 
       final result = await kratosClient.logout();
 
-      expect(result, isA<LogoutSuccess>());
+      expect(result, isA<LogoutSuccessResult>());
       verify(() => mockStorage.read()).called(1);
       verify(
         () => mockHttpClient.delete(
@@ -153,7 +154,8 @@ void main() {
       ).called(1);
     });
 
-    test('should return LogoutFail when statusCode is not 204', () async {
+    test('should return LogoutUnknownErrorResult when statusCode is not 204',
+        () async {
       when(() => mockStorage.read()).thenAnswer((_) async => sessionToken);
       when(
         () => mockHttpClient.delete(
@@ -165,7 +167,7 @@ void main() {
 
       final result = await kratosClient.logout();
 
-      expect(result, isA<LogoutFail>());
+      expect(result, isA<LogoutUnknownErrorResult>());
       verify(() => mockStorage.read()).called(1);
       verify(
         () => mockHttpClient.delete(
@@ -176,12 +178,13 @@ void main() {
       ).called(1);
     });
 
-    test('should return LogoutFail when sessionToken is null', () async {
+    test('should return LogoutUnknownErrorResult when sessionToken is null',
+        () async {
       when(() => mockStorage.read()).thenAnswer((_) async => null);
 
       final result = await kratosClient.logout();
 
-      expect(result, isA<LogoutFail>());
+      expect(result, isA<LogoutUnknownErrorResult>());
       verify(() => mockStorage.read()).called(1);
       verifyNever(
         () => mockHttpClient.delete(
@@ -221,9 +224,9 @@ void main() {
 
       expect(
         result,
-        isA<VerificationFlowResult>().having(
-          (result) => result.flowId,
-          'flowId',
+        isA<VerificationFlowDto>().having(
+          (result) => result.id,
+          'id',
           loginFlowId,
         ),
       );
@@ -231,9 +234,7 @@ void main() {
           .called(1);
     });
 
-    test(
-        'should return VerificationFlowResultError when loginFlowId is not String',
-        () async {
+    test('should return null when loginFlowId is not String', () async {
       const loginFlowId = 123;
       when(
         () => mockHttpClient.get(
@@ -246,7 +247,7 @@ void main() {
 
       final result = await kratosClient.getVerificationFlow();
 
-      expect(result, isA<VerificationFlowResultError>());
+      expect(result, null);
       verify(
         () => mockHttpClient.get(
           any(),
@@ -255,7 +256,7 @@ void main() {
       ).called(1);
     });
 
-    test('should return VerificationFlowResultError on exception', () async {
+    test('should return null on exception', () async {
       when(
         () => mockHttpClient.get(
           any(),
@@ -265,7 +266,7 @@ void main() {
 
       final result = await kratosClient.getVerificationFlow();
 
-      expect(result, isA<VerificationFlowResultError>());
+      expect(result, null);
       verify(
         () => mockHttpClient.get(
           any(),
@@ -343,14 +344,7 @@ void main() {
         flowId: '3721',
       );
 
-      expect(
-        result,
-        isA<VerificationFailedResult>().having(
-          (result) => result.error,
-          'error',
-          KratosMessage.errorValidationVerificationCodeInvalidOrAlreadyUsed,
-        ),
-      );
+      expect(result, isA<VerificationUnknownErrorResult>());
       verify(
         () => mockHttpClient.post(
           any(),

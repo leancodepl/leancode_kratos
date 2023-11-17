@@ -1,1 +1,5 @@
-enum OidcProvider { google, apple, facebook }
+enum OidcProvider {
+  google,
+  apple,
+  facebook,
+}

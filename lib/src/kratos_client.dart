@@ -5,6 +5,7 @@ import 'package:collection/collection.dart';
 import 'package:http/http.dart' as http;
 import 'package:leancode_kratos_client/leancode_kratos_client.dart';
 import 'package:leancode_kratos_client/src/common/api/auth_dtos.dart';
+import 'package:leancode_kratos_client/src/common/api/verification_flow_dto.dart';
 import 'package:leancode_kratos_client/src/login/api/login_error.dart'
     as login_error;
 import 'package:leancode_kratos_client/src/login/api/login_success.dart';
@@ -479,45 +480,33 @@ class KratosClient {
     }
   }
 
-  Future<Logout> logout() async {
+  /// NOTE: logout always clears credential storage. The result is regarding the
+  /// server logout notification which is executed on a best effort basis
+
+  Future<LogoutResult> logout() async {
     final sessionToken = await _credentialsStorage.read();
+    await _credentialsStorage.clear();
+
     if (sessionToken == null) {
-      return LogoutFail();
+      return const LogoutUnknownErrorResult();
     }
-    final logoutResult = await _client.delete(
-      _buildUri(path: 'self-service/logout/api'),
-      headers: _commonHeaders,
-      body: jsonEncode(
-        {
-          'session_token': sessionToken,
-        },
-      ),
-    );
-    if (logoutResult.statusCode == 204) {
-      await _credentialsStorage.clear();
-      return LogoutSuccess();
-    } else {
-      return LogoutFail();
-    }
-  }
 
-  Future<VerificationFlow> getVerificationFlow() async {
-    final response = await _client.get(
-      _buildUri(path: 'self-service/verification/api'),
-      headers: _commonHeaders,
-    );
     try {
-      final decodedResult = jsonDecode(response.body) as Map<String, dynamic>;
-      final dynamic loginFlowId = decodedResult['id'];
+      final logoutResult = await _client.delete(
+        _buildUri(path: 'self-service/logout/api'),
+        headers: _commonHeaders,
+        body: jsonEncode({'session_token': sessionToken}),
+      );
 
-      if (loginFlowId is! String) {
-        return VerificationFlowResultError();
+      if (logoutResult.statusCode == 204) {
+        return const LogoutSuccessResult();
+      } else {
+        return const LogoutUnknownErrorResult();
       }
-
-      return VerificationFlowResult(flowId: loginFlowId);
     } catch (e, st) {
-      _logger.warning('Error getting verification flow', e, st);
-      return VerificationFlowResultError();
+      _logger.warning('Logout failed.', e, st);
+
+      return const LogoutUnknownErrorResult();
     }
   }
 
@@ -525,32 +514,41 @@ class KratosClient {
     required String flowId,
     required String code,
   }) async {
-    final result = await _client.post(
-      _buildUri(
-        path: 'self-service/verification',
-        queryParameters: {'code': code, 'flow': flowId},
-      ),
-      headers: _commonHeaders,
-      body: jsonEncode(
-        {
-          'method': 'code',
-        },
-      ),
-    );
     try {
-      final decodedResult = jsonDecode(result.body) as Map<String, dynamic>;
-      final state = decodedResult['state'] as String;
-      if (state == 'passed_challenge') {
-        return VerificationSuccessResult();
-      } else {
-        return VerificationFailedResult(
-          error:
-              KratosMessage.errorValidationVerificationCodeInvalidOrAlreadyUsed,
+      final response = await _client.post(
+        _buildUri(
+          path: 'self-service/verification',
+          queryParameters: {
+            'code': code,
+            'flow': flowId,
+          },
+        ),
+        headers: _commonHeaders,
+        body: jsonEncode({'method': 'code'}),
+      );
+
+      if (response.statusCode == 200) {
+        final resultFlow = VerificationFlowDto.fromString(response.body);
+
+        if (resultFlow.state != 'passed_challenge') {
+          return const VerificationUnknownErrorResult();
+        }
+
+        return const VerificationSuccessResult();
+      } else if (response.statusCode == 400) {
+        final resultFlow = VerificationFlowDto.fromString(response.body);
+
+        return VerificationErrorResult(
+          generalErrors: resultFlow.ui.getGeneralMessages(),
+          fieldErrors: resultFlow.ui.getFieldMessages(),
         );
       }
+
+      return const VerificationUnknownErrorResult();
     } catch (e, st) {
       _logger.warning('Error completing verification', e, st);
-      return VerificationFailedResult();
+
+      return const VerificationUnknownErrorResult();
     }
   }
 
@@ -558,15 +556,18 @@ class KratosClient {
   /// Use when old verification flow expired / verification flow interrupted on mobile
   ///
 
-  Future<VerificationFlow> getNewVerificationFlow({
-    required String email,
-  }) async {
+  Future<VerificationFlowDto?> getNewVerificationFlow(String email) async {
     final verificationFlow = await getVerificationFlow();
-    if (verificationFlow is VerificationFlowResult) {
+
+    if (verificationFlow == null) {
+      return null;
+    }
+
+    try {
       final response = await _client.post(
         _buildUri(
           path: 'self-service/verification',
-          queryParameters: {'flow': verificationFlow.flowId},
+          queryParameters: {'flow': verificationFlow.id},
         ),
         headers: _commonHeaders,
         body: jsonEncode(
@@ -576,18 +577,43 @@ class KratosClient {
           },
         ),
       );
-      try {
-        final decodedResult = jsonDecode(response.body) as Map<String, dynamic>;
-        final state = decodedResult['state'] as String;
-        if (state == 'sent_email') {
-          return verificationFlow;
-        }
-      } catch (e, st) {
-        _logger.warning('Error getting verification flow', e, st);
-        return VerificationFlowResultError();
+
+      if (response.statusCode != 200) {
+        return null;
       }
+
+      final postedVerificationFlow =
+          VerificationFlowDto.fromString(response.body);
+
+      if (postedVerificationFlow.state != 'sent_email') {
+        return null;
+      }
+
+      return postedVerificationFlow;
+    } catch (e, st) {
+      _logger.warning('Error getting verification flow', e, st);
+
+      return null;
     }
-    return VerificationFlowResultError();
+  }
+
+  Future<VerificationFlowDto?> getVerificationFlow() async {
+    try {
+      final response = await _client.get(
+        _buildUri(path: 'self-service/verification/api'),
+        headers: _commonHeaders,
+      );
+
+      if (response.statusCode != 200) {
+        return null;
+      }
+
+      return VerificationFlowDto.fromString(response.body);
+    } catch (e, st) {
+      _logger.warning('Error getting verification flow', e, st);
+
+      return null;
+    }
   }
 
   Future<void> refreshSessionToken() async {
