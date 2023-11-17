@@ -542,6 +542,8 @@ class KratosClient {
           generalErrors: resultFlow.ui.getGeneralMessages(),
           fieldErrors: resultFlow.ui.getFieldMessages(),
         );
+      } else if (response.statusCode == 403) {
+        return const VerificationFlowExpiredResult();
       }
 
       return const VerificationUnknownErrorResult();
