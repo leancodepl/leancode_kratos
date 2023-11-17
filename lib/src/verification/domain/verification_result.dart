@@ -18,6 +18,10 @@ class VerificationErrorResult extends VerificationResult {
   final List<(String fieldName, KratosMessage error)> fieldErrors;
 }
 
+class VerificationFlowExpiredResult extends VerificationResult {
+  const VerificationFlowExpiredResult();
+}
+
 class VerificationUnknownErrorResult extends VerificationResult {
   const VerificationUnknownErrorResult();
 }
