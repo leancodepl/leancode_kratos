@@ -707,77 +707,61 @@ class KratosClient {
       body: jsonEncode({'code': code, 'method': 'code'}),
       headers: _commonHeaders,
     );
-    if (recoveryFlow.statusCode == 422) {
-      final setCookieHeader = recoveryFlow.headers['set-cookie'];
-      final cookieHeader = _parseCookie(setCookieHeader);
-      if (cookieHeader == null) {
-        return SettingsFlowResultError();
-      }
-      final browserSettingsFlow = await _client.get(
-        _buildUri(path: '/self-service/settings/browser'),
-        headers: {
-          'Accept': 'application/json',
-          'Cookie': cookieHeader,
-        },
-      );
-      if (browserSettingsFlow.statusCode == 200) {
-        final dynamic decodedResult = jsonDecode(browserSettingsFlow.body);
-        String? csrfTokenNode;
-        if (decodedResult
-            case {
-              'id': final String settingsFlowId,
-              'ui': {
-                'nodes': final List<dynamic> nodes,
-              }
-            }) {
-          for (final node in nodes) {
-            if (node
-                case {
-                  'attributes': {
-                    'name': 'csrf_token',
-                    'value': final String value,
-                  },
-                }) {
-              csrfTokenNode = value;
-              break;
-            }
+    if (recoveryFlow.statusCode == 200) {
+      final decodedResult =
+          jsonDecode(recoveryFlow.body) as Map<String, dynamic>;
+      if (decodedResult
+          case {
+            'state': 'passed_challenge',
+            'continue_with': final List<dynamic> continueWith
+          }) {
+        String? settingsFlowId;
+        String? sessionToken;
+        for (final cw in continueWith) {
+          if (cw
+              case {
+                'action': 'set_ory_session_token',
+                'ory_session_token': final String value
+              }) {
+            sessionToken = value;
+          } else if (cw
+              case {
+                'action': 'show_settings_ui',
+                'flow': {'id': final String value}
+              }) {
+            settingsFlowId = value;
           }
-          if (csrfTokenNode == null) {
-            return SettingsFlowResultError();
-          }
+        }
 
+        if (settingsFlowId == null || sessionToken == null) {
+          return SettingsFlowResultError();
+        } else {
           return SettingsFlowResultData(
-            cookie: cookieHeader,
             flowId: settingsFlowId,
-            csrfToken: csrfTokenNode,
+            sessionToken: sessionToken,
           );
         }
+      } else {
+        return SettingsFlowResultError();
       }
     }
     return SettingsFlowResultError();
   }
 
   Future<bool> sendNewPasswordSettingsFlow({
-    required String flowId,
+    required SettingsFlowResultData flow,
     required String newPassword,
-    required String cookieHeader,
-    required String csrfToken,
   }) async {
     final settingsFlow = await _client.post(
       _buildUri(
         path: 'self-service/settings',
-        queryParameters: {'flow': flowId},
+        queryParameters: {'flow': flow.flowId},
       ),
       body: jsonEncode({
         'method': 'password',
         'password': newPassword,
-        'csrf_token': csrfToken,
       }),
-      headers: {
-        'Accept': 'application/json',
-        'Cookie': cookieHeader,
-        'Content-Type': 'application/json',
-      },
+      headers: _buildHeaders({'X-Session-Token': flow.sessionToken}),
     );
     return settingsFlow.statusCode == 200;
   }
@@ -789,10 +773,7 @@ class KratosClient {
     final csrfToken = _csrfTokenRegExp.firstMatch(cookieHeader)?.group(1);
     final oryKratosToken =
         _oryKratosSessionRegExp.firstMatch(cookieHeader)?.group(1);
-    if (csrfToken == null || oryKratosToken == null) {
-      return null;
-    }
-    return [csrfToken, oryKratosToken].join('; ');
+    return [csrfToken, oryKratosToken].where((t) => t != null).join('; ');
   }
 
   Future<Profile> getSettingsFlow() async {
