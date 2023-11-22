@@ -2,14 +2,12 @@ sealed class SettingsFlowResult {}
 
 class SettingsFlowResultData extends SettingsFlowResult {
   SettingsFlowResultData({
-    required this.cookie,
     required this.flowId,
-    required this.csrfToken,
+    required this.sessionToken,
   });
 
-  final String cookie;
   final String flowId;
-  final String csrfToken;
+  final String sessionToken;
 }
 
 class SettingsFlowResultError extends SettingsFlowResult {}
