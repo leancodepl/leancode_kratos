@@ -819,8 +819,6 @@ class KratosClient {
     required String flowId,
   }) async {
     final kratosToken = await _credentialsStorage.read();
-    final emailUpdate =
-        traits.firstWhereOrNull((trait) => trait.traitName == 'email') != null;
 
     if (kratosToken == null) {
       return ProfileUpdateFailure();
@@ -845,7 +843,7 @@ class KratosClient {
     );
 
     return switch (settingsFlow.statusCode) {
-      200 => emailUpdate ? ProfileNeedsVerification() : ProfileUpdateSuccess(),
+      200 => ProfileUpdateSuccess(),
       403 => ProfileUpdateRequiresReauthorization(),
       _ => ProfileUpdateFailure(),
     };
