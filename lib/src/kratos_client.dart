@@ -762,7 +762,7 @@ class KratosClient {
     return settingsFlow.statusCode == 200;
   }
   
-  Future<String?> _getSettingsFlow() async {
+  Future<String?> _getSettingsFlowId() async {
     final kratosToken = await _credentialsStorage.read();
     if (kratosToken == null) {
       return null;
@@ -792,7 +792,7 @@ class KratosClient {
   Future<UpdateProfile> updateTraits({
     required List<ProfileTrait> traits,
   }) async {
-    final settingsFlowId = await _getSettingsFlow();
+    final settingsFlowId = await _getSettingsFlowId();
     final kratosToken = await _credentialsStorage.read();
 
     if (kratosToken == null || settingsFlowId == null) {
@@ -827,7 +827,7 @@ class KratosClient {
   Future<UpdatePassword> updatePassword({
     required String password,
   }) async {
-    final settingsFlowId = await _getSettingsFlow();
+    final settingsFlowId = await _getSettingsFlowId();
     final kratosToken = await _credentialsStorage.read();
 
     if (kratosToken == null || settingsFlowId == null) {
