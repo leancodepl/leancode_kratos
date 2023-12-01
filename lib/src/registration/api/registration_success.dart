@@ -75,7 +75,7 @@ class Identity with _$Identity {
     String? schemaUrl,
     String? state,
     DateTime? stateChangedAt,
-    Traits? traits,
+    Map<String, dynamic>? traits,
     List<VerifiableAddress>? verifiableAddresses,
     List<RecoveryAddress>? recoveryAddresses,
     dynamic metadataPublic,
@@ -99,18 +99,6 @@ class RecoveryAddress with _$RecoveryAddress {
 
   factory RecoveryAddress.fromJson(Map<String, dynamic> json) =>
       _$RecoveryAddressFromJson(json);
-}
-
-@freezed
-class Traits with _$Traits {
-  const factory Traits({
-    String? givenName,
-    String? familyName,
-    bool? regulationsAccepted,
-    String? email,
-  }) = _Traits;
-
-  factory Traits.fromJson(Map<String, dynamic> json) => _$TraitsFromJson(json);
 }
 
 @freezed

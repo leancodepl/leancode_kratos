@@ -34,10 +34,6 @@ class KratosClient {
     'Accept': 'application/json',
     'Content-Type': 'application/json',
   };
-  static final _csrfTokenRegExp =
-      RegExp(r'(csrf_token_[A-Fa-f0-9]+=[^;]+)(;|$)');
-  static final _oryKratosSessionRegExp =
-      RegExp(r'(ory_kratos_session=[^;]+)(;|$)');
 
   Future<AuthFlowDto?> _initRegistrationFlow({
     required bool returnSessionTokenExchangeCode,
@@ -765,21 +761,11 @@ class KratosClient {
     );
     return settingsFlow.statusCode == 200;
   }
-
-  String? _parseCookie(String? cookieHeader) {
-    if (cookieHeader == null) {
-      return null;
-    }
-    final csrfToken = _csrfTokenRegExp.firstMatch(cookieHeader)?.group(1);
-    final oryKratosToken =
-        _oryKratosSessionRegExp.firstMatch(cookieHeader)?.group(1);
-    return [csrfToken, oryKratosToken].where((t) => t != null).join('; ');
-  }
-
-  Future<Profile> getSettingsFlow() async {
+  
+  Future<String?> _getSettingsFlowId() async {
     final kratosToken = await _credentialsStorage.read();
     if (kratosToken == null) {
-      return ErrorGettingProfile();
+      return null;
     }
     final settingsFlow = await _client.get(
       _buildUri(path: 'self-service/settings/api'),
@@ -792,35 +778,24 @@ class KratosClient {
         final dynamic flowId = decodedResult['id'];
         switch (flowId) {
           case String _:
-            final identity = decodedResult['identity'] as Map<String, dynamic>;
-            final traits = identity['traits'] as Map<String, dynamic>;
-            final traitsList = traits.entries.map((entry) {
-              return ProfileTrait(traitName: entry.key, value: entry.value);
-            }).toList();
-            final userId = identity['id'] as String;
-            return ProfileData(
-              traits: traitsList,
-              flowId: flowId,
-              userId: userId,
-            );
+            return flowId;
           default:
-            return ErrorGettingProfile();
+            return null;
         }
       } catch (e, st) {
         _logger.warning('Error getting recovery flow', e, st);
-        return ErrorGettingProfile();
       }
     }
-    return ErrorGettingProfile();
+    return null;
   }
 
   Future<UpdateProfile> updateTraits({
     required List<ProfileTrait> traits,
-    required String flowId,
   }) async {
+    final settingsFlowId = await _getSettingsFlowId();
     final kratosToken = await _credentialsStorage.read();
 
-    if (kratosToken == null) {
+    if (kratosToken == null || settingsFlowId == null) {
       return ProfileUpdateFailure();
     }
 
@@ -833,7 +808,7 @@ class KratosClient {
     final settingsFlow = await _client.post(
       _buildUri(
         path: 'self-service/settings',
-        queryParameters: {'flow': flowId},
+        queryParameters: {'flow': settingsFlowId},
       ),
       body: jsonEncode({
         'method': 'profile',
@@ -851,18 +826,18 @@ class KratosClient {
 
   Future<UpdatePassword> updatePassword({
     required String password,
-    required String flowId,
   }) async {
+    final settingsFlowId = await _getSettingsFlowId();
     final kratosToken = await _credentialsStorage.read();
 
-    if (kratosToken == null) {
+    if (kratosToken == null || settingsFlowId == null) {
       return UpdateRequiresReauthorization();
     }
 
     final settingsFlow = await _client.post(
       _buildUri(
         path: 'self-service/settings',
-        queryParameters: {'flow': flowId},
+        queryParameters: {'flow': settingsFlowId},
       ),
       body: jsonEncode({
         'method': 'password',
@@ -877,6 +852,44 @@ class KratosClient {
       400 => UpdateFailure(error: _handleChangePasswordError(settingsFlow)),
       _ => UpdateFailure(error: null),
     };
+  }
+
+  Future<UserProfile> getUserProfile() async {
+    final kratosToken = await _credentialsStorage.read();
+
+    if (kratosToken == null) {
+      return ErrorGettingUserProfile();
+    }
+
+    final whoamiResponse = await _client.get(
+      _buildUri(path: 'sessions/whoami'),
+      headers: _buildHeaders({'X-Session-Token': kratosToken}),
+    );
+
+    if (whoamiResponse.statusCode == 200) {
+      try {
+        final session = Session.fromJson(
+          json.decode(whoamiResponse.body) as Map<String, dynamic>,
+        );
+        final userId = session.identity.id;
+        final traits = session.identity.traits;
+        final profileTraits = traits.entries
+            .map(
+              (e) => ProfileTrait(
+                traitName: e.key,
+                value: e.value,
+              ),
+            )
+            .toList();
+        return UserProfileData(
+          traits: profileTraits,
+          userId: userId,
+        );
+      } catch (e, st) {
+        _logger.warning('Error getting recovery flow', e, st);
+      }
+    }
+    return ErrorGettingUserProfile();
   }
 
   Uri _buildUri({
