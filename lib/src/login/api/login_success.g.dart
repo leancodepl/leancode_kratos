@@ -89,7 +89,7 @@ _$_Identity _$$_IdentityFromJson(Map<String, dynamic> json) => _$_Identity(
       stateChangedAt: json['state_changed_at'] == null
           ? null
           : DateTime.parse(json['state_changed_at'] as String),
-      traits: Traits.fromJson(json['traits'] as Map<String, dynamic>),
+      traits: json['traits'] as Map<String, dynamic>,
       verifiableAddresses: (json['verifiable_addresses'] as List<dynamic>)
           .map((e) => VerifiableAddress.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -108,7 +108,7 @@ Map<String, dynamic> _$$_IdentityToJson(_$_Identity instance) =>
       'schema_url': instance.schemaUrl,
       'state': instance.state,
       'state_changed_at': instance.stateChangedAt?.toIso8601String(),
-      'traits': instance.traits.toJson(),
+      'traits': instance.traits,
       'verifiable_addresses':
           instance.verifiableAddresses.map((e) => e.toJson()).toList(),
       'recovery_addresses':
@@ -134,20 +134,6 @@ Map<String, dynamic> _$$_RecoveryAddressToJson(_$_RecoveryAddress instance) =>
       'via': instance.via,
       'created_at': instance.createdAt.toIso8601String(),
       'updated_at': instance.updatedAt.toIso8601String(),
-    };
-
-_$_Traits _$$_TraitsFromJson(Map<String, dynamic> json) => _$_Traits(
-      email: json['email'] as String,
-      givenName: json['given_name'] as String,
-      familyName: json['family_name'] as String,
-      regulationsAccepted: json['regulations_accepted'] as bool,
-    );
-
-Map<String, dynamic> _$$_TraitsToJson(_$_Traits instance) => <String, dynamic>{
-      'email': instance.email,
-      'given_name': instance.givenName,
-      'family_name': instance.familyName,
-      'regulations_accepted': instance.regulationsAccepted,
     };
 
 _$_VerifiableAddress _$$_VerifiableAddressFromJson(Map<String, dynamic> json) =>

@@ -902,7 +902,7 @@ mixin _$Identity {
   String get schemaUrl => throw _privateConstructorUsedError;
   String get state => throw _privateConstructorUsedError;
   DateTime? get stateChangedAt => throw _privateConstructorUsedError;
-  Traits get traits => throw _privateConstructorUsedError;
+  Map<String, dynamic> get traits => throw _privateConstructorUsedError;
   List<VerifiableAddress> get verifiableAddresses =>
       throw _privateConstructorUsedError;
   List<RecoveryAddress> get recoveryAddresses =>
@@ -928,14 +928,12 @@ abstract class $IdentityCopyWith<$Res> {
       String schemaUrl,
       String state,
       DateTime? stateChangedAt,
-      Traits traits,
+      Map<String, dynamic> traits,
       List<VerifiableAddress> verifiableAddresses,
       List<RecoveryAddress> recoveryAddresses,
       dynamic metadataPublic,
       DateTime createdAt,
       DateTime updatedAt});
-
-  $TraitsCopyWith<$Res> get traits;
 }
 
 /// @nodoc
@@ -987,7 +985,7 @@ class _$IdentityCopyWithImpl<$Res, $Val extends Identity>
       traits: null == traits
           ? _value.traits
           : traits // ignore: cast_nullable_to_non_nullable
-              as Traits,
+              as Map<String, dynamic>,
       verifiableAddresses: null == verifiableAddresses
           ? _value.verifiableAddresses
           : verifiableAddresses // ignore: cast_nullable_to_non_nullable
@@ -1010,14 +1008,6 @@ class _$IdentityCopyWithImpl<$Res, $Val extends Identity>
               as DateTime,
     ) as $Val);
   }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $TraitsCopyWith<$Res> get traits {
-    return $TraitsCopyWith<$Res>(_value.traits, (value) {
-      return _then(_value.copyWith(traits: value) as $Val);
-    });
-  }
 }
 
 /// @nodoc
@@ -1033,15 +1023,12 @@ abstract class _$$_IdentityCopyWith<$Res> implements $IdentityCopyWith<$Res> {
       String schemaUrl,
       String state,
       DateTime? stateChangedAt,
-      Traits traits,
+      Map<String, dynamic> traits,
       List<VerifiableAddress> verifiableAddresses,
       List<RecoveryAddress> recoveryAddresses,
       dynamic metadataPublic,
       DateTime createdAt,
       DateTime updatedAt});
-
-  @override
-  $TraitsCopyWith<$Res> get traits;
 }
 
 /// @nodoc
@@ -1089,9 +1076,9 @@ class __$$_IdentityCopyWithImpl<$Res>
           : stateChangedAt // ignore: cast_nullable_to_non_nullable
               as DateTime?,
       traits: null == traits
-          ? _value.traits
+          ? _value._traits
           : traits // ignore: cast_nullable_to_non_nullable
-              as Traits,
+              as Map<String, dynamic>,
       verifiableAddresses: null == verifiableAddresses
           ? _value._verifiableAddresses
           : verifiableAddresses // ignore: cast_nullable_to_non_nullable
@@ -1125,13 +1112,14 @@ class _$_Identity implements _Identity {
       required this.schemaUrl,
       required this.state,
       required this.stateChangedAt,
-      required this.traits,
+      required final Map<String, dynamic> traits,
       required final List<VerifiableAddress> verifiableAddresses,
       required final List<RecoveryAddress> recoveryAddresses,
       required this.metadataPublic,
       required this.createdAt,
       required this.updatedAt})
-      : _verifiableAddresses = verifiableAddresses,
+      : _traits = traits,
+        _verifiableAddresses = verifiableAddresses,
         _recoveryAddresses = recoveryAddresses;
 
   factory _$_Identity.fromJson(Map<String, dynamic> json) =>
@@ -1147,8 +1135,14 @@ class _$_Identity implements _Identity {
   final String state;
   @override
   final DateTime? stateChangedAt;
+  final Map<String, dynamic> _traits;
   @override
-  final Traits traits;
+  Map<String, dynamic> get traits {
+    if (_traits is EqualUnmodifiableMapView) return _traits;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_traits);
+  }
+
   final List<VerifiableAddress> _verifiableAddresses;
   @override
   List<VerifiableAddress> get verifiableAddresses {
@@ -1192,7 +1186,7 @@ class _$_Identity implements _Identity {
             (identical(other.state, state) || other.state == state) &&
             (identical(other.stateChangedAt, stateChangedAt) ||
                 other.stateChangedAt == stateChangedAt) &&
-            (identical(other.traits, traits) || other.traits == traits) &&
+            const DeepCollectionEquality().equals(other._traits, _traits) &&
             const DeepCollectionEquality()
                 .equals(other._verifiableAddresses, _verifiableAddresses) &&
             const DeepCollectionEquality()
@@ -1214,7 +1208,7 @@ class _$_Identity implements _Identity {
       schemaUrl,
       state,
       stateChangedAt,
-      traits,
+      const DeepCollectionEquality().hash(_traits),
       const DeepCollectionEquality().hash(_verifiableAddresses),
       const DeepCollectionEquality().hash(_recoveryAddresses),
       const DeepCollectionEquality().hash(metadataPublic),
@@ -1242,7 +1236,7 @@ abstract class _Identity implements Identity {
       required final String schemaUrl,
       required final String state,
       required final DateTime? stateChangedAt,
-      required final Traits traits,
+      required final Map<String, dynamic> traits,
       required final List<VerifiableAddress> verifiableAddresses,
       required final List<RecoveryAddress> recoveryAddresses,
       required final dynamic metadataPublic,
@@ -1262,7 +1256,7 @@ abstract class _Identity implements Identity {
   @override
   DateTime? get stateChangedAt;
   @override
-  Traits get traits;
+  Map<String, dynamic> get traits;
   @override
   List<VerifiableAddress> get verifiableAddresses;
   @override
@@ -1499,204 +1493,6 @@ abstract class _RecoveryAddress implements RecoveryAddress {
   @override
   @JsonKey(ignore: true)
   _$$_RecoveryAddressCopyWith<_$_RecoveryAddress> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-Traits _$TraitsFromJson(Map<String, dynamic> json) {
-  return _Traits.fromJson(json);
-}
-
-/// @nodoc
-mixin _$Traits {
-  String get email => throw _privateConstructorUsedError;
-  String get givenName => throw _privateConstructorUsedError;
-  String get familyName => throw _privateConstructorUsedError;
-  bool get regulationsAccepted => throw _privateConstructorUsedError;
-
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $TraitsCopyWith<Traits> get copyWith => throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $TraitsCopyWith<$Res> {
-  factory $TraitsCopyWith(Traits value, $Res Function(Traits) then) =
-      _$TraitsCopyWithImpl<$Res, Traits>;
-  @useResult
-  $Res call(
-      {String email,
-      String givenName,
-      String familyName,
-      bool regulationsAccepted});
-}
-
-/// @nodoc
-class _$TraitsCopyWithImpl<$Res, $Val extends Traits>
-    implements $TraitsCopyWith<$Res> {
-  _$TraitsCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? email = null,
-    Object? givenName = null,
-    Object? familyName = null,
-    Object? regulationsAccepted = null,
-  }) {
-    return _then(_value.copyWith(
-      email: null == email
-          ? _value.email
-          : email // ignore: cast_nullable_to_non_nullable
-              as String,
-      givenName: null == givenName
-          ? _value.givenName
-          : givenName // ignore: cast_nullable_to_non_nullable
-              as String,
-      familyName: null == familyName
-          ? _value.familyName
-          : familyName // ignore: cast_nullable_to_non_nullable
-              as String,
-      regulationsAccepted: null == regulationsAccepted
-          ? _value.regulationsAccepted
-          : regulationsAccepted // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ) as $Val);
-  }
-}
-
-/// @nodoc
-abstract class _$$_TraitsCopyWith<$Res> implements $TraitsCopyWith<$Res> {
-  factory _$$_TraitsCopyWith(_$_Traits value, $Res Function(_$_Traits) then) =
-      __$$_TraitsCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {String email,
-      String givenName,
-      String familyName,
-      bool regulationsAccepted});
-}
-
-/// @nodoc
-class __$$_TraitsCopyWithImpl<$Res>
-    extends _$TraitsCopyWithImpl<$Res, _$_Traits>
-    implements _$$_TraitsCopyWith<$Res> {
-  __$$_TraitsCopyWithImpl(_$_Traits _value, $Res Function(_$_Traits) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? email = null,
-    Object? givenName = null,
-    Object? familyName = null,
-    Object? regulationsAccepted = null,
-  }) {
-    return _then(_$_Traits(
-      email: null == email
-          ? _value.email
-          : email // ignore: cast_nullable_to_non_nullable
-              as String,
-      givenName: null == givenName
-          ? _value.givenName
-          : givenName // ignore: cast_nullable_to_non_nullable
-              as String,
-      familyName: null == familyName
-          ? _value.familyName
-          : familyName // ignore: cast_nullable_to_non_nullable
-              as String,
-      regulationsAccepted: null == regulationsAccepted
-          ? _value.regulationsAccepted
-          : regulationsAccepted // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ));
-  }
-}
-
-/// @nodoc
-@JsonSerializable()
-class _$_Traits implements _Traits {
-  const _$_Traits(
-      {required this.email,
-      required this.givenName,
-      required this.familyName,
-      required this.regulationsAccepted});
-
-  factory _$_Traits.fromJson(Map<String, dynamic> json) =>
-      _$$_TraitsFromJson(json);
-
-  @override
-  final String email;
-  @override
-  final String givenName;
-  @override
-  final String familyName;
-  @override
-  final bool regulationsAccepted;
-
-  @override
-  String toString() {
-    return 'Traits(email: $email, givenName: $givenName, familyName: $familyName, regulationsAccepted: $regulationsAccepted)';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$_Traits &&
-            (identical(other.email, email) || other.email == email) &&
-            (identical(other.givenName, givenName) ||
-                other.givenName == givenName) &&
-            (identical(other.familyName, familyName) ||
-                other.familyName == familyName) &&
-            (identical(other.regulationsAccepted, regulationsAccepted) ||
-                other.regulationsAccepted == regulationsAccepted));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(
-      runtimeType, email, givenName, familyName, regulationsAccepted);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$_TraitsCopyWith<_$_Traits> get copyWith =>
-      __$$_TraitsCopyWithImpl<_$_Traits>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$_TraitsToJson(
-      this,
-    );
-  }
-}
-
-abstract class _Traits implements Traits {
-  const factory _Traits(
-      {required final String email,
-      required final String givenName,
-      required final String familyName,
-      required final bool regulationsAccepted}) = _$_Traits;
-
-  factory _Traits.fromJson(Map<String, dynamic> json) = _$_Traits.fromJson;
-
-  @override
-  String get email;
-  @override
-  String get givenName;
-  @override
-  String get familyName;
-  @override
-  bool get regulationsAccepted;
-  @override
-  @JsonKey(ignore: true)
-  _$$_TraitsCopyWith<_$_Traits> get copyWith =>
       throw _privateConstructorUsedError;
 }
 

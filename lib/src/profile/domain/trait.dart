@@ -3,4 +3,5 @@ class ProfileTrait {
 
   final String traitName;
   final dynamic value;
+
 }
