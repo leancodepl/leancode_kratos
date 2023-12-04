@@ -19,6 +19,21 @@ _$_RegistrationSuccessResponse _$$_RegistrationSuccessResponseFromJson(
           ? null
           : Session.fromJson(json['session'] as Map<String, dynamic>),
       sessionToken: json['session_token'] as String?,
+      id: json['id'] as String?,
+      oauth2LoginChallenge: json['oauth2_login_challenge'] as String?,
+      type: json['type'] as String?,
+      expiresAt: json['expires_at'] == null
+          ? null
+          : DateTime.parse(json['expires_at'] as String),
+      issuedAt: json['issued_at'] == null
+          ? null
+          : DateTime.parse(json['issued_at'] as String),
+      requestUrl: json['request_url'] as String?,
+      returnTo: json['return_to'] as String?,
+      ui: json['ui'] == null
+          ? null
+          : UiDto.fromJson(json['ui'] as Map<String, dynamic>),
+      sessionTokenExchangeCode: json['session_token_exchange_code'] as String?,
     );
 
 Map<String, dynamic> _$$_RegistrationSuccessResponseToJson(
@@ -28,6 +43,15 @@ Map<String, dynamic> _$$_RegistrationSuccessResponseToJson(
       'identity': instance.identity?.toJson(),
       'session': instance.session?.toJson(),
       'session_token': instance.sessionToken,
+      'id': instance.id,
+      'oauth2_login_challenge': instance.oauth2LoginChallenge,
+      'type': instance.type,
+      'expires_at': instance.expiresAt?.toIso8601String(),
+      'issued_at': instance.issuedAt?.toIso8601String(),
+      'request_url': instance.requestUrl,
+      'return_to': instance.returnTo,
+      'ui': instance.ui?.toJson(),
+      'session_token_exchange_code': instance.sessionTokenExchangeCode,
     };
 
 _$_RegistrationBrowserLocationChangeRequiredResponse
