@@ -408,23 +408,32 @@ class KratosClient {
   Future<LoginResult> loginWithPassword(
     String email,
     String password, {
+    AuthFlowInfo? flowInfo,
     bool refresh = false,
   }) async {
     try {
-      final flow = await _initLoginFlow(
-        returnSessionTokenExchangeCode: false,
-        returnTo: null,
-        refresh: refresh,
-      );
+      final AuthFlowInfo? effectiveFlowInfo;
 
-      if (flow == null) {
+      if (flowInfo != null) {
+        effectiveFlowInfo = flowInfo;
+      } else {
+        final newFlow = await _initLoginFlow(
+          returnSessionTokenExchangeCode: false,
+          returnTo: null,
+          refresh: refresh,
+        );
+
+        effectiveFlowInfo = newFlow?.info;
+      }
+
+      if (effectiveFlowInfo == null) {
         return const LoginUnknownErrorResult();
       }
 
       final loginFlowResult = await _client.post(
         _buildUri(
           path: 'self-service/login',
-          queryParameters: {'flow': flow.id},
+          queryParameters: {'flow': effectiveFlowInfo.id},
         ),
         headers: _commonHeaders,
         body: jsonEncode(
@@ -451,7 +460,7 @@ class KratosClient {
         if (generalErrors
             .contains(KratosMessage.errorValidationAddressNotVerified)) {
           return LoginVerifyEmailResult(
-            flowId: flow.id,
+            flowId: effectiveFlowInfo.id,
             emailToVerify: email,
           );
         }

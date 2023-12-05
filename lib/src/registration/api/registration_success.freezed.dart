@@ -24,7 +24,17 @@ mixin _$RegistrationSuccessResponse {
   List<ContinueWith>? get continueWith => throw _privateConstructorUsedError;
   Identity? get identity => throw _privateConstructorUsedError;
   Session? get session => throw _privateConstructorUsedError;
-  String? get sessionToken => throw _privateConstructorUsedError;
+  String? get sessionToken =>
+      throw _privateConstructorUsedError; // Sign in and link undocumented response
+  String? get id => throw _privateConstructorUsedError;
+  String? get oauth2LoginChallenge => throw _privateConstructorUsedError;
+  String? get type => throw _privateConstructorUsedError;
+  DateTime? get expiresAt => throw _privateConstructorUsedError;
+  DateTime? get issuedAt => throw _privateConstructorUsedError;
+  String? get requestUrl => throw _privateConstructorUsedError;
+  String? get returnTo => throw _privateConstructorUsedError;
+  UiDto? get ui => throw _privateConstructorUsedError;
+  String? get sessionTokenExchangeCode => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -44,10 +54,20 @@ abstract class $RegistrationSuccessResponseCopyWith<$Res> {
       {List<ContinueWith>? continueWith,
       Identity? identity,
       Session? session,
-      String? sessionToken});
+      String? sessionToken,
+      String? id,
+      String? oauth2LoginChallenge,
+      String? type,
+      DateTime? expiresAt,
+      DateTime? issuedAt,
+      String? requestUrl,
+      String? returnTo,
+      UiDto? ui,
+      String? sessionTokenExchangeCode});
 
   $IdentityCopyWith<$Res>? get identity;
   $SessionCopyWith<$Res>? get session;
+  $UiDtoCopyWith<$Res>? get ui;
 }
 
 /// @nodoc
@@ -68,6 +88,15 @@ class _$RegistrationSuccessResponseCopyWithImpl<$Res,
     Object? identity = freezed,
     Object? session = freezed,
     Object? sessionToken = freezed,
+    Object? id = freezed,
+    Object? oauth2LoginChallenge = freezed,
+    Object? type = freezed,
+    Object? expiresAt = freezed,
+    Object? issuedAt = freezed,
+    Object? requestUrl = freezed,
+    Object? returnTo = freezed,
+    Object? ui = freezed,
+    Object? sessionTokenExchangeCode = freezed,
   }) {
     return _then(_value.copyWith(
       continueWith: freezed == continueWith
@@ -85,6 +114,42 @@ class _$RegistrationSuccessResponseCopyWithImpl<$Res,
       sessionToken: freezed == sessionToken
           ? _value.sessionToken
           : sessionToken // ignore: cast_nullable_to_non_nullable
+              as String?,
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String?,
+      oauth2LoginChallenge: freezed == oauth2LoginChallenge
+          ? _value.oauth2LoginChallenge
+          : oauth2LoginChallenge // ignore: cast_nullable_to_non_nullable
+              as String?,
+      type: freezed == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as String?,
+      expiresAt: freezed == expiresAt
+          ? _value.expiresAt
+          : expiresAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      issuedAt: freezed == issuedAt
+          ? _value.issuedAt
+          : issuedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      requestUrl: freezed == requestUrl
+          ? _value.requestUrl
+          : requestUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      returnTo: freezed == returnTo
+          ? _value.returnTo
+          : returnTo // ignore: cast_nullable_to_non_nullable
+              as String?,
+      ui: freezed == ui
+          ? _value.ui
+          : ui // ignore: cast_nullable_to_non_nullable
+              as UiDto?,
+      sessionTokenExchangeCode: freezed == sessionTokenExchangeCode
+          ? _value.sessionTokenExchangeCode
+          : sessionTokenExchangeCode // ignore: cast_nullable_to_non_nullable
               as String?,
     ) as $Val);
   }
@@ -112,6 +177,18 @@ class _$RegistrationSuccessResponseCopyWithImpl<$Res,
       return _then(_value.copyWith(session: value) as $Val);
     });
   }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $UiDtoCopyWith<$Res>? get ui {
+    if (_value.ui == null) {
+      return null;
+    }
+
+    return $UiDtoCopyWith<$Res>(_value.ui!, (value) {
+      return _then(_value.copyWith(ui: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -127,12 +204,23 @@ abstract class _$$_RegistrationSuccessResponseCopyWith<$Res>
       {List<ContinueWith>? continueWith,
       Identity? identity,
       Session? session,
-      String? sessionToken});
+      String? sessionToken,
+      String? id,
+      String? oauth2LoginChallenge,
+      String? type,
+      DateTime? expiresAt,
+      DateTime? issuedAt,
+      String? requestUrl,
+      String? returnTo,
+      UiDto? ui,
+      String? sessionTokenExchangeCode});
 
   @override
   $IdentityCopyWith<$Res>? get identity;
   @override
   $SessionCopyWith<$Res>? get session;
+  @override
+  $UiDtoCopyWith<$Res>? get ui;
 }
 
 /// @nodoc
@@ -152,6 +240,15 @@ class __$$_RegistrationSuccessResponseCopyWithImpl<$Res>
     Object? identity = freezed,
     Object? session = freezed,
     Object? sessionToken = freezed,
+    Object? id = freezed,
+    Object? oauth2LoginChallenge = freezed,
+    Object? type = freezed,
+    Object? expiresAt = freezed,
+    Object? issuedAt = freezed,
+    Object? requestUrl = freezed,
+    Object? returnTo = freezed,
+    Object? ui = freezed,
+    Object? sessionTokenExchangeCode = freezed,
   }) {
     return _then(_$_RegistrationSuccessResponse(
       continueWith: freezed == continueWith
@@ -170,19 +267,65 @@ class __$$_RegistrationSuccessResponseCopyWithImpl<$Res>
           ? _value.sessionToken
           : sessionToken // ignore: cast_nullable_to_non_nullable
               as String?,
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String?,
+      oauth2LoginChallenge: freezed == oauth2LoginChallenge
+          ? _value.oauth2LoginChallenge
+          : oauth2LoginChallenge // ignore: cast_nullable_to_non_nullable
+              as String?,
+      type: freezed == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as String?,
+      expiresAt: freezed == expiresAt
+          ? _value.expiresAt
+          : expiresAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      issuedAt: freezed == issuedAt
+          ? _value.issuedAt
+          : issuedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      requestUrl: freezed == requestUrl
+          ? _value.requestUrl
+          : requestUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      returnTo: freezed == returnTo
+          ? _value.returnTo
+          : returnTo // ignore: cast_nullable_to_non_nullable
+              as String?,
+      ui: freezed == ui
+          ? _value.ui
+          : ui // ignore: cast_nullable_to_non_nullable
+              as UiDto?,
+      sessionTokenExchangeCode: freezed == sessionTokenExchangeCode
+          ? _value.sessionTokenExchangeCode
+          : sessionTokenExchangeCode // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$_RegistrationSuccessResponse implements _RegistrationSuccessResponse {
+class _$_RegistrationSuccessResponse extends _RegistrationSuccessResponse {
   const _$_RegistrationSuccessResponse(
       {final List<ContinueWith>? continueWith,
       this.identity,
       this.session,
-      this.sessionToken})
-      : _continueWith = continueWith;
+      this.sessionToken,
+      this.id,
+      this.oauth2LoginChallenge,
+      this.type,
+      this.expiresAt,
+      this.issuedAt,
+      this.requestUrl,
+      this.returnTo,
+      this.ui,
+      this.sessionTokenExchangeCode})
+      : _continueWith = continueWith,
+        super._();
 
   factory _$_RegistrationSuccessResponse.fromJson(Map<String, dynamic> json) =>
       _$$_RegistrationSuccessResponseFromJson(json);
@@ -203,10 +346,29 @@ class _$_RegistrationSuccessResponse implements _RegistrationSuccessResponse {
   final Session? session;
   @override
   final String? sessionToken;
+// Sign in and link undocumented response
+  @override
+  final String? id;
+  @override
+  final String? oauth2LoginChallenge;
+  @override
+  final String? type;
+  @override
+  final DateTime? expiresAt;
+  @override
+  final DateTime? issuedAt;
+  @override
+  final String? requestUrl;
+  @override
+  final String? returnTo;
+  @override
+  final UiDto? ui;
+  @override
+  final String? sessionTokenExchangeCode;
 
   @override
   String toString() {
-    return 'RegistrationSuccessResponse(continueWith: $continueWith, identity: $identity, session: $session, sessionToken: $sessionToken)';
+    return 'RegistrationSuccessResponse(continueWith: $continueWith, identity: $identity, session: $session, sessionToken: $sessionToken, id: $id, oauth2LoginChallenge: $oauth2LoginChallenge, type: $type, expiresAt: $expiresAt, issuedAt: $issuedAt, requestUrl: $requestUrl, returnTo: $returnTo, ui: $ui, sessionTokenExchangeCode: $sessionTokenExchangeCode)';
   }
 
   @override
@@ -220,7 +382,23 @@ class _$_RegistrationSuccessResponse implements _RegistrationSuccessResponse {
                 other.identity == identity) &&
             (identical(other.session, session) || other.session == session) &&
             (identical(other.sessionToken, sessionToken) ||
-                other.sessionToken == sessionToken));
+                other.sessionToken == sessionToken) &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.oauth2LoginChallenge, oauth2LoginChallenge) ||
+                other.oauth2LoginChallenge == oauth2LoginChallenge) &&
+            (identical(other.type, type) || other.type == type) &&
+            (identical(other.expiresAt, expiresAt) ||
+                other.expiresAt == expiresAt) &&
+            (identical(other.issuedAt, issuedAt) ||
+                other.issuedAt == issuedAt) &&
+            (identical(other.requestUrl, requestUrl) ||
+                other.requestUrl == requestUrl) &&
+            (identical(other.returnTo, returnTo) ||
+                other.returnTo == returnTo) &&
+            (identical(other.ui, ui) || other.ui == ui) &&
+            (identical(
+                    other.sessionTokenExchangeCode, sessionTokenExchangeCode) ||
+                other.sessionTokenExchangeCode == sessionTokenExchangeCode));
   }
 
   @JsonKey(ignore: true)
@@ -230,7 +408,16 @@ class _$_RegistrationSuccessResponse implements _RegistrationSuccessResponse {
       const DeepCollectionEquality().hash(_continueWith),
       identity,
       session,
-      sessionToken);
+      sessionToken,
+      id,
+      oauth2LoginChallenge,
+      type,
+      expiresAt,
+      issuedAt,
+      requestUrl,
+      returnTo,
+      ui,
+      sessionTokenExchangeCode);
 
   @JsonKey(ignore: true)
   @override
@@ -248,12 +435,22 @@ class _$_RegistrationSuccessResponse implements _RegistrationSuccessResponse {
 }
 
 abstract class _RegistrationSuccessResponse
-    implements RegistrationSuccessResponse {
+    extends RegistrationSuccessResponse {
   const factory _RegistrationSuccessResponse(
       {final List<ContinueWith>? continueWith,
       final Identity? identity,
       final Session? session,
-      final String? sessionToken}) = _$_RegistrationSuccessResponse;
+      final String? sessionToken,
+      final String? id,
+      final String? oauth2LoginChallenge,
+      final String? type,
+      final DateTime? expiresAt,
+      final DateTime? issuedAt,
+      final String? requestUrl,
+      final String? returnTo,
+      final UiDto? ui,
+      final String? sessionTokenExchangeCode}) = _$_RegistrationSuccessResponse;
+  const _RegistrationSuccessResponse._() : super._();
 
   factory _RegistrationSuccessResponse.fromJson(Map<String, dynamic> json) =
       _$_RegistrationSuccessResponse.fromJson;
@@ -266,6 +463,24 @@ abstract class _RegistrationSuccessResponse
   Session? get session;
   @override
   String? get sessionToken;
+  @override // Sign in and link undocumented response
+  String? get id;
+  @override
+  String? get oauth2LoginChallenge;
+  @override
+  String? get type;
+  @override
+  DateTime? get expiresAt;
+  @override
+  DateTime? get issuedAt;
+  @override
+  String? get requestUrl;
+  @override
+  String? get returnTo;
+  @override
+  UiDto? get ui;
+  @override
+  String? get sessionTokenExchangeCode;
   @override
   @JsonKey(ignore: true)
   _$$_RegistrationSuccessResponseCopyWith<_$_RegistrationSuccessResponse>

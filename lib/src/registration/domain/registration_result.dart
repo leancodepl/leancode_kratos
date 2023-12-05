@@ -32,6 +32,12 @@ class RegistrationSocialFinishResult extends RegistrationResult {
   final List<(String fieldName, dynamic value)> values;
 }
 
+class RegistractionLinkAccountResult extends RegistrationResult {
+  const RegistractionLinkAccountResult(this.flowInfo);
+
+  final AuthFlowInfo flowInfo;
+}
+
 class RegistrationCancelledResult extends RegistrationResult {
   const RegistrationCancelledResult();
 }
@@ -53,6 +59,10 @@ class RegistrationUnknownErrorResult extends RegistrationResult {
 RegistrationResult mapRegistrationSuccessResponse(
   RegistrationSuccessResponse response,
 ) {
+  if (response.flow case final AuthFlowDto flow) {
+    return RegistractionLinkAccountResult(flow.info);
+  }
+
   final continueWith = response.continueWith;
 
   return continueWith?.map(
