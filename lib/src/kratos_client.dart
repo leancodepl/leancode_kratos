@@ -770,7 +770,7 @@ class KratosClient {
     );
     return settingsFlow.statusCode == 200;
   }
-  
+
   Future<String?> _getSettingsFlowId() async {
     final kratosToken = await _credentialsStorage.read();
     if (kratosToken == null) {
@@ -908,7 +908,7 @@ class KratosClient {
       Uri(
         scheme: _baseUri.scheme,
         host: _baseUri.host,
-        path: path,
+        path: '${_baseUri.path}/$path',
         queryParameters: queryParameters,
       );
 
