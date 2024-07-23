@@ -908,6 +908,7 @@ class KratosClient {
       Uri(
         scheme: _baseUri.scheme,
         host: _baseUri.host,
+        port: _baseUri.port,
         path: '${_baseUri.path}/$path',
         queryParameters: queryParameters,
       );
