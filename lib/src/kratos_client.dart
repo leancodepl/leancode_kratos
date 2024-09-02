@@ -262,6 +262,45 @@ class KratosClient {
     }
   }
 
+  Future<RegistrationResult> registerWithProfile({
+    Map<String, dynamic> traits = const <String, dynamic>{},
+  }) async {
+    final flow =
+    await _initRegistrationFlow(returnSessionTokenExchangeCode: false);
+
+    if (flow == null) {
+      return const RegistrationUnknownErrorResult();
+    }
+
+    try {
+      final response = await _client.post(
+        _buildUri(
+          path: 'self-service/registration',
+          queryParameters: {'flow': flow.id},
+        ),
+        headers: _commonHeaders,
+        body: jsonEncode(
+          {
+            'method': 'profile',
+            'csrf_token': flow.csrfToken,
+            'traits': traits,
+          },
+        ),
+      );
+
+      if (response.statusCode == 400) {
+        return _handleErrorResponse(response);
+      } else if (response.statusCode == 200) {
+        return _handleSuccessResponse(response);
+      }
+
+      return const RegistrationUnknownErrorResult();
+    } catch (e, st) {
+      _logger.severe('Error completing registration flow', e, st);
+      return const RegistrationUnknownErrorResult();
+    }
+  }
+
   RegistrationResult _handleErrorResponse(http.Response response) {
     final dto = AuthFlowDto.fromString(response.body);
     return mapRegistrationErrorResponse(dto);
