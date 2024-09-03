@@ -266,7 +266,7 @@ class KratosClient {
     Map<String, dynamic> traits = const <String, dynamic>{},
   }) async {
     final flow =
-    await _initRegistrationFlow(returnSessionTokenExchangeCode: false);
+        await _initRegistrationFlow(returnSessionTokenExchangeCode: false);
 
     if (flow == null) {
       return const RegistrationUnknownErrorResult();
@@ -288,9 +288,9 @@ class KratosClient {
         ),
       );
 
-      if (response.statusCode == 400) {
+      if (response.statusCode == 410 || response.statusCode == 422) {
         return _handleErrorResponse(response);
-      } else if (response.statusCode == 200) {
+      } else if (response.statusCode == 200 || response.statusCode == 400) {
         return _handleSuccessResponse(response);
       }
 
@@ -331,12 +331,12 @@ class KratosClient {
         RegistrationSuccessResponse.fromString(response.body);
     final result = mapRegistrationSuccessResponse(decodedResponse);
 
-    if (result is RegistrationSuccessResult &&
-        decodedResponse.sessionToken != null &&
-        decodedResponse.session != null) {
+    if ((decodedResponse.sessionToken, decodedResponse.session)
+        case (final sessionToken?, final session?)
+        when result is RegistrationSuccessResult) {
       await _credentialsStorage.save(
-        credentials: decodedResponse.sessionToken!,
-        expirationDate: decodedResponse.session!.expiresAt.toString(),
+        credentials: sessionToken,
+        expirationDate: session.expiresAt.toString(),
       );
     }
 
@@ -809,7 +809,7 @@ class KratosClient {
     );
     return settingsFlow.statusCode == 200;
   }
-  
+
   Future<String?> _getSettingsFlowId() async {
     final kratosToken = await _credentialsStorage.read();
     if (kratosToken == null) {
