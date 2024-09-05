@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:leancode_kratos_client/leancode_kratos_client.dart';
 import 'package:leancode_kratos_client/src/common/api/auth_dtos.dart';
-import 'package:leancode_kratos_client/src/common/api/data_state.dart';
 
 class RegistrationApi {
   RegistrationApi(Uri baseUri, Client client)
@@ -13,13 +12,13 @@ class RegistrationApi {
   final Uri _baseUri;
   final Client _client;
 
-  Future<DataState> registerWithPassword({
+  Future<Response> registerWithPassword({
     required String password,
     required Map<String, dynamic> traits,
     required String flowId,
     required String? csrfToken,
   }) async {
-    final response = await _client.post(
+    return _client.post(
       Uri(
         scheme: _baseUri.scheme,
         host: _baseUri.host,
@@ -39,15 +38,9 @@ class RegistrationApi {
         },
       ),
     );
-
-    return switch (response.statusCode) {
-      200 => DataSuccess(data: response),
-      400 => DataFailed(data: response),
-      _ => const DataFailed(),
-    };
   }
 
-  Future<DataState> initRegistrationFlow({
+  Future<AuthFlowDto> initRegistrationFlow({
     bool returnSessionTokenExchangeCode = true,
     String? returnTo,
   }) async {
@@ -63,7 +56,7 @@ class RegistrationApi {
         },
       ),
     );
-    return DataSuccess(data: AuthFlowDto.fromString(registrationFlow.body));
+    return AuthFlowDto.fromString(registrationFlow.body);
   }
 
   Future<Response> registerWithOidc({
@@ -73,7 +66,7 @@ class RegistrationApi {
     required OidcProvider provider,
     required String? effectiveIdToken,
   }) async {
-    final response = await _client.post(
+    return _client.post(
       Uri(
         scheme: _baseUri.scheme,
         host: _baseUri.host,
@@ -94,15 +87,13 @@ class RegistrationApi {
         },
       ),
     );
-
-    return response;
   }
 
-  Future<DataState> exchangeToken({
+  Future<Response> exchangeToken({
     required String initCode,
     required String returnToCode,
   }) async {
-    final response = await _client.get(
+    return _client.get(
       Uri(
         scheme: _baseUri.scheme,
         host: _baseUri.host,
@@ -117,14 +108,9 @@ class RegistrationApi {
         'Content-Type': 'application/json',
       },
     );
-
-    return switch (response.statusCode) {
-      200 => DataSuccess(data: response),
-      _ => DataFailed(data: response),
-    };
   }
 
-  Future<DataState> getRegistrationFlow({required String id}) async {
+  Future<AuthFlowDto> getRegistrationFlow({required String id}) async {
     final registrationFlow = await _client.get(
       Uri(
         scheme: _baseUri.scheme,
@@ -133,7 +119,7 @@ class RegistrationApi {
         queryParameters: {'id': id},
       ),
     );
-    return DataSuccess(data: AuthFlowDto.fromString(registrationFlow.body));
+    return AuthFlowDto.fromString(registrationFlow.body);
   }
 
   Future<Response> registerWithProfile({

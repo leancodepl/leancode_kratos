@@ -1,5 +1,4 @@
 import 'package:leancode_kratos_client/leancode_kratos_client.dart';
-import 'package:leancode_kratos_client/src/common/api/data_state.dart';
 import 'package:leancode_kratos_client/src/logout/api/logout_api.dart';
 import 'package:logging/logging.dart';
 
@@ -23,11 +22,11 @@ class LogoutRepository {
     }
 
     try {
-      final logoutResult = await _api.logout(sessionToken: sessionToken);
-
-      if (logoutResult is DataSuccess) {
-        return const LogoutSuccessResult();
-      }
+      final response = await _api.logout(sessionToken: sessionToken);
+      return switch (response.statusCode) {
+        204 => const LogoutSuccessResult(),
+        _ => const LogoutUnknownErrorResult(),
+      };
     } catch (e, st) {
       _logger.warning('Logout failed.', e, st);
     }

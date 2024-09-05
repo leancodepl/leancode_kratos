@@ -2,9 +2,6 @@ import 'dart:convert';
 
 import 'package:http/http.dart';
 import 'package:leancode_kratos_client/src/common/api/auth_dtos.dart';
-import 'package:leancode_kratos_client/src/common/api/data_state.dart';
-import 'package:leancode_kratos_client/src/login/api/login_error.dart';
-import 'package:leancode_kratos_client/src/login/api/login_success.dart';
 
 class LoginApi {
   LoginApi(Uri baseUri, Client client)
@@ -14,12 +11,12 @@ class LoginApi {
   final Uri _baseUri;
   final Client _client;
 
-  Future<DataState> loginWithPassword({
+  Future<Response> loginWithPassword({
     required String email,
     required String password,
     required String flowId,
   }) async {
-    final response = await _client.post(
+    return _client.post(
       Uri(
         scheme: _baseUri.scheme,
         host: _baseUri.host,
@@ -40,19 +37,9 @@ class LoginApi {
         },
       ),
     );
-
-    return switch (response.statusCode) {
-      200 => DataSuccess<LoginSuccessResponse>(
-          data: loginSuccessResponseFromJson(response.body),
-        ),
-      400 => DataFailed<LoginErrorResponse>(
-          data: loginErrorResponseFromJson(response.body),
-        ),
-      _ => const DataFailed<void>(),
-    } as DataState;
   }
 
-  Future<DataState> initLoginFlow({
+  Future<AuthFlowDto> initLoginFlow({
     bool returnSessionTokenExchangeCode = true,
     required String? returnTo,
     required bool refresh,
@@ -70,7 +57,7 @@ class LoginApi {
         },
       ),
     );
-    return DataSuccess(data: AuthFlowDto.fromString(registrationFlow.body));
+    return AuthFlowDto.fromString(registrationFlow.body);
   }
 
   Future<Response> refreshSessionToken({

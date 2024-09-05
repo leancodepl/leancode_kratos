@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:http/http.dart';
-import 'package:leancode_kratos_client/src/common/api/data_state.dart';
 import 'package:leancode_kratos_client/src/profile/api/profile_settings.dart';
 
 class ProfileApi {
@@ -12,12 +11,12 @@ class ProfileApi {
   final Uri _baseUri;
   final Client _client;
 
-  Future<DataState> updatePassword({
+  Future<Response> updatePassword({
     required String password,
     required String kratosToken,
     required String settingsFlowId,
   }) async {
-    final response = await _client.post(
+    return _client.post(
       Uri(
         scheme: _baseUri.scheme,
         host: _baseUri.host,
@@ -34,17 +33,12 @@ class ProfileApi {
         'password': password,
       }),
     );
-
-    return switch (response.statusCode) {
-      200 => const DataSuccess(),
-      _ => DataFailed(data: response),
-    };
   }
 
-  Future<DataState> getSettings({
+  Future<Response> getSettings({
     required String kratosToken,
   }) async {
-    final response = await _client.get(
+    return _client.get(
       Uri(
         scheme: _baseUri.scheme,
         host: _baseUri.host,
@@ -56,21 +50,14 @@ class ProfileApi {
         'X-Session-Token': kratosToken,
       },
     );
-
-    return switch (response.statusCode) {
-      200 => DataSuccess(
-          data: profileSettingsSuccessResponseFromJson(response.body),
-        ),
-      _ => DataFailed(data: response),
-    };
   }
 
-  Future<DataState> updateTraits({
+  Future<Response> updateTraits({
     required String kratosToken,
     required String settingsFlowId,
     required Map<String, dynamic> traitsMap,
   }) async {
-    final response = await _client.post(
+    return _client.post(
       Uri(
         scheme: _baseUri.scheme,
         host: _baseUri.host,
@@ -87,11 +74,6 @@ class ProfileApi {
         'traits': jsonEncode(traitsMap),
       }),
     );
-
-    return switch (response.statusCode) {
-      200 => const DataSuccess(),
-      _ => DataFailed(data: response),
-    };
   }
 
   Future<Response> sendNewPasswordSettingsFlow({

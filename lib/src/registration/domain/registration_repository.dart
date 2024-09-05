@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:http/http.dart';
 import 'package:leancode_kratos_client/leancode_kratos_client.dart';
 import 'package:leancode_kratos_client/src/common/api/auth_dtos.dart';
-import 'package:leancode_kratos_client/src/common/api/data_state.dart';
 import 'package:leancode_kratos_client/src/registration/api/registration_api.dart';
 import 'package:leancode_kratos_client/src/registration/api/registration_success.dart';
 import 'package:leancode_kratos_client/src/registration/api/token_exchange_success.dart';
@@ -38,13 +37,11 @@ class RegistrationRepository {
         csrfToken: flow.csrfToken,
       );
 
-      return switch (response) {
-        final DataSuccess<Response> response when response.data != null =>
-          _handleSuccessResponse(response.data!),
-        final DataFailed<Response> response when response.data != null =>
-          _handleErrorResponse(response.data!),
+      return switch (response.statusCode) {
+        200 => await _handleSuccessResponse(response),
+        400 => await _handleErrorResponse(response),
         _ => const RegistrationUnknownErrorResult(),
-      } as RegistrationResult;
+      };
     } catch (e, st) {
       _logger.severe('Error completing registration flow', e, st);
       return const RegistrationUnknownErrorResult();
@@ -174,11 +171,10 @@ class RegistrationRepository {
     String? returnTo,
   }) async {
     try {
-      final result = await _api.initRegistrationFlow(
+      return _api.initRegistrationFlow(
         returnSessionTokenExchangeCode: returnSessionTokenExchangeCode,
         returnTo: returnTo,
       );
-      return result.data;
     } catch (e, st) {
       _logger.warning('Registration flow initialization failed.', e, st);
       return null;
@@ -190,9 +186,7 @@ class RegistrationRepository {
     return mapRegistrationErrorResponse(dto);
   }
 
-  Future<RegistrationResult> _handleSuccessResponse(
-    Response response,
-  ) async {
+  Future<RegistrationResult> _handleSuccessResponse(Response response) async {
     final decodedResponse =
         RegistrationSuccessResponse.fromString(response.body);
     final result = mapRegistrationSuccessResponse(decodedResponse);
@@ -269,8 +263,8 @@ class RegistrationRepository {
       returnToCode: returnToCode,
     );
 
-    if (response.data case final Response data when response is DataSuccess) {
-      final parsedResponse = TokenExchangeSuccess.fromString(data.body);
+    if (response.statusCode == 200) {
+      final parsedResponse = TokenExchangeSuccess.fromString(response.body);
       await _credentialsStorage.save(
         credentials: parsedResponse.sessionToken!,
         expirationDate: parsedResponse.session.expiresAt.toString(),
@@ -310,13 +304,9 @@ class RegistrationRepository {
     if (returnToCode == null) {
       final response = await _api.getRegistrationFlow(id: info.id);
 
-      if (response.data case final AuthFlowDto authFlow) {
-        return mapRegistrationErrorResponse(
-          authFlow.copyWith(sessionTokenExchangeCode: initCode),
-        );
-      } else {
-        return const RegistrationUnknownErrorResult();
-      }
+      return mapRegistrationErrorResponse(
+        response.copyWith(sessionTokenExchangeCode: initCode),
+      );
     }
 
     return _exchangeSessionToken(initCode, returnToCode);

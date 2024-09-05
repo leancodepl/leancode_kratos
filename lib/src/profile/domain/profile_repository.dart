@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:leancode_kratos_client/leancode_kratos_client.dart';
 import 'package:leancode_kratos_client/src/common/api/auth_dtos.dart';
-import 'package:leancode_kratos_client/src/common/api/data_state.dart';
 import 'package:leancode_kratos_client/src/login/api/login_success.dart';
 import 'package:leancode_kratos_client/src/profile/api/profile_api.dart';
 import 'package:leancode_kratos_client/src/profile/api/profile_settings.dart';
@@ -35,16 +34,12 @@ class ProfileRepository {
       settingsFlowId: settingsFlowId,
     );
 
-    if (response is DataSuccess) {
-      return UpdateSuccess();
-    } else if (response.data case final Response response?) {
-      return switch (response.statusCode) {
-        403 => UpdateRequiresReauthorization(),
-        400 => UpdateFailure(error: _handleChangePasswordError(response)),
-        _ => UpdateFailure(error: null),
-      };
-    }
-    return UpdateFailure(error: null);
+    return switch (response.statusCode) {
+      200 => UpdateSuccess(),
+      403 => UpdateRequiresReauthorization(),
+      400 => UpdateFailure(error: _handleChangePasswordError(response)),
+      _ => UpdateFailure(error: null),
+    };
   }
 
   KratosMessage? _handleChangePasswordError(Response response) {
@@ -71,11 +66,11 @@ class ProfileRepository {
       if (kratosToken == null) {
         return null;
       }
-      final settings = await _api.getSettings(kratosToken: kratosToken);
+      final response = await _api.getSettings(kratosToken: kratosToken);
 
-      if (settings.data
-          case final ProfileSettingsSuccessResponse profileSettings) {
-        return profileSettings.id;
+      if (response.statusCode == 200) {
+        final settings = profileSettingsSuccessResponseFromJson(response.body);
+        return settings.id;
       }
     } catch (e, st) {
       _logger.warning('Error getting recovery flow', e, st);
@@ -105,11 +100,9 @@ class ProfileRepository {
       traitsMap: traitsMap,
     );
 
-    return switch (response) {
-      final DataSuccess _ => ProfileUpdateSuccess(),
-      final DataFailed<Response> response
-          when response.data?.statusCode == 403 =>
-        ProfileUpdateRequiresReauthorization(),
+    return switch (response.statusCode) {
+      200 => ProfileUpdateSuccess(),
+      403 => ProfileUpdateRequiresReauthorization(),
       _ => ProfileUpdateFailure(),
     };
   }
@@ -133,7 +126,8 @@ class ProfileRepository {
       return ErrorGettingUserProfile();
     }
 
-    final whoamiResponse = await _api.getWhaomiSession(kratosToken: kratosToken);
+    final whoamiResponse =
+        await _api.getWhaomiSession(kratosToken: kratosToken);
 
     if (whoamiResponse.statusCode == 200) {
       try {

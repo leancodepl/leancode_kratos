@@ -32,16 +32,19 @@ class LoginRepository {
         return const LoginUnknownErrorResult();
       }
 
-      final result = await _api.loginWithPassword(
+      final response = await _api.loginWithPassword(
         password: password,
         flowId: effectiveFlowInfo.id,
         email: email,
       );
-      if (result.data case final LoginSuccessResponse successResult) {
-        return _handleLoginSuccessResultResponse(successResult);
-      } else if (result.data case final LoginErrorResponse errorResult) {
+
+      if (response.statusCode == 200) {
+        return _handleLoginSuccessResultResponse(
+          loginSuccessResponseFromJson(response.body),
+        );
+      } else if (response.statusCode == 400) {
         return _handleLoginErrorResultResponse(
-          errorResult: errorResult,
+          errorResult: loginErrorResponseFromJson(response.body),
           effectiveFlowInfo: effectiveFlowInfo,
           email: email,
         );
@@ -80,11 +83,7 @@ class LoginRepository {
     required bool refresh,
   }) async {
     try {
-      final response =
-          await _api.initLoginFlow(returnTo: returnTo, refresh: refresh);
-      if (response.data case final AuthFlowDto authFlowDto) {
-        return authFlowDto;
-      }
+      return _api.initLoginFlow(returnTo: returnTo, refresh: refresh);
     } catch (e, st) {
       _logger.warning('Error initializing auth flow', e, st);
     }
