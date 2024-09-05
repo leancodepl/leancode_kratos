@@ -1,11 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart';
-import 'package:leancode_kratos_client/leancode_kratos_client.dart';
-import 'package:leancode_kratos_client/src/common/api/auth_dtos.dart';
 import 'package:leancode_kratos_client/src/common/api/data_state.dart';
-import 'package:leancode_kratos_client/src/login/api/login_error.dart';
-import 'package:leancode_kratos_client/src/login/api/login_success.dart';
 import 'package:leancode_kratos_client/src/profile/api/profile_settings.dart';
 
 class ProfileApi {
