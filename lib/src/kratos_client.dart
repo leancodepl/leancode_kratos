@@ -9,6 +9,8 @@ import 'package:leancode_kratos_client/src/common/api/verification_flow_dto.dart
 import 'package:leancode_kratos_client/src/login/api/login_api.dart';
 import 'package:leancode_kratos_client/src/login/api/login_success.dart';
 import 'package:leancode_kratos_client/src/login/domain/login_repository.dart';
+import 'package:leancode_kratos_client/src/logout/api/logout_api.dart';
+import 'package:leancode_kratos_client/src/logout/domain/logout_repository.dart';
 import 'package:leancode_kratos_client/src/registration/api/registration_success.dart';
 import 'package:leancode_kratos_client/src/registration/api/token_exchange_success.dart';
 import 'package:logging/logging.dart';
@@ -29,6 +31,10 @@ class KratosClient {
       api: LoginApi(baseUri, _client),
       credentialsStorage: _credentialsStorage,
     );
+    _logoutRepository = LogoutRepository(
+      api: LogoutApi(baseUri, _client),
+      credentialsStorage: _credentialsStorage,
+    );
   }
 
   final Uri _baseUri;
@@ -41,6 +47,7 @@ class KratosClient {
   };
 
   late final LoginRepository _loginRepository;
+  late final LogoutRepository _logoutRepository;
 
   Future<AuthFlowDto?> _initRegistrationFlow({
     required bool returnSessionTokenExchangeCode,
@@ -454,32 +461,7 @@ class KratosClient {
   /// NOTE: logout always clears credential storage. The result is regarding the
   /// server logout notification which is executed on a best effort basis
 
-  Future<LogoutResult> logout() async {
-    final sessionToken = await _credentialsStorage.read();
-    await _credentialsStorage.clear();
-
-    if (sessionToken == null) {
-      return const LogoutUnknownErrorResult();
-    }
-
-    try {
-      final logoutResult = await _client.delete(
-        _buildUri(path: 'self-service/logout/api'),
-        headers: _commonHeaders,
-        body: jsonEncode({'session_token': sessionToken}),
-      );
-
-      if (logoutResult.statusCode == 204) {
-        return const LogoutSuccessResult();
-      } else {
-        return const LogoutUnknownErrorResult();
-      }
-    } catch (e, st) {
-      _logger.warning('Logout failed.', e, st);
-
-      return const LogoutUnknownErrorResult();
-    }
-  }
+  Future<LogoutResult> logout() => _logoutRepository.logout();
 
   Future<VerificationResult> verifyAccount({
     required String flowId,
