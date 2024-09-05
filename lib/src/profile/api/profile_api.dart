@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:http/http.dart';
-import 'package:leancode_kratos_client/src/profile/api/profile_settings.dart';
 
 class ProfileApi {
   ProfileApi(Uri baseUri, Client client)
