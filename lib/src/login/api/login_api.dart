@@ -72,4 +72,18 @@ class LoginApi {
     );
     return DataSuccess(data: AuthFlowDto.fromString(registrationFlow.body));
   }
+
+  Future<Response> refreshSessionToken({
+    required String sessionToken,
+  }) async {
+    return _client.get(
+      Uri(
+        scheme: _baseUri.scheme,
+        host: _baseUri.host,
+        path: 'self-service/login/api',
+        queryParameters: {'refresh': 'true'},
+      ),
+      headers: {'X-Session-Token': sessionToken},
+    );
+  }
 }

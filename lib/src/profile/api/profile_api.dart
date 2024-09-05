@@ -93,4 +93,29 @@ class ProfileApi {
       _ => DataFailed(data: response),
     };
   }
+
+  Future<Response> sendNewPasswordSettingsFlow({
+    required String email,
+    required String newPassword,
+    required String kratosToken,
+    required String flowId,
+  }) async {
+    return _client.post(
+      Uri(
+        scheme: _baseUri.scheme,
+        host: _baseUri.host,
+        path: 'self-service/settings',
+        queryParameters: {'flow': flowId},
+      ),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'X-Session-Token': kratosToken,
+      },
+      body: jsonEncode({
+        'method': 'password',
+        'password': newPassword,
+      }),
+    );
+  }
 }

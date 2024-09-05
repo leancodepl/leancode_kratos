@@ -10,6 +10,8 @@ import 'package:leancode_kratos_client/src/logout/api/logout_api.dart';
 import 'package:leancode_kratos_client/src/logout/domain/logout_repository.dart';
 import 'package:leancode_kratos_client/src/profile/api/profile_api.dart';
 import 'package:leancode_kratos_client/src/profile/domain/profile_repository.dart';
+import 'package:leancode_kratos_client/src/recovery/api/recovery_api.dart';
+import 'package:leancode_kratos_client/src/recovery/domain/recovery_repository.dart';
 import 'package:leancode_kratos_client/src/registration/api/registration_api.dart';
 import 'package:leancode_kratos_client/src/registration/domain/registration_repository.dart';
 import 'package:leancode_kratos_client/src/verification/api/verification_api.dart';
@@ -47,6 +49,9 @@ class KratosClient {
     _verificationRepository = VerificationRepository(
       api: VerificationApi(baseUri, _client),
     );
+    _recoveryRepository = RecoveryRepository(
+      api: RecoveryApi(baseUri, _client),
+    );
   }
 
   final Uri _baseUri;
@@ -63,6 +68,7 @@ class KratosClient {
   late final ProfileRepository _profileRepository;
   late final RegistrationRepository _registrationRepository;
   late final VerificationRepository _verificationRepository;
+  late final RecoveryRepository _recoveryRepository;
 
   Future<RegistrationResult> registerWithPassword({
     required String password,
@@ -133,135 +139,28 @@ class KratosClient {
   Future<VerificationFlowDto?> getVerificationFlow() =>
       _verificationRepository.getVerificationFlow();
 
-  Future<void> refreshSessionToken() async {
-    final sessionToken = await _credentialsStorage.read();
-    final expirationTime = await _credentialsStorage.readExpirationDate();
-    final hasExpired =
-        expirationTime?.isBefore(DateTime.now().toLocal()) ?? true;
+  Future<void> refreshSessionToken() => _loginRepository.refreshSessionToken();
 
-    if (sessionToken == null || hasExpired) {
-      return;
-    }
-
-    try {
-      final refreshResult = await http.get(
-        _buildUri(
-          path: 'self-service/login/api',
-          queryParameters: {
-            'refresh': 'true',
-          },
-        ),
-        headers: {
-          'X-Session-Token': sessionToken,
-        },
-      );
-
-      final decodedResult = jsonDecode(
-        refreshResult.body,
-      ) as Map<String, dynamic>;
-
-      final dynamic newExpirationDate = decodedResult['expires_at'];
-      switch (newExpirationDate) {
-        case String _:
-          await _credentialsStorage.save(
-            credentials: sessionToken,
-            expirationDate: newExpirationDate,
-          );
-        default:
-          throw Exception('Flow id is invalid or empty.');
-      }
-    } catch (e, st) {
-      _logger.warning('Could not refresh session token.', e, st);
-    }
-  }
-
-  Future<RecoveryFlowResult> getRecoveryFlow() async {
-    final recoveryFlow = await _client.get(
-      _buildUri(path: 'self-service/recovery/api'),
-    );
-    try {
-      final decodedResult =
-          jsonDecode(recoveryFlow.body) as Map<String, dynamic>;
-      final dynamic recoveryFlowId = decodedResult['id'];
-      switch (recoveryFlowId) {
-        case String _:
-          return RecoveryFlow(recoveryFlowId);
-        default:
-          return RecoveryFlowError();
-      }
-    } catch (e, st) {
-      _logger.warning('Error getting recovery flow', e, st);
-      return RecoveryFlowError();
-    }
-  }
+  Future<RecoveryFlowResult> getRecoveryFlow() =>
+      _recoveryRepository.getRecoveryFlow();
 
   Future<bool> sendEmailRecoveryFlow({
     required String flowId,
     required String email,
-  }) async {
-    final recoveryFlow = await _client.post(
-      _buildUri(
-        path: 'self-service/recovery',
-        queryParameters: {'flow': flowId},
-      ),
-      headers: _commonHeaders,
-      body: jsonEncode({'email': email, 'method': 'code'}),
-    );
-    return recoveryFlow.statusCode == 200;
-  }
+  }) =>
+      _recoveryRepository.sendEmailRecoveryFlow(
+        flowId: flowId,
+        email: email,
+      );
 
   Future<SettingsFlowResult> sendCodeRecoveryFlow({
     required String flowId,
     required String code,
-  }) async {
-    final recoveryFlow = await _client.post(
-      _buildUri(
-        path: 'self-service/recovery',
-        queryParameters: {'flow': flowId},
-      ),
-      body: jsonEncode({'code': code, 'method': 'code'}),
-      headers: _commonHeaders,
-    );
-    if (recoveryFlow.statusCode == 200) {
-      final decodedResult =
-          jsonDecode(recoveryFlow.body) as Map<String, dynamic>;
-      if (decodedResult
-          case {
-            'state': 'passed_challenge',
-            'continue_with': final List<dynamic> continueWith
-          }) {
-        String? settingsFlowId;
-        String? sessionToken;
-        for (final cw in continueWith) {
-          if (cw
-              case {
-                'action': 'set_ory_session_token',
-                'ory_session_token': final String value
-              }) {
-            sessionToken = value;
-          } else if (cw
-              case {
-                'action': 'show_settings_ui',
-                'flow': {'id': final String value}
-              }) {
-            settingsFlowId = value;
-          }
-        }
-
-        if (settingsFlowId == null || sessionToken == null) {
-          return SettingsFlowResultError();
-        } else {
-          return SettingsFlowResultData(
-            flowId: settingsFlowId,
-            sessionToken: sessionToken,
-          );
-        }
-      } else {
-        return SettingsFlowResultError();
-      }
-    }
-    return SettingsFlowResultError();
-  }
+  }) =>
+      _recoveryRepository.sendCodeRecoveryFlow(
+        flowId: flowId,
+        code: code,
+      );
 
   Future<bool> sendNewPasswordSettingsFlow({
     required SettingsFlowResultData flow,
