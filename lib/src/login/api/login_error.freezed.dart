@@ -12,7 +12,7 @@ part of 'login_error.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 LoginErrorResponse _$LoginErrorResponseFromJson(Map<String, dynamic> json) {
   return _LoginErrorResponse.fromJson(json);
@@ -143,11 +143,11 @@ class _$LoginErrorResponseCopyWithImpl<$Res, $Val extends LoginErrorResponse>
 }
 
 /// @nodoc
-abstract class _$$_LoginErrorResponseCopyWith<$Res>
+abstract class _$$LoginErrorResponseImplCopyWith<$Res>
     implements $LoginErrorResponseCopyWith<$Res> {
-  factory _$$_LoginErrorResponseCopyWith(_$_LoginErrorResponse value,
-          $Res Function(_$_LoginErrorResponse) then) =
-      __$$_LoginErrorResponseCopyWithImpl<$Res>;
+  factory _$$LoginErrorResponseImplCopyWith(_$LoginErrorResponseImpl value,
+          $Res Function(_$LoginErrorResponseImpl) then) =
+      __$$LoginErrorResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -168,11 +168,11 @@ abstract class _$$_LoginErrorResponseCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_LoginErrorResponseCopyWithImpl<$Res>
-    extends _$LoginErrorResponseCopyWithImpl<$Res, _$_LoginErrorResponse>
-    implements _$$_LoginErrorResponseCopyWith<$Res> {
-  __$$_LoginErrorResponseCopyWithImpl(
-      _$_LoginErrorResponse _value, $Res Function(_$_LoginErrorResponse) _then)
+class __$$LoginErrorResponseImplCopyWithImpl<$Res>
+    extends _$LoginErrorResponseCopyWithImpl<$Res, _$LoginErrorResponseImpl>
+    implements _$$LoginErrorResponseImplCopyWith<$Res> {
+  __$$LoginErrorResponseImplCopyWithImpl(_$LoginErrorResponseImpl _value,
+      $Res Function(_$LoginErrorResponseImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -190,7 +190,7 @@ class __$$_LoginErrorResponseCopyWithImpl<$Res>
     Object? refresh = null,
     Object? requestedAal = null,
   }) {
-    return _then(_$_LoginErrorResponse(
+    return _then(_$LoginErrorResponseImpl(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -241,8 +241,8 @@ class __$$_LoginErrorResponseCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_LoginErrorResponse implements _LoginErrorResponse {
-  const _$_LoginErrorResponse(
+class _$LoginErrorResponseImpl implements _LoginErrorResponse {
+  const _$LoginErrorResponseImpl(
       {required this.id,
       required this.oauth2LoginChallenge,
       required this.type,
@@ -255,8 +255,8 @@ class _$_LoginErrorResponse implements _LoginErrorResponse {
       required this.refresh,
       required this.requestedAal});
 
-  factory _$_LoginErrorResponse.fromJson(Map<String, dynamic> json) =>
-      _$$_LoginErrorResponseFromJson(json);
+  factory _$LoginErrorResponseImpl.fromJson(Map<String, dynamic> json) =>
+      _$$LoginErrorResponseImplFromJson(json);
 
   @override
   final String id;
@@ -287,10 +287,10 @@ class _$_LoginErrorResponse implements _LoginErrorResponse {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_LoginErrorResponse &&
+            other is _$LoginErrorResponseImpl &&
             (identical(other.id, id) || other.id == id) &&
             const DeepCollectionEquality()
                 .equals(other.oauth2LoginChallenge, oauth2LoginChallenge) &&
@@ -330,13 +330,13 @@ class _$_LoginErrorResponse implements _LoginErrorResponse {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_LoginErrorResponseCopyWith<_$_LoginErrorResponse> get copyWith =>
-      __$$_LoginErrorResponseCopyWithImpl<_$_LoginErrorResponse>(
+  _$$LoginErrorResponseImplCopyWith<_$LoginErrorResponseImpl> get copyWith =>
+      __$$LoginErrorResponseImplCopyWithImpl<_$LoginErrorResponseImpl>(
           this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_LoginErrorResponseToJson(
+    return _$$LoginErrorResponseImplToJson(
       this,
     );
   }
@@ -354,10 +354,10 @@ abstract class _LoginErrorResponse implements LoginErrorResponse {
       required final DateTime createdAt,
       required final DateTime updatedAt,
       required final bool refresh,
-      required final String requestedAal}) = _$_LoginErrorResponse;
+      required final String requestedAal}) = _$LoginErrorResponseImpl;
 
   factory _LoginErrorResponse.fromJson(Map<String, dynamic> json) =
-      _$_LoginErrorResponse.fromJson;
+      _$LoginErrorResponseImpl.fromJson;
 
   @override
   String get id;
@@ -383,6 +383,6 @@ abstract class _LoginErrorResponse implements LoginErrorResponse {
   String get requestedAal;
   @override
   @JsonKey(ignore: true)
-  _$$_LoginErrorResponseCopyWith<_$_LoginErrorResponse> get copyWith =>
+  _$$LoginErrorResponseImplCopyWith<_$LoginErrorResponseImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

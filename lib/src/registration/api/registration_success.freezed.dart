@@ -12,7 +12,7 @@ part of 'registration_success.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 RegistrationSuccessResponse _$RegistrationSuccessResponseFromJson(
     Map<String, dynamic> json) {
@@ -25,7 +25,7 @@ mixin _$RegistrationSuccessResponse {
   Identity? get identity => throw _privateConstructorUsedError;
   Session? get session => throw _privateConstructorUsedError;
   String? get sessionToken =>
-      throw _privateConstructorUsedError; // Sign in and link undocumented response
+      throw _privateConstructorUsedError; // Undocumented response for linking accounts
   String? get id => throw _privateConstructorUsedError;
   String? get oauth2LoginChallenge => throw _privateConstructorUsedError;
   String? get type => throw _privateConstructorUsedError;
@@ -192,12 +192,12 @@ class _$RegistrationSuccessResponseCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_RegistrationSuccessResponseCopyWith<$Res>
+abstract class _$$RegistrationSuccessResponseImplCopyWith<$Res>
     implements $RegistrationSuccessResponseCopyWith<$Res> {
-  factory _$$_RegistrationSuccessResponseCopyWith(
-          _$_RegistrationSuccessResponse value,
-          $Res Function(_$_RegistrationSuccessResponse) then) =
-      __$$_RegistrationSuccessResponseCopyWithImpl<$Res>;
+  factory _$$RegistrationSuccessResponseImplCopyWith(
+          _$RegistrationSuccessResponseImpl value,
+          $Res Function(_$RegistrationSuccessResponseImpl) then) =
+      __$$RegistrationSuccessResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -224,13 +224,13 @@ abstract class _$$_RegistrationSuccessResponseCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_RegistrationSuccessResponseCopyWithImpl<$Res>
+class __$$RegistrationSuccessResponseImplCopyWithImpl<$Res>
     extends _$RegistrationSuccessResponseCopyWithImpl<$Res,
-        _$_RegistrationSuccessResponse>
-    implements _$$_RegistrationSuccessResponseCopyWith<$Res> {
-  __$$_RegistrationSuccessResponseCopyWithImpl(
-      _$_RegistrationSuccessResponse _value,
-      $Res Function(_$_RegistrationSuccessResponse) _then)
+        _$RegistrationSuccessResponseImpl>
+    implements _$$RegistrationSuccessResponseImplCopyWith<$Res> {
+  __$$RegistrationSuccessResponseImplCopyWithImpl(
+      _$RegistrationSuccessResponseImpl _value,
+      $Res Function(_$RegistrationSuccessResponseImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -250,7 +250,7 @@ class __$$_RegistrationSuccessResponseCopyWithImpl<$Res>
     Object? ui = freezed,
     Object? sessionTokenExchangeCode = freezed,
   }) {
-    return _then(_$_RegistrationSuccessResponse(
+    return _then(_$RegistrationSuccessResponseImpl(
       continueWith: freezed == continueWith
           ? _value._continueWith
           : continueWith // ignore: cast_nullable_to_non_nullable
@@ -309,8 +309,8 @@ class __$$_RegistrationSuccessResponseCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_RegistrationSuccessResponse extends _RegistrationSuccessResponse {
-  const _$_RegistrationSuccessResponse(
+class _$RegistrationSuccessResponseImpl extends _RegistrationSuccessResponse {
+  const _$RegistrationSuccessResponseImpl(
       {final List<ContinueWith>? continueWith,
       this.identity,
       this.session,
@@ -327,8 +327,9 @@ class _$_RegistrationSuccessResponse extends _RegistrationSuccessResponse {
       : _continueWith = continueWith,
         super._();
 
-  factory _$_RegistrationSuccessResponse.fromJson(Map<String, dynamic> json) =>
-      _$$_RegistrationSuccessResponseFromJson(json);
+  factory _$RegistrationSuccessResponseImpl.fromJson(
+          Map<String, dynamic> json) =>
+      _$$RegistrationSuccessResponseImplFromJson(json);
 
   final List<ContinueWith>? _continueWith;
   @override
@@ -346,7 +347,7 @@ class _$_RegistrationSuccessResponse extends _RegistrationSuccessResponse {
   final Session? session;
   @override
   final String? sessionToken;
-// Sign in and link undocumented response
+// Undocumented response for linking accounts
   @override
   final String? id;
   @override
@@ -372,10 +373,10 @@ class _$_RegistrationSuccessResponse extends _RegistrationSuccessResponse {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_RegistrationSuccessResponse &&
+            other is _$RegistrationSuccessResponseImpl &&
             const DeepCollectionEquality()
                 .equals(other._continueWith, _continueWith) &&
             (identical(other.identity, identity) ||
@@ -422,13 +423,13 @@ class _$_RegistrationSuccessResponse extends _RegistrationSuccessResponse {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_RegistrationSuccessResponseCopyWith<_$_RegistrationSuccessResponse>
-      get copyWith => __$$_RegistrationSuccessResponseCopyWithImpl<
-          _$_RegistrationSuccessResponse>(this, _$identity);
+  _$$RegistrationSuccessResponseImplCopyWith<_$RegistrationSuccessResponseImpl>
+      get copyWith => __$$RegistrationSuccessResponseImplCopyWithImpl<
+          _$RegistrationSuccessResponseImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_RegistrationSuccessResponseToJson(
+    return _$$RegistrationSuccessResponseImplToJson(
       this,
     );
   }
@@ -437,23 +438,24 @@ class _$_RegistrationSuccessResponse extends _RegistrationSuccessResponse {
 abstract class _RegistrationSuccessResponse
     extends RegistrationSuccessResponse {
   const factory _RegistrationSuccessResponse(
-      {final List<ContinueWith>? continueWith,
-      final Identity? identity,
-      final Session? session,
-      final String? sessionToken,
-      final String? id,
-      final String? oauth2LoginChallenge,
-      final String? type,
-      final DateTime? expiresAt,
-      final DateTime? issuedAt,
-      final String? requestUrl,
-      final String? returnTo,
-      final UiDto? ui,
-      final String? sessionTokenExchangeCode}) = _$_RegistrationSuccessResponse;
+          {final List<ContinueWith>? continueWith,
+          final Identity? identity,
+          final Session? session,
+          final String? sessionToken,
+          final String? id,
+          final String? oauth2LoginChallenge,
+          final String? type,
+          final DateTime? expiresAt,
+          final DateTime? issuedAt,
+          final String? requestUrl,
+          final String? returnTo,
+          final UiDto? ui,
+          final String? sessionTokenExchangeCode}) =
+      _$RegistrationSuccessResponseImpl;
   const _RegistrationSuccessResponse._() : super._();
 
   factory _RegistrationSuccessResponse.fromJson(Map<String, dynamic> json) =
-      _$_RegistrationSuccessResponse.fromJson;
+      _$RegistrationSuccessResponseImpl.fromJson;
 
   @override
   List<ContinueWith>? get continueWith;
@@ -463,7 +465,7 @@ abstract class _RegistrationSuccessResponse
   Session? get session;
   @override
   String? get sessionToken;
-  @override // Sign in and link undocumented response
+  @override // Undocumented response for linking accounts
   String? get id;
   @override
   String? get oauth2LoginChallenge;
@@ -483,7 +485,7 @@ abstract class _RegistrationSuccessResponse
   String? get sessionTokenExchangeCode;
   @override
   @JsonKey(ignore: true)
-  _$$_RegistrationSuccessResponseCopyWith<_$_RegistrationSuccessResponse>
+  _$$RegistrationSuccessResponseImplCopyWith<_$RegistrationSuccessResponseImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -545,29 +547,32 @@ class _$RegistrationBrowserLocationChangeRequiredResponseCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_RegistrationBrowserLocationChangeRequiredResponseCopyWith<
+abstract class _$$RegistrationBrowserLocationChangeRequiredResponseImplCopyWith<
         $Res>
     implements
         $RegistrationBrowserLocationChangeRequiredResponseCopyWith<$Res> {
-  factory _$$_RegistrationBrowserLocationChangeRequiredResponseCopyWith(
-          _$_RegistrationBrowserLocationChangeRequiredResponse value,
-          $Res Function(_$_RegistrationBrowserLocationChangeRequiredResponse)
+  factory _$$RegistrationBrowserLocationChangeRequiredResponseImplCopyWith(
+          _$RegistrationBrowserLocationChangeRequiredResponseImpl value,
+          $Res Function(_$RegistrationBrowserLocationChangeRequiredResponseImpl)
               then) =
-      __$$_RegistrationBrowserLocationChangeRequiredResponseCopyWithImpl<$Res>;
+      __$$RegistrationBrowserLocationChangeRequiredResponseImplCopyWithImpl<
+          $Res>;
   @override
   @useResult
   $Res call({String? redirectBrowserTo});
 }
 
 /// @nodoc
-class __$$_RegistrationBrowserLocationChangeRequiredResponseCopyWithImpl<$Res>
+class __$$RegistrationBrowserLocationChangeRequiredResponseImplCopyWithImpl<
+        $Res>
     extends _$RegistrationBrowserLocationChangeRequiredResponseCopyWithImpl<
-        $Res, _$_RegistrationBrowserLocationChangeRequiredResponse>
+        $Res, _$RegistrationBrowserLocationChangeRequiredResponseImpl>
     implements
-        _$$_RegistrationBrowserLocationChangeRequiredResponseCopyWith<$Res> {
-  __$$_RegistrationBrowserLocationChangeRequiredResponseCopyWithImpl(
-      _$_RegistrationBrowserLocationChangeRequiredResponse _value,
-      $Res Function(_$_RegistrationBrowserLocationChangeRequiredResponse) _then)
+        _$$RegistrationBrowserLocationChangeRequiredResponseImplCopyWith<$Res> {
+  __$$RegistrationBrowserLocationChangeRequiredResponseImplCopyWithImpl(
+      _$RegistrationBrowserLocationChangeRequiredResponseImpl _value,
+      $Res Function(_$RegistrationBrowserLocationChangeRequiredResponseImpl)
+          _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -575,7 +580,7 @@ class __$$_RegistrationBrowserLocationChangeRequiredResponseCopyWithImpl<$Res>
   $Res call({
     Object? redirectBrowserTo = freezed,
   }) {
-    return _then(_$_RegistrationBrowserLocationChangeRequiredResponse(
+    return _then(_$RegistrationBrowserLocationChangeRequiredResponseImpl(
       redirectBrowserTo: freezed == redirectBrowserTo
           ? _value.redirectBrowserTo
           : redirectBrowserTo // ignore: cast_nullable_to_non_nullable
@@ -586,14 +591,14 @@ class __$$_RegistrationBrowserLocationChangeRequiredResponseCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_RegistrationBrowserLocationChangeRequiredResponse
+class _$RegistrationBrowserLocationChangeRequiredResponseImpl
     implements _RegistrationBrowserLocationChangeRequiredResponse {
-  const _$_RegistrationBrowserLocationChangeRequiredResponse(
+  const _$RegistrationBrowserLocationChangeRequiredResponseImpl(
       {this.redirectBrowserTo});
 
-  factory _$_RegistrationBrowserLocationChangeRequiredResponse.fromJson(
+  factory _$RegistrationBrowserLocationChangeRequiredResponseImpl.fromJson(
           Map<String, dynamic> json) =>
-      _$$_RegistrationBrowserLocationChangeRequiredResponseFromJson(json);
+      _$$RegistrationBrowserLocationChangeRequiredResponseImplFromJson(json);
 
   @override
   final String? redirectBrowserTo;
@@ -604,10 +609,10 @@ class _$_RegistrationBrowserLocationChangeRequiredResponse
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_RegistrationBrowserLocationChangeRequiredResponse &&
+            other is _$RegistrationBrowserLocationChangeRequiredResponseImpl &&
             (identical(other.redirectBrowserTo, redirectBrowserTo) ||
                 other.redirectBrowserTo == redirectBrowserTo));
   }
@@ -619,16 +624,16 @@ class _$_RegistrationBrowserLocationChangeRequiredResponse
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_RegistrationBrowserLocationChangeRequiredResponseCopyWith<
-          _$_RegistrationBrowserLocationChangeRequiredResponse>
+  _$$RegistrationBrowserLocationChangeRequiredResponseImplCopyWith<
+          _$RegistrationBrowserLocationChangeRequiredResponseImpl>
       get copyWith =>
-          __$$_RegistrationBrowserLocationChangeRequiredResponseCopyWithImpl<
-                  _$_RegistrationBrowserLocationChangeRequiredResponse>(
+          __$$RegistrationBrowserLocationChangeRequiredResponseImplCopyWithImpl<
+                  _$RegistrationBrowserLocationChangeRequiredResponseImpl>(
               this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_RegistrationBrowserLocationChangeRequiredResponseToJson(
+    return _$$RegistrationBrowserLocationChangeRequiredResponseImplToJson(
       this,
     );
   }
@@ -638,18 +643,18 @@ abstract class _RegistrationBrowserLocationChangeRequiredResponse
     implements RegistrationBrowserLocationChangeRequiredResponse {
   const factory _RegistrationBrowserLocationChangeRequiredResponse(
           {final String? redirectBrowserTo}) =
-      _$_RegistrationBrowserLocationChangeRequiredResponse;
+      _$RegistrationBrowserLocationChangeRequiredResponseImpl;
 
   factory _RegistrationBrowserLocationChangeRequiredResponse.fromJson(
           Map<String, dynamic> json) =
-      _$_RegistrationBrowserLocationChangeRequiredResponse.fromJson;
+      _$RegistrationBrowserLocationChangeRequiredResponseImpl.fromJson;
 
   @override
   String? get redirectBrowserTo;
   @override
   @JsonKey(ignore: true)
-  _$$_RegistrationBrowserLocationChangeRequiredResponseCopyWith<
-          _$_RegistrationBrowserLocationChangeRequiredResponse>
+  _$$RegistrationBrowserLocationChangeRequiredResponseImplCopyWith<
+          _$RegistrationBrowserLocationChangeRequiredResponseImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -721,11 +726,11 @@ class _$ContinueWithCopyWithImpl<$Res, $Val extends ContinueWith>
 }
 
 /// @nodoc
-abstract class _$$_ContinueWithCopyWith<$Res>
+abstract class _$$ContinueWithImplCopyWith<$Res>
     implements $ContinueWithCopyWith<$Res> {
-  factory _$$_ContinueWithCopyWith(
-          _$_ContinueWith value, $Res Function(_$_ContinueWith) then) =
-      __$$_ContinueWithCopyWithImpl<$Res>;
+  factory _$$ContinueWithImplCopyWith(
+          _$ContinueWithImpl value, $Res Function(_$ContinueWithImpl) then) =
+      __$$ContinueWithImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String? action, Flow? flow});
@@ -735,11 +740,11 @@ abstract class _$$_ContinueWithCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_ContinueWithCopyWithImpl<$Res>
-    extends _$ContinueWithCopyWithImpl<$Res, _$_ContinueWith>
-    implements _$$_ContinueWithCopyWith<$Res> {
-  __$$_ContinueWithCopyWithImpl(
-      _$_ContinueWith _value, $Res Function(_$_ContinueWith) _then)
+class __$$ContinueWithImplCopyWithImpl<$Res>
+    extends _$ContinueWithCopyWithImpl<$Res, _$ContinueWithImpl>
+    implements _$$ContinueWithImplCopyWith<$Res> {
+  __$$ContinueWithImplCopyWithImpl(
+      _$ContinueWithImpl _value, $Res Function(_$ContinueWithImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -748,7 +753,7 @@ class __$$_ContinueWithCopyWithImpl<$Res>
     Object? action = freezed,
     Object? flow = freezed,
   }) {
-    return _then(_$_ContinueWith(
+    return _then(_$ContinueWithImpl(
       action: freezed == action
           ? _value.action
           : action // ignore: cast_nullable_to_non_nullable
@@ -763,11 +768,11 @@ class __$$_ContinueWithCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_ContinueWith implements _ContinueWith {
-  const _$_ContinueWith({this.action, this.flow});
+class _$ContinueWithImpl implements _ContinueWith {
+  const _$ContinueWithImpl({this.action, this.flow});
 
-  factory _$_ContinueWith.fromJson(Map<String, dynamic> json) =>
-      _$$_ContinueWithFromJson(json);
+  factory _$ContinueWithImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ContinueWithImplFromJson(json);
 
   @override
   final String? action;
@@ -780,10 +785,10 @@ class _$_ContinueWith implements _ContinueWith {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_ContinueWith &&
+            other is _$ContinueWithImpl &&
             (identical(other.action, action) || other.action == action) &&
             (identical(other.flow, flow) || other.flow == flow));
   }
@@ -795,12 +800,12 @@ class _$_ContinueWith implements _ContinueWith {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ContinueWithCopyWith<_$_ContinueWith> get copyWith =>
-      __$$_ContinueWithCopyWithImpl<_$_ContinueWith>(this, _$identity);
+  _$$ContinueWithImplCopyWith<_$ContinueWithImpl> get copyWith =>
+      __$$ContinueWithImplCopyWithImpl<_$ContinueWithImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_ContinueWithToJson(
+    return _$$ContinueWithImplToJson(
       this,
     );
   }
@@ -808,10 +813,10 @@ class _$_ContinueWith implements _ContinueWith {
 
 abstract class _ContinueWith implements ContinueWith {
   const factory _ContinueWith({final String? action, final Flow? flow}) =
-      _$_ContinueWith;
+      _$ContinueWithImpl;
 
   factory _ContinueWith.fromJson(Map<String, dynamic> json) =
-      _$_ContinueWith.fromJson;
+      _$ContinueWithImpl.fromJson;
 
   @override
   String? get action;
@@ -819,7 +824,7 @@ abstract class _ContinueWith implements ContinueWith {
   Flow? get flow;
   @override
   @JsonKey(ignore: true)
-  _$$_ContinueWithCopyWith<_$_ContinueWith> get copyWith =>
+  _$$ContinueWithImplCopyWith<_$ContinueWithImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -875,18 +880,20 @@ class _$FlowCopyWithImpl<$Res, $Val extends Flow>
 }
 
 /// @nodoc
-abstract class _$$_FlowCopyWith<$Res> implements $FlowCopyWith<$Res> {
-  factory _$$_FlowCopyWith(_$_Flow value, $Res Function(_$_Flow) then) =
-      __$$_FlowCopyWithImpl<$Res>;
+abstract class _$$FlowImplCopyWith<$Res> implements $FlowCopyWith<$Res> {
+  factory _$$FlowImplCopyWith(
+          _$FlowImpl value, $Res Function(_$FlowImpl) then) =
+      __$$FlowImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String? id, String? verifiableAddress});
 }
 
 /// @nodoc
-class __$$_FlowCopyWithImpl<$Res> extends _$FlowCopyWithImpl<$Res, _$_Flow>
-    implements _$$_FlowCopyWith<$Res> {
-  __$$_FlowCopyWithImpl(_$_Flow _value, $Res Function(_$_Flow) _then)
+class __$$FlowImplCopyWithImpl<$Res>
+    extends _$FlowCopyWithImpl<$Res, _$FlowImpl>
+    implements _$$FlowImplCopyWith<$Res> {
+  __$$FlowImplCopyWithImpl(_$FlowImpl _value, $Res Function(_$FlowImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -895,7 +902,7 @@ class __$$_FlowCopyWithImpl<$Res> extends _$FlowCopyWithImpl<$Res, _$_Flow>
     Object? id = freezed,
     Object? verifiableAddress = freezed,
   }) {
-    return _then(_$_Flow(
+    return _then(_$FlowImpl(
       id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -910,10 +917,11 @@ class __$$_FlowCopyWithImpl<$Res> extends _$FlowCopyWithImpl<$Res, _$_Flow>
 
 /// @nodoc
 @JsonSerializable()
-class _$_Flow implements _Flow {
-  const _$_Flow({this.id, this.verifiableAddress});
+class _$FlowImpl implements _Flow {
+  const _$FlowImpl({this.id, this.verifiableAddress});
 
-  factory _$_Flow.fromJson(Map<String, dynamic> json) => _$$_FlowFromJson(json);
+  factory _$FlowImpl.fromJson(Map<String, dynamic> json) =>
+      _$$FlowImplFromJson(json);
 
   @override
   final String? id;
@@ -926,10 +934,10 @@ class _$_Flow implements _Flow {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_Flow &&
+            other is _$FlowImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.verifiableAddress, verifiableAddress) ||
                 other.verifiableAddress == verifiableAddress));
@@ -942,12 +950,12 @@ class _$_Flow implements _Flow {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_FlowCopyWith<_$_Flow> get copyWith =>
-      __$$_FlowCopyWithImpl<_$_Flow>(this, _$identity);
+  _$$FlowImplCopyWith<_$FlowImpl> get copyWith =>
+      __$$FlowImplCopyWithImpl<_$FlowImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_FlowToJson(
+    return _$$FlowImplToJson(
       this,
     );
   }
@@ -955,9 +963,9 @@ class _$_Flow implements _Flow {
 
 abstract class _Flow implements Flow {
   const factory _Flow({final String? id, final String? verifiableAddress}) =
-      _$_Flow;
+      _$FlowImpl;
 
-  factory _Flow.fromJson(Map<String, dynamic> json) = _$_Flow.fromJson;
+  factory _Flow.fromJson(Map<String, dynamic> json) = _$FlowImpl.fromJson;
 
   @override
   String? get id;
@@ -965,7 +973,8 @@ abstract class _Flow implements Flow {
   String? get verifiableAddress;
   @override
   @JsonKey(ignore: true)
-  _$$_FlowCopyWith<_$_Flow> get copyWith => throw _privateConstructorUsedError;
+  _$$FlowImplCopyWith<_$FlowImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 Identity _$IdentityFromJson(Map<String, dynamic> json) {
@@ -1088,10 +1097,11 @@ class _$IdentityCopyWithImpl<$Res, $Val extends Identity>
 }
 
 /// @nodoc
-abstract class _$$_IdentityCopyWith<$Res> implements $IdentityCopyWith<$Res> {
-  factory _$$_IdentityCopyWith(
-          _$_Identity value, $Res Function(_$_Identity) then) =
-      __$$_IdentityCopyWithImpl<$Res>;
+abstract class _$$IdentityImplCopyWith<$Res>
+    implements $IdentityCopyWith<$Res> {
+  factory _$$IdentityImplCopyWith(
+          _$IdentityImpl value, $Res Function(_$IdentityImpl) then) =
+      __$$IdentityImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -1109,11 +1119,11 @@ abstract class _$$_IdentityCopyWith<$Res> implements $IdentityCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$_IdentityCopyWithImpl<$Res>
-    extends _$IdentityCopyWithImpl<$Res, _$_Identity>
-    implements _$$_IdentityCopyWith<$Res> {
-  __$$_IdentityCopyWithImpl(
-      _$_Identity _value, $Res Function(_$_Identity) _then)
+class __$$IdentityImplCopyWithImpl<$Res>
+    extends _$IdentityCopyWithImpl<$Res, _$IdentityImpl>
+    implements _$$IdentityImplCopyWith<$Res> {
+  __$$IdentityImplCopyWithImpl(
+      _$IdentityImpl _value, $Res Function(_$IdentityImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1131,7 +1141,7 @@ class __$$_IdentityCopyWithImpl<$Res>
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
   }) {
-    return _then(_$_Identity(
+    return _then(_$IdentityImpl(
       id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -1182,8 +1192,8 @@ class __$$_IdentityCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_Identity implements _Identity {
-  const _$_Identity(
+class _$IdentityImpl implements _Identity {
+  const _$IdentityImpl(
       {this.id,
       this.schemaId,
       this.schemaUrl,
@@ -1199,8 +1209,8 @@ class _$_Identity implements _Identity {
         _verifiableAddresses = verifiableAddresses,
         _recoveryAddresses = recoveryAddresses;
 
-  factory _$_Identity.fromJson(Map<String, dynamic> json) =>
-      _$$_IdentityFromJson(json);
+  factory _$IdentityImpl.fromJson(Map<String, dynamic> json) =>
+      _$$IdentityImplFromJson(json);
 
   @override
   final String? id;
@@ -1257,10 +1267,10 @@ class _$_Identity implements _Identity {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_Identity &&
+            other is _$IdentityImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.schemaId, schemaId) ||
                 other.schemaId == schemaId) &&
@@ -1301,12 +1311,12 @@ class _$_Identity implements _Identity {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_IdentityCopyWith<_$_Identity> get copyWith =>
-      __$$_IdentityCopyWithImpl<_$_Identity>(this, _$identity);
+  _$$IdentityImplCopyWith<_$IdentityImpl> get copyWith =>
+      __$$IdentityImplCopyWithImpl<_$IdentityImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_IdentityToJson(
+    return _$$IdentityImplToJson(
       this,
     );
   }
@@ -1324,9 +1334,10 @@ abstract class _Identity implements Identity {
       final List<RecoveryAddress>? recoveryAddresses,
       final dynamic metadataPublic,
       final DateTime? createdAt,
-      final DateTime? updatedAt}) = _$_Identity;
+      final DateTime? updatedAt}) = _$IdentityImpl;
 
-  factory _Identity.fromJson(Map<String, dynamic> json) = _$_Identity.fromJson;
+  factory _Identity.fromJson(Map<String, dynamic> json) =
+      _$IdentityImpl.fromJson;
 
   @override
   String? get id;
@@ -1352,7 +1363,7 @@ abstract class _Identity implements Identity {
   DateTime? get updatedAt;
   @override
   @JsonKey(ignore: true)
-  _$$_IdentityCopyWith<_$_Identity> get copyWith =>
+  _$$IdentityImplCopyWith<_$IdentityImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -1433,11 +1444,11 @@ class _$RecoveryAddressCopyWithImpl<$Res, $Val extends RecoveryAddress>
 }
 
 /// @nodoc
-abstract class _$$_RecoveryAddressCopyWith<$Res>
+abstract class _$$RecoveryAddressImplCopyWith<$Res>
     implements $RecoveryAddressCopyWith<$Res> {
-  factory _$$_RecoveryAddressCopyWith(
-          _$_RecoveryAddress value, $Res Function(_$_RecoveryAddress) then) =
-      __$$_RecoveryAddressCopyWithImpl<$Res>;
+  factory _$$RecoveryAddressImplCopyWith(_$RecoveryAddressImpl value,
+          $Res Function(_$RecoveryAddressImpl) then) =
+      __$$RecoveryAddressImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -1449,11 +1460,11 @@ abstract class _$$_RecoveryAddressCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_RecoveryAddressCopyWithImpl<$Res>
-    extends _$RecoveryAddressCopyWithImpl<$Res, _$_RecoveryAddress>
-    implements _$$_RecoveryAddressCopyWith<$Res> {
-  __$$_RecoveryAddressCopyWithImpl(
-      _$_RecoveryAddress _value, $Res Function(_$_RecoveryAddress) _then)
+class __$$RecoveryAddressImplCopyWithImpl<$Res>
+    extends _$RecoveryAddressCopyWithImpl<$Res, _$RecoveryAddressImpl>
+    implements _$$RecoveryAddressImplCopyWith<$Res> {
+  __$$RecoveryAddressImplCopyWithImpl(
+      _$RecoveryAddressImpl _value, $Res Function(_$RecoveryAddressImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1465,7 +1476,7 @@ class __$$_RecoveryAddressCopyWithImpl<$Res>
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
   }) {
-    return _then(_$_RecoveryAddress(
+    return _then(_$RecoveryAddressImpl(
       id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -1492,12 +1503,12 @@ class __$$_RecoveryAddressCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_RecoveryAddress implements _RecoveryAddress {
-  const _$_RecoveryAddress(
+class _$RecoveryAddressImpl implements _RecoveryAddress {
+  const _$RecoveryAddressImpl(
       {this.id, this.value, this.via, this.createdAt, this.updatedAt});
 
-  factory _$_RecoveryAddress.fromJson(Map<String, dynamic> json) =>
-      _$$_RecoveryAddressFromJson(json);
+  factory _$RecoveryAddressImpl.fromJson(Map<String, dynamic> json) =>
+      _$$RecoveryAddressImplFromJson(json);
 
   @override
   final String? id;
@@ -1516,10 +1527,10 @@ class _$_RecoveryAddress implements _RecoveryAddress {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_RecoveryAddress &&
+            other is _$RecoveryAddressImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.value, value) || other.value == value) &&
             (identical(other.via, via) || other.via == via) &&
@@ -1537,12 +1548,13 @@ class _$_RecoveryAddress implements _RecoveryAddress {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_RecoveryAddressCopyWith<_$_RecoveryAddress> get copyWith =>
-      __$$_RecoveryAddressCopyWithImpl<_$_RecoveryAddress>(this, _$identity);
+  _$$RecoveryAddressImplCopyWith<_$RecoveryAddressImpl> get copyWith =>
+      __$$RecoveryAddressImplCopyWithImpl<_$RecoveryAddressImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_RecoveryAddressToJson(
+    return _$$RecoveryAddressImplToJson(
       this,
     );
   }
@@ -1554,10 +1566,10 @@ abstract class _RecoveryAddress implements RecoveryAddress {
       final String? value,
       final String? via,
       final DateTime? createdAt,
-      final DateTime? updatedAt}) = _$_RecoveryAddress;
+      final DateTime? updatedAt}) = _$RecoveryAddressImpl;
 
   factory _RecoveryAddress.fromJson(Map<String, dynamic> json) =
-      _$_RecoveryAddress.fromJson;
+      _$RecoveryAddressImpl.fromJson;
 
   @override
   String? get id;
@@ -1571,7 +1583,7 @@ abstract class _RecoveryAddress implements RecoveryAddress {
   DateTime? get updatedAt;
   @override
   @JsonKey(ignore: true)
-  _$$_RecoveryAddressCopyWith<_$_RecoveryAddress> get copyWith =>
+  _$$RecoveryAddressImplCopyWith<_$RecoveryAddressImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -1666,11 +1678,11 @@ class _$VerifiableAddressCopyWithImpl<$Res, $Val extends VerifiableAddress>
 }
 
 /// @nodoc
-abstract class _$$_VerifiableAddressCopyWith<$Res>
+abstract class _$$VerifiableAddressImplCopyWith<$Res>
     implements $VerifiableAddressCopyWith<$Res> {
-  factory _$$_VerifiableAddressCopyWith(_$_VerifiableAddress value,
-          $Res Function(_$_VerifiableAddress) then) =
-      __$$_VerifiableAddressCopyWithImpl<$Res>;
+  factory _$$VerifiableAddressImplCopyWith(_$VerifiableAddressImpl value,
+          $Res Function(_$VerifiableAddressImpl) then) =
+      __$$VerifiableAddressImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -1684,11 +1696,11 @@ abstract class _$$_VerifiableAddressCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_VerifiableAddressCopyWithImpl<$Res>
-    extends _$VerifiableAddressCopyWithImpl<$Res, _$_VerifiableAddress>
-    implements _$$_VerifiableAddressCopyWith<$Res> {
-  __$$_VerifiableAddressCopyWithImpl(
-      _$_VerifiableAddress _value, $Res Function(_$_VerifiableAddress) _then)
+class __$$VerifiableAddressImplCopyWithImpl<$Res>
+    extends _$VerifiableAddressCopyWithImpl<$Res, _$VerifiableAddressImpl>
+    implements _$$VerifiableAddressImplCopyWith<$Res> {
+  __$$VerifiableAddressImplCopyWithImpl(_$VerifiableAddressImpl _value,
+      $Res Function(_$VerifiableAddressImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1702,7 +1714,7 @@ class __$$_VerifiableAddressCopyWithImpl<$Res>
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
   }) {
-    return _then(_$_VerifiableAddress(
+    return _then(_$VerifiableAddressImpl(
       id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -1737,8 +1749,8 @@ class __$$_VerifiableAddressCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_VerifiableAddress implements _VerifiableAddress {
-  const _$_VerifiableAddress(
+class _$VerifiableAddressImpl implements _VerifiableAddress {
+  const _$VerifiableAddressImpl(
       {this.id,
       this.value,
       this.verified,
@@ -1747,8 +1759,8 @@ class _$_VerifiableAddress implements _VerifiableAddress {
       this.createdAt,
       this.updatedAt});
 
-  factory _$_VerifiableAddress.fromJson(Map<String, dynamic> json) =>
-      _$$_VerifiableAddressFromJson(json);
+  factory _$VerifiableAddressImpl.fromJson(Map<String, dynamic> json) =>
+      _$$VerifiableAddressImplFromJson(json);
 
   @override
   final String? id;
@@ -1771,10 +1783,10 @@ class _$_VerifiableAddress implements _VerifiableAddress {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_VerifiableAddress &&
+            other is _$VerifiableAddressImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.value, value) || other.value == value) &&
             (identical(other.verified, verified) ||
@@ -1795,13 +1807,13 @@ class _$_VerifiableAddress implements _VerifiableAddress {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_VerifiableAddressCopyWith<_$_VerifiableAddress> get copyWith =>
-      __$$_VerifiableAddressCopyWithImpl<_$_VerifiableAddress>(
+  _$$VerifiableAddressImplCopyWith<_$VerifiableAddressImpl> get copyWith =>
+      __$$VerifiableAddressImplCopyWithImpl<_$VerifiableAddressImpl>(
           this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_VerifiableAddressToJson(
+    return _$$VerifiableAddressImplToJson(
       this,
     );
   }
@@ -1815,10 +1827,10 @@ abstract class _VerifiableAddress implements VerifiableAddress {
       final String? via,
       final String? status,
       final DateTime? createdAt,
-      final DateTime? updatedAt}) = _$_VerifiableAddress;
+      final DateTime? updatedAt}) = _$VerifiableAddressImpl;
 
   factory _VerifiableAddress.fromJson(Map<String, dynamic> json) =
-      _$_VerifiableAddress.fromJson;
+      _$VerifiableAddressImpl.fromJson;
 
   @override
   String? get id;
@@ -1836,6 +1848,6 @@ abstract class _VerifiableAddress implements VerifiableAddress {
   DateTime? get updatedAt;
   @override
   @JsonKey(ignore: true)
-  _$$_VerifiableAddressCopyWith<_$_VerifiableAddress> get copyWith =>
+  _$$VerifiableAddressImplCopyWith<_$VerifiableAddressImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

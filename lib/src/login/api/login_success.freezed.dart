@@ -12,28 +12,28 @@ part of 'login_success.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-SuccessLoginResponse _$SuccessLoginResponseFromJson(Map<String, dynamic> json) {
-  return _SuccessLoginResponse.fromJson(json);
+LoginSuccessResponse _$LoginSuccessResponseFromJson(Map<String, dynamic> json) {
+  return _LoginSuccessResponse.fromJson(json);
 }
 
 /// @nodoc
-mixin _$SuccessLoginResponse {
+mixin _$LoginSuccessResponse {
   String get sessionToken => throw _privateConstructorUsedError;
   Session get session => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $SuccessLoginResponseCopyWith<SuccessLoginResponse> get copyWith =>
+  $LoginSuccessResponseCopyWith<LoginSuccessResponse> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $SuccessLoginResponseCopyWith<$Res> {
-  factory $SuccessLoginResponseCopyWith(SuccessLoginResponse value,
-          $Res Function(SuccessLoginResponse) then) =
-      _$SuccessLoginResponseCopyWithImpl<$Res, SuccessLoginResponse>;
+abstract class $LoginSuccessResponseCopyWith<$Res> {
+  factory $LoginSuccessResponseCopyWith(LoginSuccessResponse value,
+          $Res Function(LoginSuccessResponse) then) =
+      _$LoginSuccessResponseCopyWithImpl<$Res, LoginSuccessResponse>;
   @useResult
   $Res call({String sessionToken, Session session});
 
@@ -41,10 +41,10 @@ abstract class $SuccessLoginResponseCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$SuccessLoginResponseCopyWithImpl<$Res,
-        $Val extends SuccessLoginResponse>
-    implements $SuccessLoginResponseCopyWith<$Res> {
-  _$SuccessLoginResponseCopyWithImpl(this._value, this._then);
+class _$LoginSuccessResponseCopyWithImpl<$Res,
+        $Val extends LoginSuccessResponse>
+    implements $LoginSuccessResponseCopyWith<$Res> {
+  _$LoginSuccessResponseCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -79,11 +79,11 @@ class _$SuccessLoginResponseCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_SuccessLoginResponseCopyWith<$Res>
-    implements $SuccessLoginResponseCopyWith<$Res> {
-  factory _$$_SuccessLoginResponseCopyWith(_$_SuccessLoginResponse value,
-          $Res Function(_$_SuccessLoginResponse) then) =
-      __$$_SuccessLoginResponseCopyWithImpl<$Res>;
+abstract class _$$LoginSuccessResponseImplCopyWith<$Res>
+    implements $LoginSuccessResponseCopyWith<$Res> {
+  factory _$$LoginSuccessResponseImplCopyWith(_$LoginSuccessResponseImpl value,
+          $Res Function(_$LoginSuccessResponseImpl) then) =
+      __$$LoginSuccessResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String sessionToken, Session session});
@@ -93,11 +93,11 @@ abstract class _$$_SuccessLoginResponseCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_SuccessLoginResponseCopyWithImpl<$Res>
-    extends _$SuccessLoginResponseCopyWithImpl<$Res, _$_SuccessLoginResponse>
-    implements _$$_SuccessLoginResponseCopyWith<$Res> {
-  __$$_SuccessLoginResponseCopyWithImpl(_$_SuccessLoginResponse _value,
-      $Res Function(_$_SuccessLoginResponse) _then)
+class __$$LoginSuccessResponseImplCopyWithImpl<$Res>
+    extends _$LoginSuccessResponseCopyWithImpl<$Res, _$LoginSuccessResponseImpl>
+    implements _$$LoginSuccessResponseImplCopyWith<$Res> {
+  __$$LoginSuccessResponseImplCopyWithImpl(_$LoginSuccessResponseImpl _value,
+      $Res Function(_$LoginSuccessResponseImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -106,7 +106,7 @@ class __$$_SuccessLoginResponseCopyWithImpl<$Res>
     Object? sessionToken = null,
     Object? session = null,
   }) {
-    return _then(_$_SuccessLoginResponse(
+    return _then(_$LoginSuccessResponseImpl(
       sessionToken: null == sessionToken
           ? _value.sessionToken
           : sessionToken // ignore: cast_nullable_to_non_nullable
@@ -121,12 +121,12 @@ class __$$_SuccessLoginResponseCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_SuccessLoginResponse implements _SuccessLoginResponse {
-  const _$_SuccessLoginResponse(
+class _$LoginSuccessResponseImpl implements _LoginSuccessResponse {
+  const _$LoginSuccessResponseImpl(
       {required this.sessionToken, required this.session});
 
-  factory _$_SuccessLoginResponse.fromJson(Map<String, dynamic> json) =>
-      _$$_SuccessLoginResponseFromJson(json);
+  factory _$LoginSuccessResponseImpl.fromJson(Map<String, dynamic> json) =>
+      _$$LoginSuccessResponseImplFromJson(json);
 
   @override
   final String sessionToken;
@@ -135,14 +135,14 @@ class _$_SuccessLoginResponse implements _SuccessLoginResponse {
 
   @override
   String toString() {
-    return 'SuccessLoginResponse(sessionToken: $sessionToken, session: $session)';
+    return 'LoginSuccessResponse(sessionToken: $sessionToken, session: $session)';
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_SuccessLoginResponse &&
+            other is _$LoginSuccessResponseImpl &&
             (identical(other.sessionToken, sessionToken) ||
                 other.sessionToken == sessionToken) &&
             (identical(other.session, session) || other.session == session));
@@ -155,25 +155,26 @@ class _$_SuccessLoginResponse implements _SuccessLoginResponse {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_SuccessLoginResponseCopyWith<_$_SuccessLoginResponse> get copyWith =>
-      __$$_SuccessLoginResponseCopyWithImpl<_$_SuccessLoginResponse>(
-          this, _$identity);
+  _$$LoginSuccessResponseImplCopyWith<_$LoginSuccessResponseImpl>
+      get copyWith =>
+          __$$LoginSuccessResponseImplCopyWithImpl<_$LoginSuccessResponseImpl>(
+              this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_SuccessLoginResponseToJson(
+    return _$$LoginSuccessResponseImplToJson(
       this,
     );
   }
 }
 
-abstract class _SuccessLoginResponse implements SuccessLoginResponse {
-  const factory _SuccessLoginResponse(
+abstract class _LoginSuccessResponse implements LoginSuccessResponse {
+  const factory _LoginSuccessResponse(
       {required final String sessionToken,
-      required final Session session}) = _$_SuccessLoginResponse;
+      required final Session session}) = _$LoginSuccessResponseImpl;
 
-  factory _SuccessLoginResponse.fromJson(Map<String, dynamic> json) =
-      _$_SuccessLoginResponse.fromJson;
+  factory _LoginSuccessResponse.fromJson(Map<String, dynamic> json) =
+      _$LoginSuccessResponseImpl.fromJson;
 
   @override
   String get sessionToken;
@@ -181,8 +182,8 @@ abstract class _SuccessLoginResponse implements SuccessLoginResponse {
   Session get session;
   @override
   @JsonKey(ignore: true)
-  _$$_SuccessLoginResponseCopyWith<_$_SuccessLoginResponse> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$LoginSuccessResponseImplCopyWith<_$LoginSuccessResponseImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 Session _$SessionFromJson(Map<String, dynamic> json) {
@@ -299,10 +300,10 @@ class _$SessionCopyWithImpl<$Res, $Val extends Session>
 }
 
 /// @nodoc
-abstract class _$$_SessionCopyWith<$Res> implements $SessionCopyWith<$Res> {
-  factory _$$_SessionCopyWith(
-          _$_Session value, $Res Function(_$_Session) then) =
-      __$$_SessionCopyWithImpl<$Res>;
+abstract class _$$SessionImplCopyWith<$Res> implements $SessionCopyWith<$Res> {
+  factory _$$SessionImplCopyWith(
+          _$SessionImpl value, $Res Function(_$SessionImpl) then) =
+      __$$SessionImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -321,10 +322,11 @@ abstract class _$$_SessionCopyWith<$Res> implements $SessionCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$_SessionCopyWithImpl<$Res>
-    extends _$SessionCopyWithImpl<$Res, _$_Session>
-    implements _$$_SessionCopyWith<$Res> {
-  __$$_SessionCopyWithImpl(_$_Session _value, $Res Function(_$_Session) _then)
+class __$$SessionImplCopyWithImpl<$Res>
+    extends _$SessionCopyWithImpl<$Res, _$SessionImpl>
+    implements _$$SessionImplCopyWith<$Res> {
+  __$$SessionImplCopyWithImpl(
+      _$SessionImpl _value, $Res Function(_$SessionImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -340,7 +342,7 @@ class __$$_SessionCopyWithImpl<$Res>
     Object? identity = null,
     Object? devices = null,
   }) {
-    return _then(_$_Session(
+    return _then(_$SessionImpl(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -383,8 +385,8 @@ class __$$_SessionCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_Session implements _Session {
-  const _$_Session(
+class _$SessionImpl implements _Session {
+  const _$SessionImpl(
       {required this.id,
       required this.active,
       required this.expiresAt,
@@ -397,8 +399,8 @@ class _$_Session implements _Session {
       : _authenticationMethods = authenticationMethods,
         _devices = devices;
 
-  factory _$_Session.fromJson(Map<String, dynamic> json) =>
-      _$$_SessionFromJson(json);
+  factory _$SessionImpl.fromJson(Map<String, dynamic> json) =>
+      _$$SessionImplFromJson(json);
 
   @override
   final String id;
@@ -437,10 +439,10 @@ class _$_Session implements _Session {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_Session &&
+            other is _$SessionImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.active, active) || other.active == active) &&
             (identical(other.expiresAt, expiresAt) ||
@@ -477,12 +479,12 @@ class _$_Session implements _Session {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_SessionCopyWith<_$_Session> get copyWith =>
-      __$$_SessionCopyWithImpl<_$_Session>(this, _$identity);
+  _$$SessionImplCopyWith<_$SessionImpl> get copyWith =>
+      __$$SessionImplCopyWithImpl<_$SessionImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_SessionToJson(
+    return _$$SessionImplToJson(
       this,
     );
   }
@@ -498,9 +500,9 @@ abstract class _Session implements Session {
       required final List<AuthenticationMethod> authenticationMethods,
       required final DateTime issuedAt,
       required final Identity identity,
-      required final List<Device> devices}) = _$_Session;
+      required final List<Device> devices}) = _$SessionImpl;
 
-  factory _Session.fromJson(Map<String, dynamic> json) = _$_Session.fromJson;
+  factory _Session.fromJson(Map<String, dynamic> json) = _$SessionImpl.fromJson;
 
   @override
   String get id;
@@ -522,7 +524,7 @@ abstract class _Session implements Session {
   List<Device> get devices;
   @override
   @JsonKey(ignore: true)
-  _$$_SessionCopyWith<_$_Session> get copyWith =>
+  _$$SessionImplCopyWith<_$SessionImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -587,22 +589,22 @@ class _$AuthenticationMethodCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_AuthenticationMethodCopyWith<$Res>
+abstract class _$$AuthenticationMethodImplCopyWith<$Res>
     implements $AuthenticationMethodCopyWith<$Res> {
-  factory _$$_AuthenticationMethodCopyWith(_$_AuthenticationMethod value,
-          $Res Function(_$_AuthenticationMethod) then) =
-      __$$_AuthenticationMethodCopyWithImpl<$Res>;
+  factory _$$AuthenticationMethodImplCopyWith(_$AuthenticationMethodImpl value,
+          $Res Function(_$AuthenticationMethodImpl) then) =
+      __$$AuthenticationMethodImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String method, String aal, DateTime completedAt});
 }
 
 /// @nodoc
-class __$$_AuthenticationMethodCopyWithImpl<$Res>
-    extends _$AuthenticationMethodCopyWithImpl<$Res, _$_AuthenticationMethod>
-    implements _$$_AuthenticationMethodCopyWith<$Res> {
-  __$$_AuthenticationMethodCopyWithImpl(_$_AuthenticationMethod _value,
-      $Res Function(_$_AuthenticationMethod) _then)
+class __$$AuthenticationMethodImplCopyWithImpl<$Res>
+    extends _$AuthenticationMethodCopyWithImpl<$Res, _$AuthenticationMethodImpl>
+    implements _$$AuthenticationMethodImplCopyWith<$Res> {
+  __$$AuthenticationMethodImplCopyWithImpl(_$AuthenticationMethodImpl _value,
+      $Res Function(_$AuthenticationMethodImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -612,7 +614,7 @@ class __$$_AuthenticationMethodCopyWithImpl<$Res>
     Object? aal = null,
     Object? completedAt = null,
   }) {
-    return _then(_$_AuthenticationMethod(
+    return _then(_$AuthenticationMethodImpl(
       method: null == method
           ? _value.method
           : method // ignore: cast_nullable_to_non_nullable
@@ -631,12 +633,12 @@ class __$$_AuthenticationMethodCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_AuthenticationMethod implements _AuthenticationMethod {
-  const _$_AuthenticationMethod(
+class _$AuthenticationMethodImpl implements _AuthenticationMethod {
+  const _$AuthenticationMethodImpl(
       {required this.method, required this.aal, required this.completedAt});
 
-  factory _$_AuthenticationMethod.fromJson(Map<String, dynamic> json) =>
-      _$$_AuthenticationMethodFromJson(json);
+  factory _$AuthenticationMethodImpl.fromJson(Map<String, dynamic> json) =>
+      _$$AuthenticationMethodImplFromJson(json);
 
   @override
   final String method;
@@ -651,10 +653,10 @@ class _$_AuthenticationMethod implements _AuthenticationMethod {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_AuthenticationMethod &&
+            other is _$AuthenticationMethodImpl &&
             (identical(other.method, method) || other.method == method) &&
             (identical(other.aal, aal) || other.aal == aal) &&
             (identical(other.completedAt, completedAt) ||
@@ -668,13 +670,14 @@ class _$_AuthenticationMethod implements _AuthenticationMethod {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_AuthenticationMethodCopyWith<_$_AuthenticationMethod> get copyWith =>
-      __$$_AuthenticationMethodCopyWithImpl<_$_AuthenticationMethod>(
-          this, _$identity);
+  _$$AuthenticationMethodImplCopyWith<_$AuthenticationMethodImpl>
+      get copyWith =>
+          __$$AuthenticationMethodImplCopyWithImpl<_$AuthenticationMethodImpl>(
+              this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_AuthenticationMethodToJson(
+    return _$$AuthenticationMethodImplToJson(
       this,
     );
   }
@@ -684,10 +687,10 @@ abstract class _AuthenticationMethod implements AuthenticationMethod {
   const factory _AuthenticationMethod(
       {required final String method,
       required final String aal,
-      required final DateTime completedAt}) = _$_AuthenticationMethod;
+      required final DateTime completedAt}) = _$AuthenticationMethodImpl;
 
   factory _AuthenticationMethod.fromJson(Map<String, dynamic> json) =
-      _$_AuthenticationMethod.fromJson;
+      _$AuthenticationMethodImpl.fromJson;
 
   @override
   String get method;
@@ -697,8 +700,8 @@ abstract class _AuthenticationMethod implements AuthenticationMethod {
   DateTime get completedAt;
   @override
   @JsonKey(ignore: true)
-  _$$_AuthenticationMethodCopyWith<_$_AuthenticationMethod> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$AuthenticationMethodImplCopyWith<_$AuthenticationMethodImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 Device _$DeviceFromJson(Map<String, dynamic> json) {
@@ -765,19 +768,21 @@ class _$DeviceCopyWithImpl<$Res, $Val extends Device>
 }
 
 /// @nodoc
-abstract class _$$_DeviceCopyWith<$Res> implements $DeviceCopyWith<$Res> {
-  factory _$$_DeviceCopyWith(_$_Device value, $Res Function(_$_Device) then) =
-      __$$_DeviceCopyWithImpl<$Res>;
+abstract class _$$DeviceImplCopyWith<$Res> implements $DeviceCopyWith<$Res> {
+  factory _$$DeviceImplCopyWith(
+          _$DeviceImpl value, $Res Function(_$DeviceImpl) then) =
+      __$$DeviceImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String id, String ipAddress, String userAgent, String location});
 }
 
 /// @nodoc
-class __$$_DeviceCopyWithImpl<$Res>
-    extends _$DeviceCopyWithImpl<$Res, _$_Device>
-    implements _$$_DeviceCopyWith<$Res> {
-  __$$_DeviceCopyWithImpl(_$_Device _value, $Res Function(_$_Device) _then)
+class __$$DeviceImplCopyWithImpl<$Res>
+    extends _$DeviceCopyWithImpl<$Res, _$DeviceImpl>
+    implements _$$DeviceImplCopyWith<$Res> {
+  __$$DeviceImplCopyWithImpl(
+      _$DeviceImpl _value, $Res Function(_$DeviceImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -788,7 +793,7 @@ class __$$_DeviceCopyWithImpl<$Res>
     Object? userAgent = null,
     Object? location = null,
   }) {
-    return _then(_$_Device(
+    return _then(_$DeviceImpl(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -811,15 +816,15 @@ class __$$_DeviceCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_Device implements _Device {
-  const _$_Device(
+class _$DeviceImpl implements _Device {
+  const _$DeviceImpl(
       {required this.id,
       required this.ipAddress,
       required this.userAgent,
       required this.location});
 
-  factory _$_Device.fromJson(Map<String, dynamic> json) =>
-      _$$_DeviceFromJson(json);
+  factory _$DeviceImpl.fromJson(Map<String, dynamic> json) =>
+      _$$DeviceImplFromJson(json);
 
   @override
   final String id;
@@ -836,10 +841,10 @@ class _$_Device implements _Device {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_Device &&
+            other is _$DeviceImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.ipAddress, ipAddress) ||
                 other.ipAddress == ipAddress) &&
@@ -857,12 +862,12 @@ class _$_Device implements _Device {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_DeviceCopyWith<_$_Device> get copyWith =>
-      __$$_DeviceCopyWithImpl<_$_Device>(this, _$identity);
+  _$$DeviceImplCopyWith<_$DeviceImpl> get copyWith =>
+      __$$DeviceImplCopyWithImpl<_$DeviceImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_DeviceToJson(
+    return _$$DeviceImplToJson(
       this,
     );
   }
@@ -873,9 +878,9 @@ abstract class _Device implements Device {
       {required final String id,
       required final String ipAddress,
       required final String userAgent,
-      required final String location}) = _$_Device;
+      required final String location}) = _$DeviceImpl;
 
-  factory _Device.fromJson(Map<String, dynamic> json) = _$_Device.fromJson;
+  factory _Device.fromJson(Map<String, dynamic> json) = _$DeviceImpl.fromJson;
 
   @override
   String get id;
@@ -887,7 +892,7 @@ abstract class _Device implements Device {
   String get location;
   @override
   @JsonKey(ignore: true)
-  _$$_DeviceCopyWith<_$_Device> get copyWith =>
+  _$$DeviceImplCopyWith<_$DeviceImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -1011,10 +1016,11 @@ class _$IdentityCopyWithImpl<$Res, $Val extends Identity>
 }
 
 /// @nodoc
-abstract class _$$_IdentityCopyWith<$Res> implements $IdentityCopyWith<$Res> {
-  factory _$$_IdentityCopyWith(
-          _$_Identity value, $Res Function(_$_Identity) then) =
-      __$$_IdentityCopyWithImpl<$Res>;
+abstract class _$$IdentityImplCopyWith<$Res>
+    implements $IdentityCopyWith<$Res> {
+  factory _$$IdentityImplCopyWith(
+          _$IdentityImpl value, $Res Function(_$IdentityImpl) then) =
+      __$$IdentityImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -1032,11 +1038,11 @@ abstract class _$$_IdentityCopyWith<$Res> implements $IdentityCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$_IdentityCopyWithImpl<$Res>
-    extends _$IdentityCopyWithImpl<$Res, _$_Identity>
-    implements _$$_IdentityCopyWith<$Res> {
-  __$$_IdentityCopyWithImpl(
-      _$_Identity _value, $Res Function(_$_Identity) _then)
+class __$$IdentityImplCopyWithImpl<$Res>
+    extends _$IdentityCopyWithImpl<$Res, _$IdentityImpl>
+    implements _$$IdentityImplCopyWith<$Res> {
+  __$$IdentityImplCopyWithImpl(
+      _$IdentityImpl _value, $Res Function(_$IdentityImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1054,7 +1060,7 @@ class __$$_IdentityCopyWithImpl<$Res>
     Object? createdAt = null,
     Object? updatedAt = null,
   }) {
-    return _then(_$_Identity(
+    return _then(_$IdentityImpl(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -1105,8 +1111,8 @@ class __$$_IdentityCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_Identity implements _Identity {
-  const _$_Identity(
+class _$IdentityImpl implements _Identity {
+  const _$IdentityImpl(
       {required this.id,
       required this.schemaId,
       required this.schemaUrl,
@@ -1122,8 +1128,8 @@ class _$_Identity implements _Identity {
         _verifiableAddresses = verifiableAddresses,
         _recoveryAddresses = recoveryAddresses;
 
-  factory _$_Identity.fromJson(Map<String, dynamic> json) =>
-      _$$_IdentityFromJson(json);
+  factory _$IdentityImpl.fromJson(Map<String, dynamic> json) =>
+      _$$IdentityImplFromJson(json);
 
   @override
   final String id;
@@ -1174,10 +1180,10 @@ class _$_Identity implements _Identity {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_Identity &&
+            other is _$IdentityImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.schemaId, schemaId) ||
                 other.schemaId == schemaId) &&
@@ -1218,12 +1224,12 @@ class _$_Identity implements _Identity {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_IdentityCopyWith<_$_Identity> get copyWith =>
-      __$$_IdentityCopyWithImpl<_$_Identity>(this, _$identity);
+  _$$IdentityImplCopyWith<_$IdentityImpl> get copyWith =>
+      __$$IdentityImplCopyWithImpl<_$IdentityImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_IdentityToJson(
+    return _$$IdentityImplToJson(
       this,
     );
   }
@@ -1241,9 +1247,10 @@ abstract class _Identity implements Identity {
       required final List<RecoveryAddress> recoveryAddresses,
       required final dynamic metadataPublic,
       required final DateTime createdAt,
-      required final DateTime updatedAt}) = _$_Identity;
+      required final DateTime updatedAt}) = _$IdentityImpl;
 
-  factory _Identity.fromJson(Map<String, dynamic> json) = _$_Identity.fromJson;
+  factory _Identity.fromJson(Map<String, dynamic> json) =
+      _$IdentityImpl.fromJson;
 
   @override
   String get id;
@@ -1269,7 +1276,7 @@ abstract class _Identity implements Identity {
   DateTime get updatedAt;
   @override
   @JsonKey(ignore: true)
-  _$$_IdentityCopyWith<_$_Identity> get copyWith =>
+  _$$IdentityImplCopyWith<_$IdentityImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -1350,11 +1357,11 @@ class _$RecoveryAddressCopyWithImpl<$Res, $Val extends RecoveryAddress>
 }
 
 /// @nodoc
-abstract class _$$_RecoveryAddressCopyWith<$Res>
+abstract class _$$RecoveryAddressImplCopyWith<$Res>
     implements $RecoveryAddressCopyWith<$Res> {
-  factory _$$_RecoveryAddressCopyWith(
-          _$_RecoveryAddress value, $Res Function(_$_RecoveryAddress) then) =
-      __$$_RecoveryAddressCopyWithImpl<$Res>;
+  factory _$$RecoveryAddressImplCopyWith(_$RecoveryAddressImpl value,
+          $Res Function(_$RecoveryAddressImpl) then) =
+      __$$RecoveryAddressImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -1366,11 +1373,11 @@ abstract class _$$_RecoveryAddressCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_RecoveryAddressCopyWithImpl<$Res>
-    extends _$RecoveryAddressCopyWithImpl<$Res, _$_RecoveryAddress>
-    implements _$$_RecoveryAddressCopyWith<$Res> {
-  __$$_RecoveryAddressCopyWithImpl(
-      _$_RecoveryAddress _value, $Res Function(_$_RecoveryAddress) _then)
+class __$$RecoveryAddressImplCopyWithImpl<$Res>
+    extends _$RecoveryAddressCopyWithImpl<$Res, _$RecoveryAddressImpl>
+    implements _$$RecoveryAddressImplCopyWith<$Res> {
+  __$$RecoveryAddressImplCopyWithImpl(
+      _$RecoveryAddressImpl _value, $Res Function(_$RecoveryAddressImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1382,7 +1389,7 @@ class __$$_RecoveryAddressCopyWithImpl<$Res>
     Object? createdAt = null,
     Object? updatedAt = null,
   }) {
-    return _then(_$_RecoveryAddress(
+    return _then(_$RecoveryAddressImpl(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -1409,16 +1416,16 @@ class __$$_RecoveryAddressCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_RecoveryAddress implements _RecoveryAddress {
-  const _$_RecoveryAddress(
+class _$RecoveryAddressImpl implements _RecoveryAddress {
+  const _$RecoveryAddressImpl(
       {required this.id,
       required this.value,
       required this.via,
       required this.createdAt,
       required this.updatedAt});
 
-  factory _$_RecoveryAddress.fromJson(Map<String, dynamic> json) =>
-      _$$_RecoveryAddressFromJson(json);
+  factory _$RecoveryAddressImpl.fromJson(Map<String, dynamic> json) =>
+      _$$RecoveryAddressImplFromJson(json);
 
   @override
   final String id;
@@ -1437,10 +1444,10 @@ class _$_RecoveryAddress implements _RecoveryAddress {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_RecoveryAddress &&
+            other is _$RecoveryAddressImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.value, value) || other.value == value) &&
             (identical(other.via, via) || other.via == via) &&
@@ -1458,12 +1465,13 @@ class _$_RecoveryAddress implements _RecoveryAddress {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_RecoveryAddressCopyWith<_$_RecoveryAddress> get copyWith =>
-      __$$_RecoveryAddressCopyWithImpl<_$_RecoveryAddress>(this, _$identity);
+  _$$RecoveryAddressImplCopyWith<_$RecoveryAddressImpl> get copyWith =>
+      __$$RecoveryAddressImplCopyWithImpl<_$RecoveryAddressImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_RecoveryAddressToJson(
+    return _$$RecoveryAddressImplToJson(
       this,
     );
   }
@@ -1475,10 +1483,10 @@ abstract class _RecoveryAddress implements RecoveryAddress {
       required final String value,
       required final String via,
       required final DateTime createdAt,
-      required final DateTime updatedAt}) = _$_RecoveryAddress;
+      required final DateTime updatedAt}) = _$RecoveryAddressImpl;
 
   factory _RecoveryAddress.fromJson(Map<String, dynamic> json) =
-      _$_RecoveryAddress.fromJson;
+      _$RecoveryAddressImpl.fromJson;
 
   @override
   String get id;
@@ -1492,7 +1500,7 @@ abstract class _RecoveryAddress implements RecoveryAddress {
   DateTime get updatedAt;
   @override
   @JsonKey(ignore: true)
-  _$$_RecoveryAddressCopyWith<_$_RecoveryAddress> get copyWith =>
+  _$$RecoveryAddressImplCopyWith<_$RecoveryAddressImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -1594,11 +1602,11 @@ class _$VerifiableAddressCopyWithImpl<$Res, $Val extends VerifiableAddress>
 }
 
 /// @nodoc
-abstract class _$$_VerifiableAddressCopyWith<$Res>
+abstract class _$$VerifiableAddressImplCopyWith<$Res>
     implements $VerifiableAddressCopyWith<$Res> {
-  factory _$$_VerifiableAddressCopyWith(_$_VerifiableAddress value,
-          $Res Function(_$_VerifiableAddress) then) =
-      __$$_VerifiableAddressCopyWithImpl<$Res>;
+  factory _$$VerifiableAddressImplCopyWith(_$VerifiableAddressImpl value,
+          $Res Function(_$VerifiableAddressImpl) then) =
+      __$$VerifiableAddressImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -1613,11 +1621,11 @@ abstract class _$$_VerifiableAddressCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_VerifiableAddressCopyWithImpl<$Res>
-    extends _$VerifiableAddressCopyWithImpl<$Res, _$_VerifiableAddress>
-    implements _$$_VerifiableAddressCopyWith<$Res> {
-  __$$_VerifiableAddressCopyWithImpl(
-      _$_VerifiableAddress _value, $Res Function(_$_VerifiableAddress) _then)
+class __$$VerifiableAddressImplCopyWithImpl<$Res>
+    extends _$VerifiableAddressCopyWithImpl<$Res, _$VerifiableAddressImpl>
+    implements _$$VerifiableAddressImplCopyWith<$Res> {
+  __$$VerifiableAddressImplCopyWithImpl(_$VerifiableAddressImpl _value,
+      $Res Function(_$VerifiableAddressImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1632,7 +1640,7 @@ class __$$_VerifiableAddressCopyWithImpl<$Res>
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
   }) {
-    return _then(_$_VerifiableAddress(
+    return _then(_$VerifiableAddressImpl(
       id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -1671,8 +1679,8 @@ class __$$_VerifiableAddressCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_VerifiableAddress implements _VerifiableAddress {
-  const _$_VerifiableAddress(
+class _$VerifiableAddressImpl implements _VerifiableAddress {
+  const _$VerifiableAddressImpl(
       {this.id,
       required this.value,
       required this.verified,
@@ -1682,8 +1690,8 @@ class _$_VerifiableAddress implements _VerifiableAddress {
       this.createdAt,
       this.updatedAt});
 
-  factory _$_VerifiableAddress.fromJson(Map<String, dynamic> json) =>
-      _$$_VerifiableAddressFromJson(json);
+  factory _$VerifiableAddressImpl.fromJson(Map<String, dynamic> json) =>
+      _$$VerifiableAddressImplFromJson(json);
 
   @override
   final String? id;
@@ -1708,10 +1716,10 @@ class _$_VerifiableAddress implements _VerifiableAddress {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_VerifiableAddress &&
+            other is _$VerifiableAddressImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.value, value) || other.value == value) &&
             (identical(other.verified, verified) ||
@@ -1734,13 +1742,13 @@ class _$_VerifiableAddress implements _VerifiableAddress {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_VerifiableAddressCopyWith<_$_VerifiableAddress> get copyWith =>
-      __$$_VerifiableAddressCopyWithImpl<_$_VerifiableAddress>(
+  _$$VerifiableAddressImplCopyWith<_$VerifiableAddressImpl> get copyWith =>
+      __$$VerifiableAddressImplCopyWithImpl<_$VerifiableAddressImpl>(
           this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_VerifiableAddressToJson(
+    return _$$VerifiableAddressImplToJson(
       this,
     );
   }
@@ -1755,10 +1763,10 @@ abstract class _VerifiableAddress implements VerifiableAddress {
       required final String status,
       final DateTime? verifiedAt,
       final DateTime? createdAt,
-      final DateTime? updatedAt}) = _$_VerifiableAddress;
+      final DateTime? updatedAt}) = _$VerifiableAddressImpl;
 
   factory _VerifiableAddress.fromJson(Map<String, dynamic> json) =
-      _$_VerifiableAddress.fromJson;
+      _$VerifiableAddressImpl.fromJson;
 
   @override
   String? get id;
@@ -1778,6 +1786,6 @@ abstract class _VerifiableAddress implements VerifiableAddress {
   DateTime? get updatedAt;
   @override
   @JsonKey(ignore: true)
-  _$$_VerifiableAddressCopyWith<_$_VerifiableAddress> get copyWith =>
+  _$$VerifiableAddressImplCopyWith<_$VerifiableAddressImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

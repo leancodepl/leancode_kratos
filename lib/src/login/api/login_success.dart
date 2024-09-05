@@ -5,18 +5,18 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'login_success.g.dart';
 part 'login_success.freezed.dart';
 
-SuccessLoginResponse loginSuccessResponseFromJson(String str) =>
-    SuccessLoginResponse.fromJson(json.decode(str) as Map<String, dynamic>);
+LoginSuccessResponse loginSuccessResponseFromJson(String str) =>
+    LoginSuccessResponse.fromJson(json.decode(str) as Map<String, dynamic>);
 
 @freezed
-class SuccessLoginResponse with _$SuccessLoginResponse {
-  const factory SuccessLoginResponse({
+class LoginSuccessResponse with _$LoginSuccessResponse {
+  const factory LoginSuccessResponse({
     required String sessionToken,
     required Session session,
-  }) = _SuccessLoginResponse;
+  }) = _LoginSuccessResponse;
 
-  factory SuccessLoginResponse.fromJson(Map<String, dynamic> json) =>
-      _$SuccessLoginResponseFromJson(json);
+  factory LoginSuccessResponse.fromJson(Map<String, dynamic> json) =>
+      _$LoginSuccessResponseFromJson(json);
 }
 
 @freezed
