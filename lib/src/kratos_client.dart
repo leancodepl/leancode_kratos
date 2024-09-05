@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:leancode_kratos_client/leancode_kratos_client.dart';
-import 'package:leancode_kratos_client/src/common/api/auth_dtos.dart';
 import 'package:leancode_kratos_client/src/common/api/verification_flow_dto.dart';
 import 'package:leancode_kratos_client/src/login/api/login_api.dart';
 import 'package:leancode_kratos_client/src/login/api/login_success.dart';
@@ -12,7 +11,6 @@ import 'package:leancode_kratos_client/src/logout/domain/logout_repository.dart'
 import 'package:leancode_kratos_client/src/profile/api/profile_api.dart';
 import 'package:leancode_kratos_client/src/profile/domain/profile_repository.dart';
 import 'package:leancode_kratos_client/src/registration/api/registration_api.dart';
-import 'package:leancode_kratos_client/src/registration/api/registration_success.dart';
 import 'package:leancode_kratos_client/src/registration/domain/registration_repository.dart';
 import 'package:logging/logging.dart';
 
@@ -60,44 +58,6 @@ class KratosClient {
   late final ProfileRepository _profileRepository;
   late final RegistrationRepository _registrationRepository;
 
-  Future<AuthFlowDto?> _initRegistrationFlow({
-    required bool returnSessionTokenExchangeCode,
-    String? returnTo,
-  }) async {
-    return _initAuthFlow(
-      path: 'self-service/registration/api',
-      returnSessionTokenExchangeCode: returnSessionTokenExchangeCode,
-      returnTo: returnTo,
-      refresh: false,
-    );
-  }
-
-  Future<AuthFlowDto?> _initAuthFlow({
-    required String path,
-    required bool returnSessionTokenExchangeCode,
-    required String? returnTo,
-    required bool refresh,
-  }) async {
-    try {
-      final registrationFlow = await _client.get(
-        _buildUri(
-          path: path,
-          queryParameters: {
-            if (returnSessionTokenExchangeCode)
-              'return_session_token_exchange_code': 'true',
-            if (returnTo != null) 'return_to': returnTo,
-            if (refresh) 'refresh': 'true',
-          },
-        ),
-      );
-
-      return AuthFlowDto.fromString(registrationFlow.body);
-    } catch (e, st) {
-      _logger.warning('Error initializing auth flow', e, st);
-      return null;
-    }
-  }
-
   Future<RegistrationResult> registerWithPassword({
     required String password,
     Map<String, dynamic> traits = const <String, dynamic>{},
@@ -127,66 +87,8 @@ class KratosClient {
 
   Future<RegistrationResult> registerWithProfile({
     Map<String, dynamic> traits = const <String, dynamic>{},
-  }) async {
-    final flow =
-        await _initRegistrationFlow(returnSessionTokenExchangeCode: false);
-
-    if (flow == null) {
-      return const RegistrationUnknownErrorResult();
-    }
-
-    try {
-      final response = await _client.post(
-        _buildUri(
-          path: 'self-service/registration',
-          queryParameters: {'flow': flow.id},
-        ),
-        headers: _commonHeaders,
-        body: jsonEncode(
-          {
-            'method': 'profile',
-            'csrf_token': flow.csrfToken,
-            'traits': traits,
-          },
-        ),
-      );
-
-      if (response.statusCode == 410 || response.statusCode == 422) {
-        return _handleErrorResponse(response);
-      } else if (response.statusCode == 200 || response.statusCode == 400) {
-        return _handleSuccessResponse(response);
-      }
-
-      return const RegistrationUnknownErrorResult();
-    } catch (e, st) {
-      _logger.severe('Error completing registration flow', e, st);
-      return const RegistrationUnknownErrorResult();
-    }
-  }
-
-  RegistrationResult _handleErrorResponse(http.Response response) {
-    final dto = AuthFlowDto.fromString(response.body);
-    return mapRegistrationErrorResponse(dto);
-  }
-
-  Future<RegistrationResult> _handleSuccessResponse(
-    http.Response response,
-  ) async {
-    final decodedResponse =
-        RegistrationSuccessResponse.fromString(response.body);
-    final result = mapRegistrationSuccessResponse(decodedResponse);
-
-    if ((decodedResponse.sessionToken, decodedResponse.session)
-        case (final sessionToken?, final session?)
-        when result is RegistrationSuccessResult) {
-      await _credentialsStorage.save(
-        credentials: sessionToken,
-        expirationDate: session.expiresAt.toString(),
-      );
-    }
-
-    return result;
-  }
+  }) =>
+      _registrationRepository.registerWithProfile(traits: traits);
 
   Future<LoginResult> loginWithPassword(
     String email,

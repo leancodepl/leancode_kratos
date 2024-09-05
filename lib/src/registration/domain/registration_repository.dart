@@ -139,6 +139,36 @@ class RegistrationRepository {
     }
   }
 
+  Future<RegistrationResult> registerWithProfile({
+    Map<String, dynamic> traits = const <String, dynamic>{},
+  }) async {
+    final flow =
+        await _initRegistrationFlow(returnSessionTokenExchangeCode: false);
+
+    if (flow == null) {
+      return const RegistrationUnknownErrorResult();
+    }
+
+    try {
+      final response = await _api.registerWithProfile(
+        traits: traits,
+        flowId: flow.id,
+        csrfToken: flow.csrfToken,
+      );
+
+      if (response.statusCode == 410 || response.statusCode == 422) {
+        return _handleErrorResponse(response);
+      } else if (response.statusCode == 200 || response.statusCode == 400) {
+        return _handleSuccessResponse(response);
+      }
+
+      return const RegistrationUnknownErrorResult();
+    } catch (e, st) {
+      _logger.severe('Error completing registration flow', e, st);
+      return const RegistrationUnknownErrorResult();
+    }
+  }
+
   Future<AuthFlowDto?> _initRegistrationFlow({
     required bool returnSessionTokenExchangeCode,
     String? returnTo,

@@ -135,4 +135,30 @@ class RegistrationApi {
     );
     return DataSuccess(data: AuthFlowDto.fromString(registrationFlow.body));
   }
+
+  Future<Response> registerWithProfile({
+    required Map<String, dynamic> traits,
+    required String flowId,
+    required String? csrfToken,
+  }) async {
+    return _client.post(
+      Uri(
+        scheme: _baseUri.scheme,
+        host: _baseUri.host,
+        path: 'self-service/registration',
+        queryParameters: {'flow': flowId},
+      ),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(
+        {
+          'method': 'profile',
+          'csrf_token': csrfToken,
+          'traits': traits,
+        },
+      ),
+    );
+  }
 }
