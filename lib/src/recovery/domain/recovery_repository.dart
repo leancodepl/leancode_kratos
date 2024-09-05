@@ -1,9 +1,7 @@
 import 'dart:convert';
 
 import 'package:leancode_kratos_client/leancode_kratos_client.dart';
-import 'package:leancode_kratos_client/src/common/api/verification_flow_dto.dart';
 import 'package:leancode_kratos_client/src/recovery/api/recovery_api.dart';
-import 'package:leancode_kratos_client/src/verification/api/verification_api.dart';
 import 'package:logging/logging.dart';
 
 class RecoveryRepository {
