@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:http/http.dart';
 import 'package:leancode_kratos_client/leancode_kratos_client.dart';
 import 'package:leancode_kratos_client/src/common/api/auth_dtos.dart';
 import 'package:leancode_kratos_client/src/common/api/data_state.dart';
+import 'package:leancode_kratos_client/src/login/api/login_success.dart';
 import 'package:leancode_kratos_client/src/profile/api/profile_api.dart';
 import 'package:leancode_kratos_client/src/profile/api/profile_settings.dart';
 import 'package:logging/logging.dart';
@@ -121,5 +124,40 @@ class ProfileRepository {
       flowId: flow.flowId,
     );
     return settingsFlow.statusCode == 200;
+  }
+
+  Future<UserProfile> getUserProfile() async {
+    final kratosToken = await _credentialsStorage.read();
+
+    if (kratosToken == null) {
+      return ErrorGettingUserProfile();
+    }
+
+    final whoamiResponse = await _api.getWhaomiSession(kratosToken: kratosToken);
+
+    if (whoamiResponse.statusCode == 200) {
+      try {
+        final session = Session.fromJson(
+          json.decode(whoamiResponse.body) as Map<String, dynamic>,
+        );
+        final userId = session.identity.id;
+        final traits = session.identity.traits;
+        final profileTraits = traits?.entries
+            .map(
+              (e) => ProfileTrait(
+                traitName: e.key,
+                value: e.value,
+              ),
+            )
+            .toList();
+        return UserProfileData(
+          traits: profileTraits!,
+          userId: userId!,
+        );
+      } catch (e, st) {
+        _logger.warning('Error getting recovery flow', e, st);
+      }
+    }
+    return ErrorGettingUserProfile();
   }
 }

@@ -1,10 +1,7 @@
-import 'dart:convert';
-
 import 'package:http/http.dart' as http;
 import 'package:leancode_kratos_client/leancode_kratos_client.dart';
 import 'package:leancode_kratos_client/src/common/api/verification_flow_dto.dart';
 import 'package:leancode_kratos_client/src/login/api/login_api.dart';
-import 'package:leancode_kratos_client/src/login/api/login_success.dart';
 import 'package:leancode_kratos_client/src/login/domain/login_repository.dart';
 import 'package:leancode_kratos_client/src/logout/api/logout_api.dart';
 import 'package:leancode_kratos_client/src/logout/domain/logout_repository.dart';
@@ -16,7 +13,6 @@ import 'package:leancode_kratos_client/src/registration/api/registration_api.dar
 import 'package:leancode_kratos_client/src/registration/domain/registration_repository.dart';
 import 'package:leancode_kratos_client/src/verification/api/verification_api.dart';
 import 'package:leancode_kratos_client/src/verification/domain/verification_repository.dart';
-import 'package:logging/logging.dart';
 
 typedef BrowserCallback = Future<String> Function(String url);
 typedef SdkCallback = Future<SdkResult> Function();
@@ -26,8 +22,7 @@ class KratosClient {
     required Uri baseUri,
     CredentialsStorage? credentialsStorage,
     http.Client? httpClient,
-  })  : _baseUri = baseUri,
-        _credentialsStorage =
+  })  : _credentialsStorage =
             credentialsStorage ?? const FlutterSecureCredentialsStorage(),
         _client = httpClient ?? http.Client() {
     _loginRepository = LoginRepository(
@@ -54,14 +49,8 @@ class KratosClient {
     );
   }
 
-  final Uri _baseUri;
   final CredentialsStorage _credentialsStorage;
   final http.Client _client;
-  final Logger _logger = Logger('KratosClientLogger');
-  static const _commonHeaders = {
-    'Accept': 'application/json',
-    'Content-Type': 'application/json',
-  };
 
   late final LoginRepository _loginRepository;
   late final LogoutRepository _logoutRepository;
@@ -181,59 +170,5 @@ class KratosClient {
   }) =>
       _profileRepository.updatePassword(password: password);
 
-  Future<UserProfile> getUserProfile() async {
-    final kratosToken = await _credentialsStorage.read();
-
-    if (kratosToken == null) {
-      return ErrorGettingUserProfile();
-    }
-
-    final whoamiResponse = await _client.get(
-      _buildUri(path: 'sessions/whoami'),
-      headers: _buildHeaders({'X-Session-Token': kratosToken}),
-    );
-
-    if (whoamiResponse.statusCode == 200) {
-      try {
-        final session = Session.fromJson(
-          json.decode(whoamiResponse.body) as Map<String, dynamic>,
-        );
-        final userId = session.identity.id;
-        final traits = session.identity.traits;
-        final profileTraits = traits?.entries
-            .map(
-              (e) => ProfileTrait(
-                traitName: e.key,
-                value: e.value,
-              ),
-            )
-            .toList();
-        return UserProfileData(
-          traits: profileTraits!,
-          userId: userId!,
-        );
-      } catch (e, st) {
-        _logger.warning('Error getting recovery flow', e, st);
-      }
-    }
-    return ErrorGettingUserProfile();
-  }
-
-  Uri _buildUri({
-    required String path,
-    Map<String, String>? queryParameters,
-  }) =>
-      Uri(
-        scheme: _baseUri.scheme,
-        host: _baseUri.host,
-        path: path,
-        queryParameters: queryParameters,
-      );
-
-  Map<String, String> _buildHeaders(Map<String, String>? additionalHeaders) {
-    if (additionalHeaders == null) {
-      return _commonHeaders;
-    }
-    return {..._commonHeaders, ...additionalHeaders};
-  }
+  Future<UserProfile> getUserProfile() => _profileRepository.getUserProfile();
 }

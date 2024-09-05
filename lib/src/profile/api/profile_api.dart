@@ -117,4 +117,21 @@ class ProfileApi {
       }),
     );
   }
+
+  Future<Response> getWhaomiSession({
+    required String kratosToken,
+  }) async {
+    return _client.post(
+      Uri(
+        scheme: _baseUri.scheme,
+        host: _baseUri.host,
+        path: 'sessions/whoami',
+      ),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'X-Session-Token': kratosToken,
+      },
+    );
+  }
 }
