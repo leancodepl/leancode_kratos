@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:leancode_kratos_client/src/common/api/identity.dart';
 
 part 'login_success.g.dart';
 part 'login_success.freezed.dart';
@@ -57,54 +58,4 @@ class Device with _$Device {
     required String location,
   }) = _Device;
   factory Device.fromJson(Map<String, dynamic> json) => _$DeviceFromJson(json);
-}
-
-@freezed
-class Identity with _$Identity {
-  const factory Identity({
-    required String id,
-    required String schemaId,
-    required String schemaUrl,
-    required String state,
-    required DateTime? stateChangedAt,
-    required Map<String, dynamic> traits,
-    required List<VerifiableAddress> verifiableAddresses,
-    required List<RecoveryAddress> recoveryAddresses,
-    required dynamic metadataPublic,
-    required DateTime createdAt,
-    required DateTime updatedAt,
-  }) = _Identity;
-
-  factory Identity.fromJson(Map<String, dynamic> json) =>
-      _$IdentityFromJson(json);
-}
-
-@freezed
-class RecoveryAddress with _$RecoveryAddress {
-  const factory RecoveryAddress({
-    required String id,
-    required String value,
-    required String via,
-    required DateTime createdAt,
-    required DateTime updatedAt,
-  }) = _RecoveryAddress;
-  factory RecoveryAddress.fromJson(Map<String, dynamic> json) =>
-      _$RecoveryAddressFromJson(json);
-}
-
-@freezed
-class VerifiableAddress with _$VerifiableAddress {
-  const factory VerifiableAddress({
-    String? id,
-    required String value,
-    required bool verified,
-    required String via,
-    required String status,
-    DateTime? verifiedAt,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-  }) = _VerifiableAddress;
-
-  factory VerifiableAddress.fromJson(Map<String, dynamic> json) =>
-      _$VerifiableAddressFromJson(json);
 }

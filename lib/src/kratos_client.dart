@@ -830,7 +830,7 @@ class KratosClient {
         );
         final userId = session.identity.id;
         final traits = session.identity.traits;
-        final profileTraits = traits.entries
+        final profileTraits = traits?.entries
             .map(
               (e) => ProfileTrait(
                 traitName: e.key,
@@ -839,8 +839,8 @@ class KratosClient {
             )
             .toList();
         return UserProfileData(
-          traits: profileTraits,
-          userId: userId,
+          traits: profileTraits!,
+          userId: userId!,
         );
       } catch (e, st) {
         _logger.warning('Error getting recovery flow', e, st);
