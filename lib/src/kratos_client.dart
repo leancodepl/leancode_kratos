@@ -6,9 +6,9 @@ import 'package:http/http.dart' as http;
 import 'package:leancode_kratos_client/leancode_kratos_client.dart';
 import 'package:leancode_kratos_client/src/common/api/auth_dtos.dart';
 import 'package:leancode_kratos_client/src/common/api/verification_flow_dto.dart';
-import 'package:leancode_kratos_client/src/login/api/login_error.dart'
-    as login_error;
+import 'package:leancode_kratos_client/src/login/api/login_api.dart';
 import 'package:leancode_kratos_client/src/login/api/login_success.dart';
+import 'package:leancode_kratos_client/src/login/domain/login_repository.dart';
 import 'package:leancode_kratos_client/src/registration/api/registration_success.dart';
 import 'package:leancode_kratos_client/src/registration/api/token_exchange_success.dart';
 import 'package:logging/logging.dart';
@@ -24,7 +24,12 @@ class KratosClient {
   })  : _baseUri = baseUri,
         _credentialsStorage =
             credentialsStorage ?? const FlutterSecureCredentialsStorage(),
-        _client = httpClient ?? http.Client();
+        _client = httpClient ?? http.Client() {
+    _loginRepository = LoginRepository(
+      api: LoginApi(baseUri, _client),
+      credentialsStorage: _credentialsStorage,
+    );
+  }
 
   final Uri _baseUri;
   final CredentialsStorage _credentialsStorage;
@@ -35,6 +40,8 @@ class KratosClient {
     'Content-Type': 'application/json',
   };
 
+  late final LoginRepository _loginRepository;
+
   Future<AuthFlowDto?> _initRegistrationFlow({
     required bool returnSessionTokenExchangeCode,
     String? returnTo,
@@ -44,19 +51,6 @@ class KratosClient {
       returnSessionTokenExchangeCode: returnSessionTokenExchangeCode,
       returnTo: returnTo,
       refresh: false,
-    );
-  }
-
-  Future<AuthFlowDto?> _initLoginFlow({
-    bool returnSessionTokenExchangeCode = true,
-    required String? returnTo,
-    required bool refresh,
-  }) async {
-    return _initAuthFlow(
-      path: 'self-service/login/api',
-      returnSessionTokenExchangeCode: returnSessionTokenExchangeCode,
-      returnTo: returnTo,
-      refresh: refresh,
     );
   }
 
@@ -449,80 +443,13 @@ class KratosClient {
     String password, {
     AuthFlowInfo? flowInfo,
     bool refresh = false,
-  }) async {
-    try {
-      final AuthFlowInfo? effectiveFlowInfo;
-
-      if (flowInfo != null) {
-        effectiveFlowInfo = flowInfo;
-      } else {
-        final newFlow = await _initLoginFlow(
-          returnSessionTokenExchangeCode: false,
-          returnTo: null,
-          refresh: refresh,
-        );
-
-        effectiveFlowInfo = newFlow?.info;
-      }
-
-      if (effectiveFlowInfo == null) {
-        return const LoginUnknownErrorResult();
-      }
-
-      final loginFlowResult = await _client.post(
-        _buildUri(
-          path: 'self-service/login',
-          queryParameters: {'flow': effectiveFlowInfo.id},
-        ),
-        headers: _commonHeaders,
-        body: jsonEncode(
-          {
-            'method': 'password',
-            'identifier': email,
-            'password': password,
-          },
-        ),
+  }) =>
+      _loginRepository.loginWithPassword(
+        password: password,
+        email: email,
+        flowInfo: flowInfo,
+        refresh: refresh,
       );
-
-      if (loginFlowResult.statusCode == 200) {
-        final loginResult = loginSuccessResponseFromJson(loginFlowResult.body);
-        await _credentialsStorage.save(
-          credentials: loginResult.sessionToken,
-          expirationDate: loginResult.session.expiresAt.toString(),
-        );
-        return const LoginSuccessResult();
-      } else if (loginFlowResult.statusCode == 400) {
-        final errorLoginResult =
-            login_error.loginErrorResponseFromJson(loginFlowResult.body);
-        final generalErrors = errorLoginResult.ui.getGeneralMessages();
-
-        if (generalErrors
-            .contains(KratosMessage.errorValidationAddressNotVerified)) {
-          return LoginVerifyEmailResult(
-            flowId: effectiveFlowInfo.id,
-            emailToVerify: email,
-          );
-        }
-
-        final fieldErrors = errorLoginResult.ui.getFieldMessages();
-
-        if (generalErrors.isNotEmpty || fieldErrors.isNotEmpty) {
-          return LoginErrorResult(
-            generalErrors: generalErrors,
-            fieldErrors: fieldErrors,
-          );
-        }
-
-        return const LoginUnknownErrorResult();
-      }
-
-      return const LoginUnknownErrorResult();
-    } catch (e, st) {
-      _logger.warning('Login failed.', e, st);
-
-      return const LoginUnknownErrorResult();
-    }
-  }
 
   /// NOTE: logout always clears credential storage. The result is regarding the
   /// server logout notification which is executed on a best effort basis
