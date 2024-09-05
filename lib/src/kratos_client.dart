@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:leancode_kratos_client/leancode_kratos_client.dart';
@@ -14,7 +13,6 @@ import 'package:leancode_kratos_client/src/profile/api/profile_api.dart';
 import 'package:leancode_kratos_client/src/profile/domain/profile_repository.dart';
 import 'package:leancode_kratos_client/src/registration/api/registration_api.dart';
 import 'package:leancode_kratos_client/src/registration/api/registration_success.dart';
-import 'package:leancode_kratos_client/src/registration/api/token_exchange_success.dart';
 import 'package:leancode_kratos_client/src/registration/domain/registration_repository.dart';
 import 'package:logging/logging.dart';
 
@@ -100,31 +98,6 @@ class KratosClient {
     }
   }
 
-  Future<AuthFlowDto?> _getRegistrationFlow(String id) async {
-    return _getAuthFlow(
-      path: 'self-service/registration/flows',
-      id: id,
-    );
-  }
-
-  Future<AuthFlowDto?> _getAuthFlow({
-    required String path,
-    required String id,
-  }) async {
-    try {
-      final registrationFlow = await _client.get(
-        _buildUri(
-          path: path,
-          queryParameters: {'id': id},
-        ),
-      );
-      return AuthFlowDto.fromString(registrationFlow.body);
-    } catch (e, st) {
-      _logger.warning('Error getting auth flow', e, st);
-      return null;
-    }
-  }
-
   Future<RegistrationResult> registerWithPassword({
     required String password,
     Map<String, dynamic> traits = const <String, dynamic>{},
@@ -140,106 +113,17 @@ class KratosClient {
     Map<String, dynamic> traits = const <String, dynamic>{},
     AuthFlowInfo? flowInfo,
     String? idToken,
-  }) async {
-    final AuthFlowInfo? effectiveFlowInfo;
-
-    if (flowInfo != null) {
-      effectiveFlowInfo = flowInfo;
-    } else {
-      final newFlow = await _initRegistrationFlow(
-        returnSessionTokenExchangeCode: true,
+  }) =>
+      _registrationRepository.registerWithOidc(
+        provider: provider,
         returnTo: returnTo,
+        browserCallback: browserCallback,
+        appleSdkCallback: appleSdkCallback,
+        googleSdkCallback: googleSdkCallback,
+        traits: traits,
+        flowInfo: flowInfo,
+        idToken: idToken,
       );
-
-      effectiveFlowInfo = newFlow?.info;
-    }
-
-    if (effectiveFlowInfo == null) {
-      return const RegistrationUnknownErrorResult();
-    }
-
-    var effectiveIdToken = idToken;
-    var effectiveTraits = traits;
-
-    if (effectiveIdToken == null) {
-      SdkResult? sdkResult;
-
-      if (Platform.isAndroid &&
-          provider == OidcProvider.google &&
-          googleSdkCallback != null) {
-        sdkResult = await googleSdkCallback();
-      } else if (Platform.isIOS &&
-          provider == OidcProvider.apple &&
-          appleSdkCallback != null) {
-        sdkResult = await appleSdkCallback();
-      }
-
-      if (sdkResult != null) {
-        switch (sdkResult) {
-          case SdkCancelledResult():
-            return const RegistrationCancelledResult();
-          case SdkErrorResult():
-            return const RegistrationUnknownErrorResult();
-          case SdkSuccessResult():
-        }
-
-        effectiveIdToken = sdkResult.idToken;
-        effectiveTraits = <String, dynamic>{
-          ...effectiveTraits,
-          ...sdkResult.traits,
-        };
-      }
-    }
-
-    try {
-      final streamedResponse = await _client.send(
-        http.Request(
-          'POST',
-          _buildUri(
-            path: 'self-service/registration',
-            queryParameters: {'flow': effectiveFlowInfo.id},
-          ),
-        )
-          ..headers.addAll(_commonHeaders)
-          ..body = jsonEncode(
-            {
-              'method': 'oidc',
-              'provider': provider.name,
-              'id_token': effectiveIdToken,
-              'csrf_token': effectiveFlowInfo.csrfToken,
-              'traits': effectiveTraits,
-            },
-          )
-          ..followRedirects = false,
-      );
-
-      final response = await http.Response.fromStream(streamedResponse);
-
-      if (response.statusCode == 400) {
-        return _handleErrorResponse(response);
-      } else if (response.statusCode == 200) {
-        return _handleSuccessResponse(response);
-      } else if (response.statusCode == 422) {
-        return await _handleBrowserLocationChangeRequiredResponse(
-          response: response,
-          info: effectiveFlowInfo,
-          browserCallback: browserCallback,
-        );
-      } else if (response.statusCode == 303) {
-        return await _handleRedirectResponse(
-          response: response,
-          info: effectiveFlowInfo,
-          idToken: effectiveIdToken,
-          traits: effectiveTraits,
-        );
-      }
-
-      return const RegistrationUnknownErrorResult();
-    } catch (e, st) {
-      _logger.severe('Error completing registration flow', e, st);
-      return const RegistrationUnknownErrorResult();
-    }
-  }
 
   Future<RegistrationResult> registerWithProfile({
     Map<String, dynamic> traits = const <String, dynamic>{},
@@ -302,107 +186,6 @@ class KratosClient {
     }
 
     return result;
-  }
-
-  Future<RegistrationResult> _handleBrowserLocationChangeRequiredResponse({
-    required http.Response response,
-    required AuthFlowInfo info,
-    required BrowserCallback browserCallback,
-  }) async {
-    final browserLocationChangeRequiredResponse =
-        RegistrationBrowserLocationChangeRequiredResponse.fromString(
-      response.body,
-    );
-
-    final redirectBrowserTo =
-        browserLocationChangeRequiredResponse.redirectBrowserTo;
-
-    if (redirectBrowserTo == null) {
-      return const RegistrationUnknownErrorResult();
-    }
-
-    final result = await browserCallback(redirectBrowserTo);
-
-    final returnToCode = Uri.parse(result).queryParameters['code'];
-    final initCode = info.sessionTokenExchangeCode;
-
-    if (initCode == null) {
-      return const RegistrationUnknownErrorResult();
-    }
-
-    if (returnToCode == null) {
-      final newFlow = await _getRegistrationFlow(info.id);
-
-      if (newFlow == null) {
-        return const RegistrationUnknownErrorResult();
-      }
-
-      return mapRegistrationErrorResponse(
-        newFlow.copyWith(sessionTokenExchangeCode: initCode),
-      );
-    }
-
-    return _exchangeSessionToken(initCode, returnToCode);
-  }
-
-  Future<RegistrationResult> _handleRedirectResponse({
-    required http.Response response,
-    required AuthFlowInfo info,
-    required String? idToken,
-    required Map<String, dynamic> traits,
-  }) async {
-    final location = response.headers['location'];
-
-    if (location == null) {
-      return const RegistrationUnknownErrorResult();
-    }
-
-    final returnToCode = Uri.parse(location).queryParameters['code'];
-    final initCode = info.sessionTokenExchangeCode;
-
-    if (initCode != null && returnToCode != null) {
-      return _exchangeSessionToken(initCode, returnToCode);
-    }
-
-    if (initCode != null && idToken != null) {
-      return RegistrationSocialFinishResult(
-        flowInfo: info,
-        idToken: idToken,
-        values: traits.entries
-            .map((entry) => ('traits.${entry.key}', entry.value))
-            .toList(),
-      );
-    }
-
-    return const RegistrationUnknownErrorResult();
-  }
-
-  Future<RegistrationResult> _exchangeSessionToken(
-    String initCode,
-    String returnToCode,
-  ) async {
-    final response = await _client.get(
-      _buildUri(
-        path: 'sessions/token-exchange',
-        queryParameters: {
-          'init_code': initCode,
-          'return_to_code': returnToCode,
-        },
-      ),
-    );
-
-    if (response.statusCode == 200) {
-      final parsedResponse = TokenExchangeSuccess.fromString(response.body);
-
-      await _credentialsStorage.save(
-        credentials: parsedResponse.sessionToken!,
-        expirationDate: parsedResponse.session.expiresAt.toString(),
-      );
-
-      return const RegistrationSuccessResult();
-    } else {
-      return const RegistrationUnknownErrorResult();
-    }
   }
 
   Future<LoginResult> loginWithPassword(
