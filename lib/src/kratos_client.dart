@@ -12,8 +12,10 @@ import 'package:leancode_kratos_client/src/logout/api/logout_api.dart';
 import 'package:leancode_kratos_client/src/logout/domain/logout_repository.dart';
 import 'package:leancode_kratos_client/src/profile/api/profile_api.dart';
 import 'package:leancode_kratos_client/src/profile/domain/profile_repository.dart';
+import 'package:leancode_kratos_client/src/registration/api/registration_api.dart';
 import 'package:leancode_kratos_client/src/registration/api/registration_success.dart';
 import 'package:leancode_kratos_client/src/registration/api/token_exchange_success.dart';
+import 'package:leancode_kratos_client/src/registration/domain/registration_repository.dart';
 import 'package:logging/logging.dart';
 
 typedef BrowserCallback = Future<String> Function(String url);
@@ -40,6 +42,10 @@ class KratosClient {
       api: ProfileApi(baseUri, _client),
       credentialsStorage: _credentialsStorage,
     );
+    _registrationRepository = RegistrationRepository(
+      api: RegistrationApi(baseUri, _client),
+      credentialsStorage: _credentialsStorage,
+    );
   }
 
   final Uri _baseUri;
@@ -54,6 +60,7 @@ class KratosClient {
   late final LoginRepository _loginRepository;
   late final LogoutRepository _logoutRepository;
   late final ProfileRepository _profileRepository;
+  late final RegistrationRepository _registrationRepository;
 
   Future<AuthFlowDto?> _initRegistrationFlow({
     required bool returnSessionTokenExchangeCode,
@@ -121,43 +128,8 @@ class KratosClient {
   Future<RegistrationResult> registerWithPassword({
     required String password,
     Map<String, dynamic> traits = const <String, dynamic>{},
-  }) async {
-    final flow =
-        await _initRegistrationFlow(returnSessionTokenExchangeCode: false);
-
-    if (flow == null) {
-      return const RegistrationUnknownErrorResult();
-    }
-
-    try {
-      final response = await _client.post(
-        _buildUri(
-          path: 'self-service/registration',
-          queryParameters: {'flow': flow.id},
-        ),
-        headers: _commonHeaders,
-        body: jsonEncode(
-          {
-            'method': 'password',
-            'csrf_token': flow.csrfToken,
-            'password': password,
-            'traits': traits,
-          },
-        ),
-      );
-
-      if (response.statusCode == 400) {
-        return _handleErrorResponse(response);
-      } else if (response.statusCode == 200) {
-        return _handleSuccessResponse(response);
-      }
-
-      return const RegistrationUnknownErrorResult();
-    } catch (e, st) {
-      _logger.severe('Error completing registration flow', e, st);
-      return const RegistrationUnknownErrorResult();
-    }
-  }
+  }) =>
+      _registrationRepository.registerWithPassword(password: password);
 
   Future<RegistrationResult> registerWithOidc({
     required OidcProvider provider,
