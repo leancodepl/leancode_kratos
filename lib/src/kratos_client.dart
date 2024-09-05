@@ -11,6 +11,8 @@ import 'package:leancode_kratos_client/src/login/api/login_success.dart';
 import 'package:leancode_kratos_client/src/login/domain/login_repository.dart';
 import 'package:leancode_kratos_client/src/logout/api/logout_api.dart';
 import 'package:leancode_kratos_client/src/logout/domain/logout_repository.dart';
+import 'package:leancode_kratos_client/src/profile/api/profile_api.dart';
+import 'package:leancode_kratos_client/src/profile/domain/profile_repository.dart';
 import 'package:leancode_kratos_client/src/registration/api/registration_success.dart';
 import 'package:leancode_kratos_client/src/registration/api/token_exchange_success.dart';
 import 'package:logging/logging.dart';
@@ -35,6 +37,10 @@ class KratosClient {
       api: LogoutApi(baseUri, _client),
       credentialsStorage: _credentialsStorage,
     );
+    _profileRepository = ProfileRepository(
+      api: ProfileApi(baseUri, _client),
+      credentialsStorage: _credentialsStorage,
+    );
   }
 
   final Uri _baseUri;
@@ -48,6 +54,7 @@ class KratosClient {
 
   late final LoginRepository _loginRepository;
   late final LogoutRepository _logoutRepository;
+  late final ProfileRepository _profileRepository;
 
   Future<AuthFlowDto?> _initRegistrationFlow({
     required bool returnSessionTokenExchangeCode,
@@ -305,24 +312,6 @@ class KratosClient {
   RegistrationResult _handleErrorResponse(http.Response response) {
     final dto = AuthFlowDto.fromString(response.body);
     return mapRegistrationErrorResponse(dto);
-  }
-
-  KratosMessage? _handleChangePasswordError(http.Response response) {
-    final dto = AuthFlowDto.fromString(response.body);
-    final nodes = dto.ui.nodes;
-    final errors = nodes
-        .map((node) {
-          return switch ((node.attributes.name, node.messages)) {
-            (final attributeName?, [MessageDto(:final id), ...]) => (
-                attributeName,
-                KratosMessage.forId(id),
-              ),
-            _ => null
-          };
-        })
-        .nonNulls
-        .toList();
-    return errors.firstOrNull?.$2;
   }
 
   Future<RegistrationResult> _handleSuccessResponse(
@@ -783,33 +772,8 @@ class KratosClient {
 
   Future<UpdatePassword> updatePassword({
     required String password,
-  }) async {
-    final settingsFlowId = await _getSettingsFlowId();
-    final kratosToken = await _credentialsStorage.read();
-
-    if (kratosToken == null || settingsFlowId == null) {
-      return UpdateRequiresReauthorization();
-    }
-
-    final settingsFlow = await _client.post(
-      _buildUri(
-        path: 'self-service/settings',
-        queryParameters: {'flow': settingsFlowId},
-      ),
-      body: jsonEncode({
-        'method': 'password',
-        'password': password,
-      }),
-      headers: _buildHeaders({'X-Session-Token': kratosToken}),
-    );
-
-    return switch (settingsFlow.statusCode) {
-      200 => UpdateSuccess(),
-      403 => UpdateRequiresReauthorization(),
-      400 => UpdateFailure(error: _handleChangePasswordError(settingsFlow)),
-      _ => UpdateFailure(error: null),
-    };
-  }
+  }) =>
+      _profileRepository.updatePassword(password: password);
 
   Future<UserProfile> getUserProfile() async {
     final kratosToken = await _credentialsStorage.read();
