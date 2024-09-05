@@ -707,67 +707,10 @@ class KratosClient {
     return settingsFlow.statusCode == 200;
   }
 
-  Future<String?> _getSettingsFlowId() async {
-    final kratosToken = await _credentialsStorage.read();
-    if (kratosToken == null) {
-      return null;
-    }
-    final settingsFlow = await _client.get(
-      _buildUri(path: 'self-service/settings/api'),
-      headers: _buildHeaders({'X-Session-Token': kratosToken}),
-    );
-    if (settingsFlow.statusCode == 200) {
-      try {
-        final decodedResult =
-            jsonDecode(settingsFlow.body) as Map<String, dynamic>;
-        final dynamic flowId = decodedResult['id'];
-        switch (flowId) {
-          case String _:
-            return flowId;
-          default:
-            return null;
-        }
-      } catch (e, st) {
-        _logger.warning('Error getting recovery flow', e, st);
-      }
-    }
-    return null;
-  }
-
   Future<UpdateProfile> updateTraits({
     required List<ProfileTrait> traits,
-  }) async {
-    final settingsFlowId = await _getSettingsFlowId();
-    final kratosToken = await _credentialsStorage.read();
-
-    if (kratosToken == null || settingsFlowId == null) {
-      return ProfileUpdateFailure();
-    }
-
-    final traitsMap = Map<String, dynamic>.fromEntries(
-      traits.map(
-        (trait) => MapEntry<String, dynamic>(trait.traitName, trait.value),
-      ),
-    );
-
-    final settingsFlow = await _client.post(
-      _buildUri(
-        path: 'self-service/settings',
-        queryParameters: {'flow': settingsFlowId},
-      ),
-      body: jsonEncode({
-        'method': 'profile',
-        'traits': jsonEncode(traitsMap),
-      }),
-      headers: _buildHeaders({'X-Session-Token': kratosToken}),
-    );
-
-    return switch (settingsFlow.statusCode) {
-      200 => ProfileUpdateSuccess(),
-      403 => ProfileUpdateRequiresReauthorization(),
-      _ => ProfileUpdateFailure(),
-    };
-  }
+  }) =>
+      _profileRepository.updateTraits(traits: traits);
 
   Future<UpdatePassword> updatePassword({
     required String password,

@@ -79,4 +79,35 @@ class ProfileRepository {
     }
     return null;
   }
+
+  Future<UpdateProfile> updateTraits({
+    required List<ProfileTrait> traits,
+  }) async {
+    final settingsFlowId = await _getSettingsFlowId();
+    final kratosToken = await _credentialsStorage.read();
+
+    if (kratosToken == null || settingsFlowId == null) {
+      return ProfileUpdateFailure();
+    }
+
+    final traitsMap = Map<String, dynamic>.fromEntries(
+      traits.map(
+        (trait) => MapEntry<String, dynamic>(trait.traitName, trait.value),
+      ),
+    );
+
+    final response = await _api.updateTraits(
+      kratosToken: kratosToken,
+      settingsFlowId: settingsFlowId,
+      traitsMap: traitsMap,
+    );
+
+    return switch (response) {
+      final DataSuccess _ => ProfileUpdateSuccess(),
+      final DataFailed<Response> response
+          when response.data?.statusCode == 403 =>
+        ProfileUpdateRequiresReauthorization(),
+      _ => ProfileUpdateFailure(),
+    };
+  }
 }

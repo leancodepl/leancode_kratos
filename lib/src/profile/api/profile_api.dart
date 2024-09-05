@@ -64,4 +64,33 @@ class ProfileApi {
       _ => DataFailed(data: response),
     };
   }
+
+  Future<DataState> updateTraits({
+    required String kratosToken,
+    required String settingsFlowId,
+    required Map<String, dynamic> traitsMap,
+  }) async {
+    final response = await _client.post(
+      Uri(
+        scheme: _baseUri.scheme,
+        host: _baseUri.host,
+        path: 'self-service/settings',
+        queryParameters: {'flow': settingsFlowId},
+      ),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'X-Session-Token': kratosToken,
+      },
+      body: jsonEncode({
+        'method': 'profile',
+        'traits': jsonEncode(traitsMap),
+      }),
+    );
+
+    return switch (response.statusCode) {
+      200 => const DataSuccess(),
+      _ => DataFailed(data: response),
+    };
+  }
 }
