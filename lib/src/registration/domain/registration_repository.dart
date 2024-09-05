@@ -21,7 +21,7 @@ class RegistrationRepository {
 
   Future<RegistrationResult> registerWithPassword({
     required String password,
-    Map<String, dynamic> traits = const <String, dynamic>{},
+    required Map<String, dynamic> traits,
   }) async {
     final flow =
         await _initRegistrationFlow(returnSessionTokenExchangeCode: false);

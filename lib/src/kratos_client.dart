@@ -63,7 +63,10 @@ class KratosClient {
     required String password,
     Map<String, dynamic> traits = const <String, dynamic>{},
   }) =>
-      _registrationRepository.registerWithPassword(password: password);
+      _registrationRepository.registerWithPassword(
+        password: password,
+        traits: traits,
+      );
 
   Future<RegistrationResult> registerWithOidc({
     required OidcProvider provider,
@@ -156,18 +159,14 @@ class KratosClient {
     required String newPassword,
   }) =>
       sendNewPasswordSettingsFlow(
-        newPassword: newPassword,
         flow: flow,
+        newPassword: newPassword,
       );
 
-  Future<UpdateProfile> updateTraits({
-    required List<ProfileTrait> traits,
-  }) =>
+  Future<UpdateProfile> updateTraits({required List<ProfileTrait> traits}) =>
       _profileRepository.updateTraits(traits: traits);
 
-  Future<UpdatePassword> updatePassword({
-    required String password,
-  }) =>
+  Future<UpdatePassword> updatePassword({required String password}) =>
       _profileRepository.updatePassword(password: password);
 
   Future<UserProfile> getUserProfile() => _profileRepository.getUserProfile();
