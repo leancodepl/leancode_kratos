@@ -110,4 +110,16 @@ class ProfileRepository {
       _ => ProfileUpdateFailure(),
     };
   }
+
+  Future<bool> sendNewPasswordSettingsFlow({
+    required SettingsFlowResultData flow,
+    required String newPassword,
+  }) async {
+    final settingsFlow = await _api.sendNewPasswordSettingsFlow(
+      newPassword: newPassword,
+      kratosToken: flow.sessionToken,
+      flowId: flow.flowId,
+    );
+    return settingsFlow.statusCode == 200;
+  }
 }

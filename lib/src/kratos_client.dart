@@ -165,20 +165,11 @@ class KratosClient {
   Future<bool> sendNewPasswordSettingsFlow({
     required SettingsFlowResultData flow,
     required String newPassword,
-  }) async {
-    final settingsFlow = await _client.post(
-      _buildUri(
-        path: 'self-service/settings',
-        queryParameters: {'flow': flow.flowId},
-      ),
-      body: jsonEncode({
-        'method': 'password',
-        'password': newPassword,
-      }),
-      headers: _buildHeaders({'X-Session-Token': flow.sessionToken}),
-    );
-    return settingsFlow.statusCode == 200;
-  }
+  }) =>
+      sendNewPasswordSettingsFlow(
+        newPassword: newPassword,
+        flow: flow,
+      );
 
   Future<UpdateProfile> updateTraits({
     required List<ProfileTrait> traits,

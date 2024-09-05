@@ -95,7 +95,6 @@ class ProfileApi {
   }
 
   Future<Response> sendNewPasswordSettingsFlow({
-    required String email,
     required String newPassword,
     required String kratosToken,
     required String flowId,
