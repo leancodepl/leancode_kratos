@@ -262,6 +262,45 @@ class KratosClient {
     }
   }
 
+  Future<RegistrationResult> registerWithProfile({
+    Map<String, dynamic> traits = const <String, dynamic>{},
+  }) async {
+    final flow =
+        await _initRegistrationFlow(returnSessionTokenExchangeCode: false);
+
+    if (flow == null) {
+      return const RegistrationUnknownErrorResult();
+    }
+
+    try {
+      final response = await _client.post(
+        _buildUri(
+          path: 'self-service/registration',
+          queryParameters: {'flow': flow.id},
+        ),
+        headers: _commonHeaders,
+        body: jsonEncode(
+          {
+            'method': 'profile',
+            'csrf_token': flow.csrfToken,
+            'traits': traits,
+          },
+        ),
+      );
+
+      if (response.statusCode == 410 || response.statusCode == 422) {
+        return _handleErrorResponse(response);
+      } else if (response.statusCode == 200 || response.statusCode == 400) {
+        return _handleSuccessResponse(response);
+      }
+
+      return const RegistrationUnknownErrorResult();
+    } catch (e, st) {
+      _logger.severe('Error completing registration flow', e, st);
+      return const RegistrationUnknownErrorResult();
+    }
+  }
+
   RegistrationResult _handleErrorResponse(http.Response response) {
     final dto = AuthFlowDto.fromString(response.body);
     return mapRegistrationErrorResponse(dto);
@@ -292,12 +331,12 @@ class KratosClient {
         RegistrationSuccessResponse.fromString(response.body);
     final result = mapRegistrationSuccessResponse(decodedResponse);
 
-    if (result is RegistrationSuccessResult &&
-        decodedResponse.sessionToken != null &&
-        decodedResponse.session != null) {
+    if ((decodedResponse.sessionToken, decodedResponse.session)
+        case (final sessionToken?, final session?)
+        when result is RegistrationSuccessResult) {
       await _credentialsStorage.save(
-        credentials: decodedResponse.sessionToken!,
-        expirationDate: decodedResponse.session!.expiresAt.toString(),
+        credentials: sessionToken,
+        expirationDate: session.expiresAt.toString(),
       );
     }
 
@@ -770,7 +809,7 @@ class KratosClient {
     );
     return settingsFlow.statusCode == 200;
   }
-  
+
   Future<String?> _getSettingsFlowId() async {
     final kratosToken = await _credentialsStorage.read();
     if (kratosToken == null) {
