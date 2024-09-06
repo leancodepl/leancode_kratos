@@ -12,7 +12,7 @@ part of 'verification_flow_dto.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 VerificationFlowDto _$VerificationFlowDtoFromJson(Map<String, dynamic> json) {
   return _VerificationFlowDto.fromJson(json);
@@ -129,11 +129,11 @@ class _$VerificationFlowDtoCopyWithImpl<$Res, $Val extends VerificationFlowDto>
 }
 
 /// @nodoc
-abstract class _$$_VerificationFlowDtoCopyWith<$Res>
+abstract class _$$VerificationFlowDtoImplCopyWith<$Res>
     implements $VerificationFlowDtoCopyWith<$Res> {
-  factory _$$_VerificationFlowDtoCopyWith(_$_VerificationFlowDto value,
-          $Res Function(_$_VerificationFlowDto) then) =
-      __$$_VerificationFlowDtoCopyWithImpl<$Res>;
+  factory _$$VerificationFlowDtoImplCopyWith(_$VerificationFlowDtoImpl value,
+          $Res Function(_$VerificationFlowDtoImpl) then) =
+      __$$VerificationFlowDtoImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -152,11 +152,11 @@ abstract class _$$_VerificationFlowDtoCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_VerificationFlowDtoCopyWithImpl<$Res>
-    extends _$VerificationFlowDtoCopyWithImpl<$Res, _$_VerificationFlowDto>
-    implements _$$_VerificationFlowDtoCopyWith<$Res> {
-  __$$_VerificationFlowDtoCopyWithImpl(_$_VerificationFlowDto _value,
-      $Res Function(_$_VerificationFlowDto) _then)
+class __$$VerificationFlowDtoImplCopyWithImpl<$Res>
+    extends _$VerificationFlowDtoCopyWithImpl<$Res, _$VerificationFlowDtoImpl>
+    implements _$$VerificationFlowDtoImplCopyWith<$Res> {
+  __$$VerificationFlowDtoImplCopyWithImpl(_$VerificationFlowDtoImpl _value,
+      $Res Function(_$VerificationFlowDtoImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -172,7 +172,7 @@ class __$$_VerificationFlowDtoCopyWithImpl<$Res>
     Object? type = null,
     Object? ui = null,
   }) {
-    return _then(_$_VerificationFlowDto(
+    return _then(_$VerificationFlowDtoImpl(
       active: freezed == active
           ? _value.active
           : active // ignore: cast_nullable_to_non_nullable
@@ -215,8 +215,8 @@ class __$$_VerificationFlowDtoCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_VerificationFlowDto implements _VerificationFlowDto {
-  const _$_VerificationFlowDto(
+class _$VerificationFlowDtoImpl implements _VerificationFlowDto {
+  const _$VerificationFlowDtoImpl(
       {this.active,
       this.expiresAt,
       required this.id,
@@ -227,8 +227,8 @@ class _$_VerificationFlowDto implements _VerificationFlowDto {
       required this.type,
       required this.ui});
 
-  factory _$_VerificationFlowDto.fromJson(Map<String, dynamic> json) =>
-      _$$_VerificationFlowDtoFromJson(json);
+  factory _$VerificationFlowDtoImpl.fromJson(Map<String, dynamic> json) =>
+      _$$VerificationFlowDtoImplFromJson(json);
 
   @override
   final String? active;
@@ -255,10 +255,10 @@ class _$_VerificationFlowDto implements _VerificationFlowDto {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_VerificationFlowDto &&
+            other is _$VerificationFlowDtoImpl &&
             (identical(other.active, active) || other.active == active) &&
             (identical(other.expiresAt, expiresAt) ||
                 other.expiresAt == expiresAt) &&
@@ -282,13 +282,13 @@ class _$_VerificationFlowDto implements _VerificationFlowDto {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_VerificationFlowDtoCopyWith<_$_VerificationFlowDto> get copyWith =>
-      __$$_VerificationFlowDtoCopyWithImpl<_$_VerificationFlowDto>(
+  _$$VerificationFlowDtoImplCopyWith<_$VerificationFlowDtoImpl> get copyWith =>
+      __$$VerificationFlowDtoImplCopyWithImpl<_$VerificationFlowDtoImpl>(
           this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_VerificationFlowDtoToJson(
+    return _$$VerificationFlowDtoImplToJson(
       this,
     );
   }
@@ -304,10 +304,10 @@ abstract class _VerificationFlowDto implements VerificationFlowDto {
       final String? returnTo,
       required final String state,
       required final String type,
-      required final UiDto ui}) = _$_VerificationFlowDto;
+      required final UiDto ui}) = _$VerificationFlowDtoImpl;
 
   factory _VerificationFlowDto.fromJson(Map<String, dynamic> json) =
-      _$_VerificationFlowDto.fromJson;
+      _$VerificationFlowDtoImpl.fromJson;
 
   @override
   String? get active;
@@ -329,6 +329,6 @@ abstract class _VerificationFlowDto implements VerificationFlowDto {
   UiDto get ui;
   @override
   @JsonKey(ignore: true)
-  _$$_VerificationFlowDtoCopyWith<_$_VerificationFlowDto> get copyWith =>
+  _$$VerificationFlowDtoImplCopyWith<_$VerificationFlowDtoImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

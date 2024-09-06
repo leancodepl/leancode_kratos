@@ -1,6 +1,9 @@
 import 'package:leancode_kratos_client/leancode_kratos_client.dart';
 import 'package:leancode_kratos_client/src/common/api/auth_dtos.dart';
+import 'package:leancode_kratos_client/src/common/api/continue_with.dart';
 import 'package:leancode_kratos_client/src/registration/api/registration_success.dart';
+
+import '../../common/api/flow.dart';
 
 sealed class RegistrationResult {
   const RegistrationResult();
