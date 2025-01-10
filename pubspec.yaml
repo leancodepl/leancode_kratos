@@ -1,5 +1,9 @@
 name: leancode_kratos_client
-description: A new Flutter plugin project.
+description: >
+  A Flutter library for connecting to Ory Kratos.
+  It helps manage user authentication, registration, making it simple to add identity features to your app.
+  
+repository: https://github.com/leancodepl/leancode_kratos
 version: 0.0.1
 
 environment:
