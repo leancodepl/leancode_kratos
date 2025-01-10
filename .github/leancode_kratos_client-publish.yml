@@ -1,0 +1,33 @@
+name: leancode_kratos_client publish
+
+on:
+  push:
+    tags: ['v*']
+
+jobs:
+  publish:
+    name: Publish to pub.dev
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Dart
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: 3.5.3
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.24.x
+          cache: true
+
+      - name: Publish and release
+        uses: leancodepl/mobile-tools/.github/actions/pub-release@pub-release-v1
