@@ -1,5 +1,6 @@
 name: leancode_kratos_client
 description: A new Flutter plugin project.
+repository: https://github.com/leancodepl/leancode_kratos
 version: 0.0.1
 
 environment:
