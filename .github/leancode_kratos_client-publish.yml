@@ -2,7 +2,7 @@ name: leancode_kratos_client publish
 
 on:
   push:
-    tags: ['leancode_kratos_client-v*']
+    tags: ['v*']
 
 jobs:
   publish:
