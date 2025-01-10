@@ -3,7 +3,7 @@ name: leancode_kratos_client test
 on:
   push:
     branches: [main]
-    tags-ignore: ['leancode_kratos_client-v*']
+    tags-ignore: ['v*']
   pull_request:
     branches: [main]
 
