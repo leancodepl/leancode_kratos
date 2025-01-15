@@ -6,9 +6,9 @@ part of 'login_error.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_LoginErrorResponse _$$_LoginErrorResponseFromJson(
+_$LoginErrorResponseImpl _$$LoginErrorResponseImplFromJson(
         Map<String, dynamic> json) =>
-    _$_LoginErrorResponse(
+    _$LoginErrorResponseImpl(
       id: json['id'] as String,
       oauth2LoginChallenge: json['oauth2_login_challenge'],
       type: json['type'] as String,
@@ -22,8 +22,8 @@ _$_LoginErrorResponse _$$_LoginErrorResponseFromJson(
       requestedAal: json['requested_aal'] as String,
     );
 
-Map<String, dynamic> _$$_LoginErrorResponseToJson(
-        _$_LoginErrorResponse instance) =>
+Map<String, dynamic> _$$LoginErrorResponseImplToJson(
+        _$LoginErrorResponseImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'oauth2_login_challenge': instance.oauth2LoginChallenge,
