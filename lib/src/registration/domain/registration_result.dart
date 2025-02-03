@@ -65,30 +65,34 @@ RegistrationResult mapRegistrationSuccessResponse(
 
   final continueWith = response.continueWith;
 
-  return continueWith?.map(
-        (element) {
-          return switch (element) {
-            ContinueWith(
-              action: 'show_verification_ui',
-              flow: Flow(
-                id: final flowId?,
-                verifiableAddress: final emailToVerify?
-              )
-            ) =>
-              RegistrationVerifyEmailResult(
-                flowId: flowId,
-                emailToVerify: emailToVerify,
-              ),
-            ContinueWith(
-              action: 'set_ory_session_token',
-              flow: null,
-            ) =>
-              const RegistrationSuccessResult(),
-            _ => const RegistrationUnknownErrorResult(),
-          };
-        },
-      ).firstOrNull ??
-      const RegistrationSuccessResult();
+  final result = continueWith?.map(
+    (element) {
+      return switch (element) {
+        ContinueWith(
+          action: 'show_verification_ui',
+          flow: Flow(
+            id: final flowId?,
+            verifiableAddress: final emailToVerify?,
+          )
+        ) =>
+          RegistrationVerifyEmailResult(
+            flowId: flowId,
+            emailToVerify: emailToVerify,
+          ),
+        ContinueWith(
+          action: 'set_ory_session_token',
+          flow: null,
+        ) =>
+          const RegistrationSuccessResult(),
+        _ => const RegistrationUnknownErrorResult(),
+      };
+    },
+  ).firstWhere(
+    (element) => element is! RegistrationUnknownErrorResult,
+    orElse: () => const RegistrationUnknownErrorResult(),
+  );
+
+  return result ?? const RegistrationUnknownErrorResult();
 }
 
 RegistrationResult mapRegistrationErrorResponse(AuthFlowDto response) {

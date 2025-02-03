@@ -2,11 +2,15 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 abstract interface class CredentialsStorage {
   Future<String?> read();
+
+  /// - [credentials] may be null on Web.
   Future<void> save({
-    required String credentials,
+    required String? credentials,
     required String expirationDate,
   });
+
   Future<void> clear();
+
   Future<DateTime?> readExpirationDate();
 }
 
@@ -25,7 +29,7 @@ class FlutterSecureCredentialsStorage implements CredentialsStorage {
 
   @override
   Future<void> save({
-    required String credentials,
+    required String? credentials,
     required String expirationDate,
   }) async {
     await _storage.write(key: _key, value: credentials);
