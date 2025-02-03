@@ -6,9 +6,9 @@ part of 'registration_success.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_RegistrationSuccessResponse _$$_RegistrationSuccessResponseFromJson(
+_$RegistrationSuccessResponseImpl _$$RegistrationSuccessResponseImplFromJson(
         Map<String, dynamic> json) =>
-    _$_RegistrationSuccessResponse(
+    _$RegistrationSuccessResponseImpl(
       continueWith: (json['continue_with'] as List<dynamic>?)
           ?.map((e) => ContinueWith.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -36,8 +36,8 @@ _$_RegistrationSuccessResponse _$$_RegistrationSuccessResponseFromJson(
       sessionTokenExchangeCode: json['session_token_exchange_code'] as String?,
     );
 
-Map<String, dynamic> _$$_RegistrationSuccessResponseToJson(
-        _$_RegistrationSuccessResponse instance) =>
+Map<String, dynamic> _$$RegistrationSuccessResponseImplToJson(
+        _$RegistrationSuccessResponseImpl instance) =>
     <String, dynamic>{
       'continue_with': instance.continueWith?.map((e) => e.toJson()).toList(),
       'identity': instance.identity?.toJson(),
@@ -54,45 +54,47 @@ Map<String, dynamic> _$$_RegistrationSuccessResponseToJson(
       'session_token_exchange_code': instance.sessionTokenExchangeCode,
     };
 
-_$_RegistrationBrowserLocationChangeRequiredResponse
-    _$$_RegistrationBrowserLocationChangeRequiredResponseFromJson(
+_$RegistrationBrowserLocationChangeRequiredResponseImpl
+    _$$RegistrationBrowserLocationChangeRequiredResponseImplFromJson(
             Map<String, dynamic> json) =>
-        _$_RegistrationBrowserLocationChangeRequiredResponse(
+        _$RegistrationBrowserLocationChangeRequiredResponseImpl(
           redirectBrowserTo: json['redirect_browser_to'] as String?,
         );
 
 Map<String, dynamic>
-    _$$_RegistrationBrowserLocationChangeRequiredResponseToJson(
-            _$_RegistrationBrowserLocationChangeRequiredResponse instance) =>
+    _$$RegistrationBrowserLocationChangeRequiredResponseImplToJson(
+            _$RegistrationBrowserLocationChangeRequiredResponseImpl instance) =>
         <String, dynamic>{
           'redirect_browser_to': instance.redirectBrowserTo,
         };
 
-_$_ContinueWith _$$_ContinueWithFromJson(Map<String, dynamic> json) =>
-    _$_ContinueWith(
+_$ContinueWithImpl _$$ContinueWithImplFromJson(Map<String, dynamic> json) =>
+    _$ContinueWithImpl(
       action: json['action'] as String?,
       flow: json['flow'] == null
           ? null
           : Flow.fromJson(json['flow'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$$_ContinueWithToJson(_$_ContinueWith instance) =>
+Map<String, dynamic> _$$ContinueWithImplToJson(_$ContinueWithImpl instance) =>
     <String, dynamic>{
       'action': instance.action,
       'flow': instance.flow?.toJson(),
     };
 
-_$_Flow _$$_FlowFromJson(Map<String, dynamic> json) => _$_Flow(
+_$FlowImpl _$$FlowImplFromJson(Map<String, dynamic> json) => _$FlowImpl(
       id: json['id'] as String?,
       verifiableAddress: json['verifiable_address'] as String?,
     );
 
-Map<String, dynamic> _$$_FlowToJson(_$_Flow instance) => <String, dynamic>{
+Map<String, dynamic> _$$FlowImplToJson(_$FlowImpl instance) =>
+    <String, dynamic>{
       'id': instance.id,
       'verifiable_address': instance.verifiableAddress,
     };
 
-_$_Identity _$$_IdentityFromJson(Map<String, dynamic> json) => _$_Identity(
+_$IdentityImpl _$$IdentityImplFromJson(Map<String, dynamic> json) =>
+    _$IdentityImpl(
       id: json['id'] as String?,
       schemaId: json['schema_id'] as String?,
       schemaUrl: json['schema_url'] as String?,
@@ -116,7 +118,7 @@ _$_Identity _$$_IdentityFromJson(Map<String, dynamic> json) => _$_Identity(
           : DateTime.parse(json['updated_at'] as String),
     );
 
-Map<String, dynamic> _$$_IdentityToJson(_$_Identity instance) =>
+Map<String, dynamic> _$$IdentityImplToJson(_$IdentityImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'schema_id': instance.schemaId,
@@ -133,8 +135,9 @@ Map<String, dynamic> _$$_IdentityToJson(_$_Identity instance) =>
       'updated_at': instance.updatedAt?.toIso8601String(),
     };
 
-_$_RecoveryAddress _$$_RecoveryAddressFromJson(Map<String, dynamic> json) =>
-    _$_RecoveryAddress(
+_$RecoveryAddressImpl _$$RecoveryAddressImplFromJson(
+        Map<String, dynamic> json) =>
+    _$RecoveryAddressImpl(
       id: json['id'] as String?,
       value: json['value'] as String?,
       via: json['via'] as String?,
@@ -146,7 +149,8 @@ _$_RecoveryAddress _$$_RecoveryAddressFromJson(Map<String, dynamic> json) =>
           : DateTime.parse(json['updated_at'] as String),
     );
 
-Map<String, dynamic> _$$_RecoveryAddressToJson(_$_RecoveryAddress instance) =>
+Map<String, dynamic> _$$RecoveryAddressImplToJson(
+        _$RecoveryAddressImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'value': instance.value,
@@ -155,8 +159,9 @@ Map<String, dynamic> _$$_RecoveryAddressToJson(_$_RecoveryAddress instance) =>
       'updated_at': instance.updatedAt?.toIso8601String(),
     };
 
-_$_VerifiableAddress _$$_VerifiableAddressFromJson(Map<String, dynamic> json) =>
-    _$_VerifiableAddress(
+_$VerifiableAddressImpl _$$VerifiableAddressImplFromJson(
+        Map<String, dynamic> json) =>
+    _$VerifiableAddressImpl(
       id: json['id'] as String?,
       value: json['value'] as String?,
       verified: json['verified'] as bool?,
@@ -170,8 +175,8 @@ _$_VerifiableAddress _$$_VerifiableAddressFromJson(Map<String, dynamic> json) =>
           : DateTime.parse(json['updated_at'] as String),
     );
 
-Map<String, dynamic> _$$_VerifiableAddressToJson(
-        _$_VerifiableAddress instance) =>
+Map<String, dynamic> _$$VerifiableAddressImplToJson(
+        _$VerifiableAddressImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'value': instance.value,

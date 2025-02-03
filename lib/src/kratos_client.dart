@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:leancode_kratos_client/leancode_kratos_client.dart';
 import 'package:leancode_kratos_client/src/common/api/auth_dtos.dart';
@@ -35,12 +36,14 @@ class KratosClient {
     'Content-Type': 'application/json',
   };
 
+  String get _flowType => kIsWeb ? 'browser' : 'api';
+
   Future<AuthFlowDto?> _initRegistrationFlow({
     required bool returnSessionTokenExchangeCode,
     String? returnTo,
   }) async {
     return _initAuthFlow(
-      path: 'self-service/registration/api',
+      path: 'self-service/registration/$_flowType',
       returnSessionTokenExchangeCode: returnSessionTokenExchangeCode,
       returnTo: returnTo,
       refresh: false,
@@ -53,7 +56,7 @@ class KratosClient {
     required bool refresh,
   }) async {
     return _initAuthFlow(
-      path: 'self-service/login/api',
+      path: 'self-service/login/$_flowType',
       returnSessionTokenExchangeCode: returnSessionTokenExchangeCode,
       returnTo: returnTo,
       refresh: refresh,
@@ -77,6 +80,7 @@ class KratosClient {
             if (refresh) 'refresh': 'true',
           },
         ),
+        headers: _commonHeaders,
       );
 
       return AuthFlowDto.fromString(registrationFlow.body);
@@ -262,6 +266,9 @@ class KratosClient {
     }
   }
 
+  /// [registerWithProfile] is used in a multi step registration flow that requires
+  /// users to provide basic information first, and complete the registration process
+  /// and set a password or a passkey at the end.
   Future<RegistrationResult> registerWithProfile({
     Map<String, dynamic> traits = const <String, dynamic>{},
   }) async {
@@ -434,7 +441,7 @@ class KratosClient {
       final parsedResponse = TokenExchangeSuccess.fromString(response.body);
 
       await _credentialsStorage.save(
-        credentials: parsedResponse.sessionToken!,
+        credentials: parsedResponse.sessionToken,
         expirationDate: parsedResponse.session.expiresAt.toString(),
       );
 
@@ -480,6 +487,8 @@ class KratosClient {
             'method': 'password',
             'identifier': email,
             'password': password,
+            if (effectiveFlowInfo.csrfToken case final csrfToken?)
+              'csrf_token': csrfToken,
           },
         ),
       );
@@ -526,18 +535,17 @@ class KratosClient {
 
   /// NOTE: logout always clears credential storage. The result is regarding the
   /// server logout notification which is executed on a best effort basis
-
   Future<LogoutResult> logout() async {
     final sessionToken = await _credentialsStorage.read();
     await _credentialsStorage.clear();
 
-    if (sessionToken == null) {
+    if (!kIsWeb && sessionToken == null) {
       return const LogoutUnknownErrorResult();
     }
 
     try {
       final logoutResult = await _client.delete(
-        _buildUri(path: 'self-service/logout/api'),
+        _buildUri(path: 'self-service/logout/$_flowType'),
         headers: _commonHeaders,
         body: jsonEncode({'session_token': sessionToken}),
       );
@@ -600,8 +608,6 @@ class KratosClient {
 
   /// getNewVerificationFlow
   /// Use when old verification flow expired / verification flow interrupted on mobile
-  ///
-
   Future<VerificationFlowDto?> getNewVerificationFlow(String email) async {
     final verificationFlow = await getVerificationFlow();
 
@@ -646,7 +652,7 @@ class KratosClient {
   Future<VerificationFlowDto?> getVerificationFlow() async {
     try {
       final response = await _client.get(
-        _buildUri(path: 'self-service/verification/api'),
+        _buildUri(path: 'self-service/verification/$_flowType'),
         headers: _commonHeaders,
       );
 
@@ -668,21 +674,19 @@ class KratosClient {
     final hasExpired =
         expirationTime?.isBefore(DateTime.now().toLocal()) ?? true;
 
-    if (sessionToken == null || hasExpired) {
+    if ((!kIsWeb && sessionToken == null) || hasExpired) {
       return;
     }
 
     try {
       final refreshResult = await http.get(
         _buildUri(
-          path: 'self-service/login/api',
+          path: 'self-service/login/$_flowType',
           queryParameters: {
             'refresh': 'true',
           },
         ),
-        headers: {
-          'X-Session-Token': sessionToken,
-        },
+        headers: _buildHeaders({'X-Session-Token': sessionToken}),
       );
 
       final decodedResult = jsonDecode(
@@ -706,7 +710,7 @@ class KratosClient {
 
   Future<RecoveryFlowResult> getRecoveryFlow() async {
     final recoveryFlow = await _client.get(
-      _buildUri(path: 'self-service/recovery/api'),
+      _buildUri(path: 'self-service/recovery/$_flowType'),
     );
     try {
       final decodedResult =
@@ -812,11 +816,12 @@ class KratosClient {
 
   Future<String?> _getSettingsFlowId() async {
     final kratosToken = await _credentialsStorage.read();
-    if (kratosToken == null) {
+    if (!kIsWeb && kratosToken == null) {
       return null;
     }
+
     final settingsFlow = await _client.get(
-      _buildUri(path: 'self-service/settings/api'),
+      _buildUri(path: 'self-service/settings/$_flowType'),
       headers: _buildHeaders({'X-Session-Token': kratosToken}),
     );
     if (settingsFlow.statusCode == 200) {
@@ -843,7 +848,7 @@ class KratosClient {
     final settingsFlowId = await _getSettingsFlowId();
     final kratosToken = await _credentialsStorage.read();
 
-    if (kratosToken == null || settingsFlowId == null) {
+    if ((!kIsWeb && kratosToken == null) || settingsFlowId == null) {
       return ProfileUpdateFailure();
     }
 
@@ -878,7 +883,7 @@ class KratosClient {
     final settingsFlowId = await _getSettingsFlowId();
     final kratosToken = await _credentialsStorage.read();
 
-    if (kratosToken == null || settingsFlowId == null) {
+    if ((!kIsWeb && kratosToken == null) || settingsFlowId == null) {
       return UpdateRequiresReauthorization();
     }
 
@@ -951,10 +956,14 @@ class KratosClient {
         queryParameters: queryParameters,
       );
 
-  Map<String, String> _buildHeaders(Map<String, String>? additionalHeaders) {
+  Map<String, String> _buildHeaders(Map<String, String?>? additionalHeaders) {
     if (additionalHeaders == null) {
       return _commonHeaders;
     }
-    return {..._commonHeaders, ...additionalHeaders};
+    return {
+      ..._commonHeaders,
+      for (final header in additionalHeaders.entries)
+        if (header.value != null) header.key: header.value!,
+    };
   }
 }

@@ -6,8 +6,8 @@ part of 'auth_dtos.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_AuthFlowDto _$$_AuthFlowDtoFromJson(Map<String, dynamic> json) =>
-    _$_AuthFlowDto(
+_$AuthFlowDtoImpl _$$AuthFlowDtoImplFromJson(Map<String, dynamic> json) =>
+    _$AuthFlowDtoImpl(
       id: json['id'] as String,
       oauth2LoginChallenge: json['oauth2_login_challenge'] as String?,
       type: json['type'] as String,
@@ -19,7 +19,7 @@ _$_AuthFlowDto _$$_AuthFlowDtoFromJson(Map<String, dynamic> json) =>
       sessionTokenExchangeCode: json['session_token_exchange_code'] as String?,
     );
 
-Map<String, dynamic> _$$_AuthFlowDtoToJson(_$_AuthFlowDto instance) =>
+Map<String, dynamic> _$$AuthFlowDtoImplToJson(_$AuthFlowDtoImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'oauth2_login_challenge': instance.oauth2LoginChallenge,
@@ -32,7 +32,7 @@ Map<String, dynamic> _$$_AuthFlowDtoToJson(_$_AuthFlowDto instance) =>
       'session_token_exchange_code': instance.sessionTokenExchangeCode,
     };
 
-_$_UiDto _$$_UiDtoFromJson(Map<String, dynamic> json) => _$_UiDto(
+_$UiDtoImpl _$$UiDtoImplFromJson(Map<String, dynamic> json) => _$UiDtoImpl(
       action: json['action'] as String,
       method: json['method'] as String,
       nodes: (json['nodes'] as List<dynamic>)
@@ -43,14 +43,16 @@ _$_UiDto _$$_UiDtoFromJson(Map<String, dynamic> json) => _$_UiDto(
           .toList(),
     );
 
-Map<String, dynamic> _$$_UiDtoToJson(_$_UiDto instance) => <String, dynamic>{
+Map<String, dynamic> _$$UiDtoImplToJson(_$UiDtoImpl instance) =>
+    <String, dynamic>{
       'action': instance.action,
       'method': instance.method,
       'nodes': instance.nodes.map((e) => e.toJson()).toList(),
       'messages': instance.messages?.map((e) => e.toJson()).toList(),
     };
 
-_$_NodeDto _$$_NodeDtoFromJson(Map<String, dynamic> json) => _$_NodeDto(
+_$NodeDtoImpl _$$NodeDtoImplFromJson(Map<String, dynamic> json) =>
+    _$NodeDtoImpl(
       type: json['type'] as String,
       group: json['group'] as String,
       attributes:
@@ -61,7 +63,7 @@ _$_NodeDto _$$_NodeDtoFromJson(Map<String, dynamic> json) => _$_NodeDto(
       meta: MetaDto.fromJson(json['meta'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$$_NodeDtoToJson(_$_NodeDto instance) =>
+Map<String, dynamic> _$$NodeDtoImplToJson(_$NodeDtoImpl instance) =>
     <String, dynamic>{
       'type': instance.type,
       'group': instance.group,
@@ -70,8 +72,8 @@ Map<String, dynamic> _$$_NodeDtoToJson(_$_NodeDto instance) =>
       'meta': instance.meta.toJson(),
     };
 
-_$_AttributesDto _$$_AttributesDtoFromJson(Map<String, dynamic> json) =>
-    _$_AttributesDto(
+_$AttributesDtoImpl _$$AttributesDtoImplFromJson(Map<String, dynamic> json) =>
+    _$AttributesDtoImpl(
       name: json['name'] as String?,
       type: json['type'] as String?,
       value: json['value'],
@@ -81,7 +83,7 @@ _$_AttributesDto _$$_AttributesDtoFromJson(Map<String, dynamic> json) =>
       autocomplete: json['autocomplete'] as String?,
     );
 
-Map<String, dynamic> _$$_AttributesDtoToJson(_$_AttributesDto instance) =>
+Map<String, dynamic> _$$AttributesDtoImplToJson(_$AttributesDtoImpl instance) =>
     <String, dynamic>{
       'name': instance.name,
       'type': instance.type,
@@ -92,9 +94,9 @@ Map<String, dynamic> _$$_AttributesDtoToJson(_$_AttributesDto instance) =>
       'autocomplete': instance.autocomplete,
     };
 
-_$_MessageDto _$$_MessageDtoFromJson(Map<String, dynamic> json) =>
-    _$_MessageDto(
-      id: json['id'] as int,
+_$MessageDtoImpl _$$MessageDtoImplFromJson(Map<String, dynamic> json) =>
+    _$MessageDtoImpl(
+      id: (json['id'] as num).toInt(),
       text: json['text'] as String,
       type: json['type'] as String,
       context: json['context'] == null
@@ -102,7 +104,7 @@ _$_MessageDto _$$_MessageDtoFromJson(Map<String, dynamic> json) =>
           : MessageContextDto.fromJson(json['context'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$$_MessageDtoToJson(_$_MessageDto instance) =>
+Map<String, dynamic> _$$MessageDtoImplToJson(_$MessageDtoImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'text': instance.text,
@@ -110,30 +112,33 @@ Map<String, dynamic> _$$_MessageDtoToJson(_$_MessageDto instance) =>
       'context': instance.context?.toJson(),
     };
 
-_$_MessageContextDto _$$_MessageContextDtoFromJson(Map<String, dynamic> json) =>
-    _$_MessageContextDto(
+_$MessageContextDtoImpl _$$MessageContextDtoImplFromJson(
+        Map<String, dynamic> json) =>
+    _$MessageContextDtoImpl(
       reason: json['reason'] as String?,
     );
 
-Map<String, dynamic> _$$_MessageContextDtoToJson(
-        _$_MessageContextDto instance) =>
+Map<String, dynamic> _$$MessageContextDtoImplToJson(
+        _$MessageContextDtoImpl instance) =>
     <String, dynamic>{
       'reason': instance.reason,
     };
 
-_$_MetaDto _$$_MetaDtoFromJson(Map<String, dynamic> json) => _$_MetaDto(
+_$MetaDtoImpl _$$MetaDtoImplFromJson(Map<String, dynamic> json) =>
+    _$MetaDtoImpl(
       label: json['label'] == null
           ? null
           : LabelDto.fromJson(json['label'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$$_MetaDtoToJson(_$_MetaDto instance) =>
+Map<String, dynamic> _$$MetaDtoImplToJson(_$MetaDtoImpl instance) =>
     <String, dynamic>{
       'label': instance.label?.toJson(),
     };
 
-_$_LabelDto _$$_LabelDtoFromJson(Map<String, dynamic> json) => _$_LabelDto(
-      id: json['id'] as int,
+_$LabelDtoImpl _$$LabelDtoImplFromJson(Map<String, dynamic> json) =>
+    _$LabelDtoImpl(
+      id: (json['id'] as num).toInt(),
       text: json['text'] as String,
       type: json['type'] as String,
       context: json['context'] == null
@@ -141,7 +146,7 @@ _$_LabelDto _$$_LabelDtoFromJson(Map<String, dynamic> json) => _$_LabelDto(
           : ContextDto.fromJson(json['context'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$$_LabelDtoToJson(_$_LabelDto instance) =>
+Map<String, dynamic> _$$LabelDtoImplToJson(_$LabelDtoImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'text': instance.text,
@@ -149,8 +154,8 @@ Map<String, dynamic> _$$_LabelDtoToJson(_$_LabelDto instance) =>
       'context': instance.context?.toJson(),
     };
 
-_$_ContextDto _$$_ContextDtoFromJson(Map<String, dynamic> json) =>
-    _$_ContextDto();
+_$ContextDtoImpl _$$ContextDtoImplFromJson(Map<String, dynamic> json) =>
+    _$ContextDtoImpl();
 
-Map<String, dynamic> _$$_ContextDtoToJson(_$_ContextDto instance) =>
+Map<String, dynamic> _$$ContextDtoImplToJson(_$ContextDtoImpl instance) =>
     <String, dynamic>{};
