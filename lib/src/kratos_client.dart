@@ -12,6 +12,8 @@ import 'package:leancode_kratos_client/src/login/api/login_error.dart'
 import 'package:leancode_kratos_client/src/login/api/login_success.dart';
 import 'package:leancode_kratos_client/src/registration/api/registration_success.dart';
 import 'package:leancode_kratos_client/src/registration/api/token_exchange_success.dart';
+import 'package:leancode_kratos_client/src/utils/create_client.dart'
+    if (dart.library.js_interop) 'package:leancode_kratos_client/src/utils/create_browser_client.dart';
 import 'package:logging/logging.dart';
 
 typedef BrowserCallback = Future<String> Function(String url);
@@ -25,7 +27,7 @@ class KratosClient {
   })  : _baseUri = baseUri,
         _credentialsStorage =
             credentialsStorage ?? const FlutterSecureCredentialsStorage(),
-        _client = httpClient ?? http.Client();
+        _client = httpClient ?? createHttpClient();
 
   final Uri _baseUri;
   final CredentialsStorage _credentialsStorage;
