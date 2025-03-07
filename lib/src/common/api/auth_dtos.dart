@@ -4,6 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:leancode_kratos_client/src/common/domain/auth_flow_info.dart';
 import 'package:leancode_kratos_client/src/utils/kratos_message.dart';
+import 'package:leancode_kratos_client/src/utils/passkey_parsing.dart';
 
 part 'auth_dtos.freezed.dart';
 part 'auth_dtos.g.dart';
@@ -35,12 +36,32 @@ class AuthFlowDto with _$AuthFlowDto {
       ?.attributes
       .value as String?;
 
-  AuthFlowInfo get info => AuthFlowInfo(
-        id: id,
-        expiresAt: expiresAt,
-        csrfToken: csrfToken,
-        sessionTokenExchangeCode: sessionTokenExchangeCode,
-      );
+  AuthFlowInfo get info {
+    final passkeyRequest = ui.nodes
+        .firstWhereOrNull((node) => node.attributes.name == 'passkey_challenge')
+        ?.attributes
+        .value as String?;
+
+    final passkeyCreation = ui.nodes
+        .firstWhereOrNull(
+          (node) => node.attributes.name == 'passkey_create_data',
+        )
+        ?.attributes
+        .value as String?;
+
+    return AuthFlowInfo(
+      id: id,
+      expiresAt: expiresAt,
+      csrfToken: csrfToken,
+      sessionTokenExchangeCode: sessionTokenExchangeCode,
+      passkeyRequestOptions: passkeyRequest != null
+          ? getPasskeyRequestOptionsFromString(passkeyRequest)
+          : null,
+      passkeyCreationOptions: passkeyCreation != null
+          ? getPasskeyCreationOptionsFromString(passkeyCreation)
+          : null,
+    );
+  }
 }
 
 @freezed
@@ -154,17 +175,9 @@ class LabelDto with _$LabelDto {
     required int id,
     required String text,
     required String type,
-    ContextDto? context,
+    Map<String, dynamic>? context,
   }) = _LabelDto;
 
   factory LabelDto.fromJson(Map<String, dynamic> json) =>
       _$LabelDtoFromJson(json);
-}
-
-@freezed
-class ContextDto with _$ContextDto {
-  const factory ContextDto() = _ContextDto;
-
-  factory ContextDto.fromJson(Map<String, dynamic> json) =>
-      _$ContextDtoFromJson(json);
 }

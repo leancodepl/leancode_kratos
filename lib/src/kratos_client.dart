@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:leancode_kratos_client/leancode_kratos_client.dart';
 import 'package:leancode_kratos_client/src/common/api/auth_dtos.dart';
+import 'package:leancode_kratos_client/src/common/api/settings_flow_dto.dart';
 import 'package:leancode_kratos_client/src/common/api/verification_flow_dto.dart';
 import 'package:leancode_kratos_client/src/login/api/login_error.dart'
     as login_error;
@@ -14,10 +15,14 @@ import 'package:leancode_kratos_client/src/registration/api/registration_success
 import 'package:leancode_kratos_client/src/registration/api/token_exchange_success.dart';
 import 'package:leancode_kratos_client/src/utils/create_client.dart'
     if (dart.library.js_interop) 'package:leancode_kratos_client/src/utils/create_browser_client.dart';
+import 'package:leancode_kratos_client/src/whoami/api/session_result.dart';
 import 'package:logging/logging.dart';
 
 typedef BrowserCallback = Future<String> Function(String url);
 typedef SdkCallback = Future<SdkResult> Function();
+typedef PasskeyCallback = Future<String> Function(
+  Map<String, dynamic> creationOptions,
+);
 
 class KratosClient {
   KratosClient({
@@ -535,6 +540,63 @@ class KratosClient {
     }
   }
 
+  Future<LoginResult> loginWithPasskey({
+    required PasskeyCallback passkeyCallback,
+    bool refresh = false,
+  }) async {
+    try {
+      final flow = await _initLoginFlow(
+        returnSessionTokenExchangeCode: false,
+        returnTo: null,
+        refresh: refresh,
+      );
+
+      if (flow == null) {
+        return const LoginUnknownErrorResult();
+      }
+
+      final passkeyRequestOptions = flow.info.passkeyRequestOptions;
+      if (passkeyRequestOptions == null) {
+        return const LoginUnknownErrorResult();
+      }
+
+      final credentialJson = await passkeyCallback(
+        passkeyRequestOptions,
+      );
+
+      final loginResponse = await _client.post(
+        _buildUri(
+          path: 'self-service/login',
+          queryParameters: {'flow': flow.id},
+        ),
+        headers: _commonHeaders,
+        body: jsonEncode(
+          {
+            'method': 'passkey',
+            'csrf_token': flow.csrfToken,
+            'passkey_login': credentialJson,
+          },
+        ),
+      );
+
+      switch (loginResponse.statusCode) {
+        case 200:
+          final loginResult = loginSuccessResponseFromJson(loginResponse.body);
+          await _credentialsStorage.save(
+            credentials: loginResult.sessionToken,
+            expirationDate: loginResult.session.expiresAt.toString(),
+          );
+          return const LoginSuccessResult();
+        default:
+          return const LoginUnknownErrorResult();
+      }
+    } catch (e, st) {
+      _logger.warning('Login with passkey failed.', e, st);
+
+      return const LoginUnknownErrorResult();
+    }
+  }
+
   /// NOTE: logout always clears credential storage. The result is regarding the
   /// server logout notification which is executed on a best effort basis
   Future<LogoutResult> logout() async {
@@ -816,6 +878,157 @@ class KratosClient {
     return settingsFlow.statusCode == 200;
   }
 
+  Future<AddPasskeyResult> addPasskey({
+    required PasskeyCallback passkeyCallback,
+  }) async {
+    try {
+      final kratosToken = await _credentialsStorage.read();
+      if (!kIsWeb && kratosToken == null) {
+        return const AddPasskeyErrorResult();
+      }
+
+      final settingsFlow = await _initSettingsFlow();
+      if (settingsFlow == null) {
+        return const AddPasskeyErrorResult();
+      }
+
+      final passkeyCreationOptions = settingsFlow.passkeyCreationOptions;
+      if (passkeyCreationOptions == null) {
+        return const AddPasskeyErrorResult();
+      }
+
+      final credentialJson = await passkeyCallback(passkeyCreationOptions);
+
+      final passkeyAddResponse = await _client.post(
+        _buildUri(
+          path: 'self-service/settings',
+          queryParameters: {'flow': settingsFlow.id},
+        ),
+        body: jsonEncode({
+          'csrf_token': settingsFlow.csrfToken,
+          'method': 'passkey',
+          'passkey_settings_register': credentialJson,
+        }),
+        headers: _buildHeaders({'X-Session-Token': kratosToken}),
+      );
+
+      return switch (passkeyAddResponse.statusCode) {
+        200 => const AddPasskeySuccessResult(),
+        _ => const AddPasskeyErrorResult(),
+      };
+    } catch (e, st) {
+      _logger.warning('Error adding a passkey', e, st);
+      return const AddPasskeyErrorResult();
+    }
+  }
+
+  Future<RemovePasskeyResult> removePasskey({
+    required String passkeyId,
+  }) async {
+    try {
+      final kratosToken = await _credentialsStorage.read();
+      if (!kIsWeb && kratosToken == null) {
+        return const RemovePasskeyErrorResult();
+      }
+
+      final settingsFlow = await _initSettingsFlow();
+
+      final removePasskeyResponse = await _client.post(
+        _buildUri(
+          path: 'self-service/settings',
+          queryParameters: {'flow': settingsFlow!.id},
+        ),
+        body: jsonEncode({
+          'csrf_token': settingsFlow.csrfToken,
+          'method': 'passkey',
+          'passkey_remove': passkeyId,
+        }),
+        headers: _buildHeaders({'X-Session-Token': kratosToken}),
+      );
+
+      return switch (removePasskeyResponse.statusCode) {
+        200 => const RemovePasskeySuccessResult(),
+        _ => const RemovePasskeyErrorResult(),
+      };
+    } catch (e, st) {
+      _logger.warning('Error getting passkeys', e, st);
+      return const RemovePasskeyErrorResult();
+    }
+  }
+
+  Future<GetPasskeysResult> getPasskeys() async {
+    try {
+      final settingsFlow = await _initSettingsFlow();
+
+      if (settingsFlow == null) {
+        return const GetPasskeysErrorResult();
+      }
+
+      final passkeys = settingsFlow.ui.nodes
+          .where((node) => node.attributes.name == 'passkey_remove')
+          .map(Passkey.fromUiNode)
+          .toList();
+
+      return GetPasskeysSuccessResult(passkeys);
+    } catch (e, st) {
+      _logger.warning('Error getting passkeys', e, st);
+      return const GetPasskeysErrorResult();
+    }
+  }
+
+  /// Current [flowInfo] is required since new flow will have it's own passkey challenge
+  Future<RegistrationResult> registerWithPasskey({
+    required String credentialJson,
+    required AuthFlowInfo flowInfo,
+    Map<String, dynamic> traits = const {},
+  }) async {
+    try {
+      final response = await _client.post(
+        _buildUri(
+          path: 'self-service/registration',
+          queryParameters: {'flow': flowInfo.id},
+        ),
+        headers: _commonHeaders,
+        body: jsonEncode(
+          {
+            'method': 'passkey',
+            'csrf_token': flowInfo.csrfToken,
+            'passkey_register': credentialJson,
+            'traits': traits,
+          },
+        ),
+      );
+
+      return switch (response.statusCode) {
+        200 => await _handleSuccessResponse(response),
+        400 => _handleErrorResponse(response),
+        _ => const RegistrationUnknownErrorResult(),
+      };
+    } catch (e, st) {
+      _logger.severe('Error completing registration flow', e, st);
+      return const RegistrationUnknownErrorResult();
+    }
+  }
+
+  Future<SettingsFlowDto?> _initSettingsFlow() async {
+    try {
+      final kratosToken = await _credentialsStorage.read();
+      if (!kIsWeb && kratosToken == null) {
+        return null;
+      }
+
+      final settingsFlow = await _client.get(
+        _buildUri(path: 'self-service/settings/$_flowType'),
+        headers: _buildHeaders({'X-Session-Token': kratosToken}),
+      );
+
+      return SettingsFlowDto.fromString(settingsFlow.body);
+    } catch (e, st) {
+      _logger.warning('Error initializing settings flow', e, st);
+      return null;
+    }
+  }
+
   Future<String?> _getSettingsFlowId() async {
     final kratosToken = await _credentialsStorage.read();
     if (!kIsWeb && kratosToken == null) {
@@ -909,42 +1122,59 @@ class KratosClient {
     };
   }
 
-  Future<UserProfile> getUserProfile() async {
-    final kratosToken = await _credentialsStorage.read();
+  Future<SessionResult> getSession() async {
+    try {
+      final kratosToken = await _credentialsStorage.read();
+      if (kratosToken == null) {
+        return const SessionErrorResult();
+      }
 
-    if (kratosToken == null) {
+      final sessionResponse = await _client.get(
+        _buildUri(path: 'sessions/whoami'),
+        headers: _buildHeaders({'X-Session-Token': kratosToken}),
+      );
+
+      return switch (sessionResponse.statusCode) {
+        200 => SessionSuccessResult(
+            Session.fromJson(
+              json.decode(sessionResponse.body) as Map<String, dynamic>,
+            ),
+          ),
+        _ => const SessionErrorResult(),
+      };
+    } catch (e, st) {
+      _logger.warning('Error getting session', e, st);
+      return const SessionErrorResult();
+    }
+  }
+
+  Future<UserProfile> getUserProfile() async {
+    try {
+      final sessionResult = await getSession();
+
+      if (sessionResult is! SessionSuccessResult) {
+        return ErrorGettingUserProfile();
+      }
+      final session = sessionResult.session;
+
+      final userId = session.identity.id;
+      final traits = session.identity.traits;
+      final profileTraits = traits.entries
+          .map(
+            (e) => ProfileTrait(
+              traitName: e.key,
+              value: e.value,
+            ),
+          )
+          .toList();
+      return UserProfileData(
+        traits: profileTraits,
+        userId: userId,
+      );
+    } catch (e, st) {
+      _logger.warning('Error getting user profile', e, st);
       return ErrorGettingUserProfile();
     }
-
-    final whoamiResponse = await _client.get(
-      _buildUri(path: 'sessions/whoami'),
-      headers: _buildHeaders({'X-Session-Token': kratosToken}),
-    );
-
-    if (whoamiResponse.statusCode == 200) {
-      try {
-        final session = Session.fromJson(
-          json.decode(whoamiResponse.body) as Map<String, dynamic>,
-        );
-        final userId = session.identity.id;
-        final traits = session.identity.traits;
-        final profileTraits = traits.entries
-            .map(
-              (e) => ProfileTrait(
-                traitName: e.key,
-                value: e.value,
-              ),
-            )
-            .toList();
-        return UserProfileData(
-          traits: profileTraits,
-          userId: userId,
-        );
-      } catch (e, st) {
-        _logger.warning('Error getting recovery flow', e, st);
-      }
-    }
-    return ErrorGettingUserProfile();
   }
 
   Uri _buildUri({

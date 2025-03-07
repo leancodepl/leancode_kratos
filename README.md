@@ -4,7 +4,7 @@ The KratosClient provides an API client for interacting with an Ory Kratos serve
 
 ## Usage
 
-### To create a client:
+### To create a client
 
 ```dart
 final client = KratosClient(
@@ -14,17 +14,21 @@ final client = KratosClient(
   },
 );
 ```
+
 ## Features
-### The main available APIs are:
+
+### The main available APIs are
 
 ### [Registration](documentation/registration.md)
 
 - `registerWithPassword` - Register using email and password
 - `registerWithOidc` - Register using OpenID Connect provider
+- `registerWithPasskey` - Register using a passkey
 
 ### [Login](documentation/login.md)
 
 - `loginWithPassword` - Login with email and password
+- `loginWithPasskey` - Login with a passkey
 
 ### [Verification](documentation/verification.md)
 
@@ -39,15 +43,20 @@ final client = KratosClient(
 
 ### [Profile](documentation/profile.md)
 
-- `getSettingsFlow` - Get user profile
+- `getUserProfile` - Get user profile
 - `updateTraits` - Update user profile traits
 - `updatePassword` - Update user password
+
+### [Settings](documentation/settings.md)
+
+- `addPasskey` - Add a new passkey
+- `removePasskey` - Remove a linked passkey
+- `getPasskeys` - Get all linked passkeys
 
 ### [Other](documentation/others.md)
 
 - `logout` - Logout user
 - `refreshSessionToken` - Refresh session token
-
 
 ## Credentials Storage
 
