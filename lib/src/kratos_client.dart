@@ -15,7 +15,6 @@ import 'package:leancode_kratos_client/src/registration/api/registration_success
 import 'package:leancode_kratos_client/src/registration/api/token_exchange_success.dart';
 import 'package:leancode_kratos_client/src/utils/create_client.dart'
     if (dart.library.js_interop) 'package:leancode_kratos_client/src/utils/create_browser_client.dart';
-import 'package:leancode_kratos_client/src/whoami/api/session_result.dart';
 import 'package:logging/logging.dart';
 
 typedef BrowserCallback = Future<String> Function(String url);
@@ -1122,59 +1121,42 @@ class KratosClient {
     };
   }
 
-  Future<SessionResult> getSession() async {
-    try {
-      final kratosToken = await _credentialsStorage.read();
-      if (kratosToken == null) {
-        return const SessionErrorResult();
-      }
-
-      final sessionResponse = await _client.get(
-        _buildUri(path: 'sessions/whoami'),
-        headers: _buildHeaders({'X-Session-Token': kratosToken}),
-      );
-
-      return switch (sessionResponse.statusCode) {
-        200 => SessionSuccessResult(
-            Session.fromJson(
-              json.decode(sessionResponse.body) as Map<String, dynamic>,
-            ),
-          ),
-        _ => const SessionErrorResult(),
-      };
-    } catch (e, st) {
-      _logger.warning('Error getting session', e, st);
-      return const SessionErrorResult();
-    }
-  }
-
   Future<UserProfile> getUserProfile() async {
-    try {
-      final sessionResult = await getSession();
+    final kratosToken = await _credentialsStorage.read();
 
-      if (sessionResult is! SessionSuccessResult) {
-        return ErrorGettingUserProfile();
-      }
-      final session = sessionResult.session;
-
-      final userId = session.identity.id;
-      final traits = session.identity.traits;
-      final profileTraits = traits.entries
-          .map(
-            (e) => ProfileTrait(
-              traitName: e.key,
-              value: e.value,
-            ),
-          )
-          .toList();
-      return UserProfileData(
-        traits: profileTraits,
-        userId: userId,
-      );
-    } catch (e, st) {
-      _logger.warning('Error getting user profile', e, st);
+    if (kratosToken == null) {
       return ErrorGettingUserProfile();
     }
+
+    final whoamiResponse = await _client.get(
+      _buildUri(path: 'sessions/whoami'),
+      headers: _buildHeaders({'X-Session-Token': kratosToken}),
+    );
+
+    if (whoamiResponse.statusCode == 200) {
+      try {
+        final session = Session.fromJson(
+          json.decode(whoamiResponse.body) as Map<String, dynamic>,
+        );
+        final userId = session.identity.id;
+        final traits = session.identity.traits;
+        final profileTraits = traits.entries
+            .map(
+              (e) => ProfileTrait(
+                traitName: e.key,
+                value: e.value,
+              ),
+            )
+            .toList();
+        return UserProfileData(
+          traits: profileTraits,
+          userId: userId,
+        );
+      } catch (e, st) {
+        _logger.warning('Error getting user profile', e, st);
+      }
+    }
+    return ErrorGettingUserProfile();
   }
 
   Uri _buildUri({
