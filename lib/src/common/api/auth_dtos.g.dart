@@ -141,9 +141,7 @@ _$LabelDtoImpl _$$LabelDtoImplFromJson(Map<String, dynamic> json) =>
       id: (json['id'] as num).toInt(),
       text: json['text'] as String,
       type: json['type'] as String,
-      context: json['context'] == null
-          ? null
-          : ContextDto.fromJson(json['context'] as Map<String, dynamic>),
+      context: json['context'] as Map<String, dynamic>?,
     );
 
 Map<String, dynamic> _$$LabelDtoImplToJson(_$LabelDtoImpl instance) =>
@@ -151,11 +149,5 @@ Map<String, dynamic> _$$LabelDtoImplToJson(_$LabelDtoImpl instance) =>
       'id': instance.id,
       'text': instance.text,
       'type': instance.type,
-      'context': instance.context?.toJson(),
+      'context': instance.context,
     };
-
-_$ContextDtoImpl _$$ContextDtoImplFromJson(Map<String, dynamic> json) =>
-    _$ContextDtoImpl();
-
-Map<String, dynamic> _$$ContextDtoImplToJson(_$ContextDtoImpl instance) =>
-    <String, dynamic>{};

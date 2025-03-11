@@ -1683,7 +1683,7 @@ mixin _$LabelDto {
   int get id => throw _privateConstructorUsedError;
   String get text => throw _privateConstructorUsedError;
   String get type => throw _privateConstructorUsedError;
-  ContextDto? get context => throw _privateConstructorUsedError;
+  Map<String, dynamic>? get context => throw _privateConstructorUsedError;
 
   /// Serializes this LabelDto to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -1700,9 +1700,7 @@ abstract class $LabelDtoCopyWith<$Res> {
   factory $LabelDtoCopyWith(LabelDto value, $Res Function(LabelDto) then) =
       _$LabelDtoCopyWithImpl<$Res, LabelDto>;
   @useResult
-  $Res call({int id, String text, String type, ContextDto? context});
-
-  $ContextDtoCopyWith<$Res>? get context;
+  $Res call({int id, String text, String type, Map<String, dynamic>? context});
 }
 
 /// @nodoc
@@ -1741,22 +1739,8 @@ class _$LabelDtoCopyWithImpl<$Res, $Val extends LabelDto>
       context: freezed == context
           ? _value.context
           : context // ignore: cast_nullable_to_non_nullable
-              as ContextDto?,
+              as Map<String, dynamic>?,
     ) as $Val);
-  }
-
-  /// Create a copy of LabelDto
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $ContextDtoCopyWith<$Res>? get context {
-    if (_value.context == null) {
-      return null;
-    }
-
-    return $ContextDtoCopyWith<$Res>(_value.context!, (value) {
-      return _then(_value.copyWith(context: value) as $Val);
-    });
   }
 }
 
@@ -1768,10 +1752,7 @@ abstract class _$$LabelDtoImplCopyWith<$Res>
       __$$LabelDtoImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int id, String text, String type, ContextDto? context});
-
-  @override
-  $ContextDtoCopyWith<$Res>? get context;
+  $Res call({int id, String text, String type, Map<String, dynamic>? context});
 }
 
 /// @nodoc
@@ -1806,9 +1787,9 @@ class __$$LabelDtoImplCopyWithImpl<$Res>
           : type // ignore: cast_nullable_to_non_nullable
               as String,
       context: freezed == context
-          ? _value.context
+          ? _value._context
           : context // ignore: cast_nullable_to_non_nullable
-              as ContextDto?,
+              as Map<String, dynamic>?,
     ));
   }
 }
@@ -1817,7 +1798,11 @@ class __$$LabelDtoImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$LabelDtoImpl implements _LabelDto {
   const _$LabelDtoImpl(
-      {required this.id, required this.text, required this.type, this.context});
+      {required this.id,
+      required this.text,
+      required this.type,
+      final Map<String, dynamic>? context})
+      : _context = context;
 
   factory _$LabelDtoImpl.fromJson(Map<String, dynamic> json) =>
       _$$LabelDtoImplFromJson(json);
@@ -1828,8 +1813,15 @@ class _$LabelDtoImpl implements _LabelDto {
   final String text;
   @override
   final String type;
+  final Map<String, dynamic>? _context;
   @override
-  final ContextDto? context;
+  Map<String, dynamic>? get context {
+    final value = _context;
+    if (value == null) return null;
+    if (_context is EqualUnmodifiableMapView) return _context;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(value);
+  }
 
   @override
   String toString() {
@@ -1844,12 +1836,13 @@ class _$LabelDtoImpl implements _LabelDto {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.text, text) || other.text == text) &&
             (identical(other.type, type) || other.type == type) &&
-            (identical(other.context, context) || other.context == context));
+            const DeepCollectionEquality().equals(other._context, _context));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, text, type, context);
+  int get hashCode => Object.hash(runtimeType, id, text, type,
+      const DeepCollectionEquality().hash(_context));
 
   /// Create a copy of LabelDto
   /// with the given fields replaced by the non-null parameter values.
@@ -1872,7 +1865,7 @@ abstract class _LabelDto implements LabelDto {
       {required final int id,
       required final String text,
       required final String type,
-      final ContextDto? context}) = _$LabelDtoImpl;
+      final Map<String, dynamic>? context}) = _$LabelDtoImpl;
 
   factory _LabelDto.fromJson(Map<String, dynamic> json) =
       _$LabelDtoImpl.fromJson;
@@ -1884,7 +1877,7 @@ abstract class _LabelDto implements LabelDto {
   @override
   String get type;
   @override
-  ContextDto? get context;
+  Map<String, dynamic>? get context;
 
   /// Create a copy of LabelDto
   /// with the given fields replaced by the non-null parameter values.
@@ -1892,92 +1885,4 @@ abstract class _LabelDto implements LabelDto {
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$LabelDtoImplCopyWith<_$LabelDtoImpl> get copyWith =>
       throw _privateConstructorUsedError;
-}
-
-ContextDto _$ContextDtoFromJson(Map<String, dynamic> json) {
-  return _ContextDto.fromJson(json);
-}
-
-/// @nodoc
-mixin _$ContextDto {
-  /// Serializes this ContextDto to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $ContextDtoCopyWith<$Res> {
-  factory $ContextDtoCopyWith(
-          ContextDto value, $Res Function(ContextDto) then) =
-      _$ContextDtoCopyWithImpl<$Res, ContextDto>;
-}
-
-/// @nodoc
-class _$ContextDtoCopyWithImpl<$Res, $Val extends ContextDto>
-    implements $ContextDtoCopyWith<$Res> {
-  _$ContextDtoCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  /// Create a copy of ContextDto
-  /// with the given fields replaced by the non-null parameter values.
-}
-
-/// @nodoc
-abstract class _$$ContextDtoImplCopyWith<$Res> {
-  factory _$$ContextDtoImplCopyWith(
-          _$ContextDtoImpl value, $Res Function(_$ContextDtoImpl) then) =
-      __$$ContextDtoImplCopyWithImpl<$Res>;
-}
-
-/// @nodoc
-class __$$ContextDtoImplCopyWithImpl<$Res>
-    extends _$ContextDtoCopyWithImpl<$Res, _$ContextDtoImpl>
-    implements _$$ContextDtoImplCopyWith<$Res> {
-  __$$ContextDtoImplCopyWithImpl(
-      _$ContextDtoImpl _value, $Res Function(_$ContextDtoImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of ContextDto
-  /// with the given fields replaced by the non-null parameter values.
-}
-
-/// @nodoc
-@JsonSerializable()
-class _$ContextDtoImpl implements _ContextDto {
-  const _$ContextDtoImpl();
-
-  factory _$ContextDtoImpl.fromJson(Map<String, dynamic> json) =>
-      _$$ContextDtoImplFromJson(json);
-
-  @override
-  String toString() {
-    return 'ContextDto()';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$ContextDtoImpl);
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$ContextDtoImplToJson(
-      this,
-    );
-  }
-}
-
-abstract class _ContextDto implements ContextDto {
-  const factory _ContextDto() = _$ContextDtoImpl;
-
-  factory _ContextDto.fromJson(Map<String, dynamic> json) =
-      _$ContextDtoImpl.fromJson;
 }
