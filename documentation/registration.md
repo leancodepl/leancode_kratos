@@ -11,7 +11,7 @@
 ## Registration with passkey
 
 1. Display the registration UI to the user in the app.
-2. When the user submits the registration form, call `registerWithProfile` first, it will return a 400 error with the passkey challenge.
+2. When the user submits the registration form, call `registerWithProfile` first.
 
     ```dart
     final registrationResult = await kratosClient.registerWithProfile(

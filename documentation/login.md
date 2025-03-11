@@ -18,9 +18,7 @@ For future requests, the persisted session can be used to authenticate the user.
 
 ## Login with passkey
 
-Login with a passkey do not requires only a passkey that is associated with the user account.
-
-Email ot other user credentials are not required.
+Login with a passkey requires only a passkey that is associated with the user account, email or other user credentials are not required.
 
 ```dart
 await kratosClient.loginWithPasskey(
