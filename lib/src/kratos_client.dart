@@ -19,7 +19,7 @@ import 'package:logging/logging.dart';
 
 typedef BrowserCallback = Future<String> Function(String url);
 typedef SdkCallback = Future<SdkResult> Function();
-typedef PasskeyCallback = Future<String> Function(
+typedef PasskeyCallback = Future<PasskeyCallbackResult> Function(
   Map<String, dynamic> creationOptions,
 );
 
@@ -539,7 +539,7 @@ class KratosClient {
     }
   }
 
-  Future<LoginResult> loginWithPasskey({
+  Future<PasskeyLoginResult> loginWithPasskey({
     required PasskeyCallback passkeyCallback,
     bool refresh = false,
   }) async {
@@ -551,17 +551,27 @@ class KratosClient {
       );
 
       if (flow == null) {
-        return const LoginUnknownErrorResult();
+        return const PasskeyLoginUnknownErrorResult();
       }
 
       final passkeyRequestOptions = flow.info.passkeyRequestOptions;
       if (passkeyRequestOptions == null) {
-        return const LoginUnknownErrorResult();
+        return const PasskeyLoginUnknownErrorResult();
       }
 
-      final credentialJson = await passkeyCallback(
+      final credentialResult = await passkeyCallback(
         passkeyRequestOptions,
       );
+
+      String credentialJson;
+      switch (credentialResult) {
+        case PasskeyCallbackSuccessResult(:final publicKeyJson):
+          credentialJson = publicKeyJson;
+        case PasskeyCallbackCancelledResult():
+          return const PasskeyLoginCancelledResult();
+        case PasskeyCallbackErrorResult():
+          return const PasskeyLoginPasskeyErrorResult();
+      }
 
       final loginResponse = await _client.post(
         _buildUri(
@@ -585,14 +595,33 @@ class KratosClient {
             credentials: loginResult.sessionToken,
             expirationDate: loginResult.session.expiresAt.toString(),
           );
-          return const LoginSuccessResult();
+          return const PasskeyLoginSuccessResult();
+        case 400:
+          final errorLoginResult =
+              login_error.loginErrorResponseFromJson(loginResponse.body);
+          final generalErrors = errorLoginResult.ui.getGeneralMessages();
+
+          if (generalErrors
+              .contains(KratosMessage.errorValidationAddressNotVerified)) {
+            return PasskeyLoginVerifyEmailResult(
+              flowId: flow.id,
+            );
+          }
+
+          if (generalErrors.isNotEmpty) {
+            return PasskeyLoginErrorResult(
+              generalErrors: generalErrors,
+            );
+          }
+
+          return const PasskeyLoginUnknownErrorResult();
         default:
-          return const LoginUnknownErrorResult();
+          return const PasskeyLoginUnknownErrorResult();
       }
     } catch (e, st) {
       _logger.warning('Login with passkey failed.', e, st);
 
-      return const LoginUnknownErrorResult();
+      return const PasskeyLoginUnknownErrorResult();
     }
   }
 
@@ -896,7 +925,19 @@ class KratosClient {
         return const AddPasskeyErrorResult();
       }
 
-      final credentialJson = await passkeyCallback(passkeyCreationOptions);
+      final credentialResult = await passkeyCallback(
+        passkeyCreationOptions,
+      );
+
+      String credentialJson;
+      switch (credentialResult) {
+        case PasskeyCallbackSuccessResult(:final publicKeyJson):
+          credentialJson = publicKeyJson;
+        case PasskeyCallbackCancelledResult():
+          return const AddPasskeyCancelledResult();
+        case PasskeyCallbackErrorResult():
+          return const AddPasskeyErrorResult();
+      }
 
       final passkeyAddResponse = await _client.post(
         _buildUri(
@@ -913,6 +954,10 @@ class KratosClient {
 
       return switch (passkeyAddResponse.statusCode) {
         200 => const AddPasskeySuccessResult(),
+        400 => AddPasskeyErrorResult(
+            message: _getSettingsFlowError(passkeyAddResponse),
+          ),
+        403 => const AddPasskeyReauthenticationRequiredResult(),
         _ => const AddPasskeyErrorResult(),
       };
     } catch (e, st) {
@@ -947,12 +992,26 @@ class KratosClient {
 
       return switch (removePasskeyResponse.statusCode) {
         200 => const RemovePasskeySuccessResult(),
+        400 => RemovePasskeyErrorResult(
+            message: _getSettingsFlowError(removePasskeyResponse),
+          ),
+        403 => const RemovePasskeyReauthenticationRequiredResult(),
         _ => const RemovePasskeyErrorResult(),
       };
     } catch (e, st) {
-      _logger.warning('Error getting passkeys', e, st);
+      _logger.warning('Error removing a passkey', e, st);
       return const RemovePasskeyErrorResult();
     }
+  }
+
+  KratosMessage? _getSettingsFlowError(http.Response response) {
+    final dto = SettingsFlowDto.fromString(response.body);
+
+    final messages = dto.ui.nodes
+        .expand((node) => node.messages)
+        .map((msg) => KratosMessage.forId(msg.id));
+
+    return messages.firstOrNull;
   }
 
   Future<GetPasskeysResult> getPasskeys() async {
