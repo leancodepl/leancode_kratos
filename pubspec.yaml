@@ -4,7 +4,7 @@ description: >
   It helps manage user authentication, registration, making it simple to add identity features to your app.
 
 repository: https://github.com/leancodepl/leancode_kratos
-version: 0.0.1+1
+version: 0.1.0
 
 environment:
   sdk: ">=3.0.5 <4.0.0"
