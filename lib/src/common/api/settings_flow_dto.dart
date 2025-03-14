@@ -43,7 +43,7 @@ class SettingsFlowDto with _$SettingsFlowDto {
         .value as String?;
 
     return passkeyCreation != null
-        ? getPasskeyCreationOptionsFromString(passkeyCreation)
+        ? getPasskeyOptionsFromString(passkeyCreation)
         : null;
   }
 }

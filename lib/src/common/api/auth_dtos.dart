@@ -55,10 +55,10 @@ class AuthFlowDto with _$AuthFlowDto {
       csrfToken: csrfToken,
       sessionTokenExchangeCode: sessionTokenExchangeCode,
       passkeyRequestOptions: passkeyRequest != null
-          ? getPasskeyRequestOptionsFromString(passkeyRequest)
+          ? getPasskeyOptionsFromString(passkeyRequest)
           : null,
       passkeyCreationOptions: passkeyCreation != null
-          ? getPasskeyCreationOptionsFromString(passkeyCreation)
+          ? getPasskeyOptionsFromString(passkeyCreation)
           : null,
     );
   }

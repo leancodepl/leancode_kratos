@@ -32,8 +32,8 @@ class RegistrationSocialFinishResult extends RegistrationResult {
   final List<(String fieldName, dynamic value)> values;
 }
 
-class RegistractionLinkAccountResult extends RegistrationResult {
-  const RegistractionLinkAccountResult(this.flowInfo);
+class RegistrationLinkAccountResult extends RegistrationResult {
+  const RegistrationLinkAccountResult(this.flowInfo);
 
   final AuthFlowInfo flowInfo;
 }
@@ -60,7 +60,7 @@ RegistrationResult mapRegistrationSuccessResponse(
   RegistrationSuccessResponse response,
 ) {
   if (response.flow case final AuthFlowDto flow) {
-    return RegistractionLinkAccountResult(flow.info);
+    return RegistrationLinkAccountResult(flow.info);
   }
 
   final continueWith = response.continueWith;
