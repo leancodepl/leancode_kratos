@@ -11,5 +11,6 @@ Map<String, dynamic> getPasskeyOptionsFromString(String value) {
     return (decoded['credentialOptions'] as Map<String, dynamic>)['publicKey'];
   }
 
+  // TODO: Handle this case with result type
   throw ArgumentError('Invalid passkey creation options');
 }
