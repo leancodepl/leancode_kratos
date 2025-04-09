@@ -57,6 +57,8 @@ final client = KratosClient(
 
 - `logout` - Logout user
 - `refreshSessionToken` - Refresh session token
+- `isSessionValid` - Check if session is valid
+- `getSession` - Get session
 
 ## Credentials Storage
 
@@ -73,3 +75,9 @@ The `http.Client` used to make requests can be customized by passing your own on
 ## Logging
 
 Debug logging is printed using the `logging` package.
+
+## Browser vs Api flows
+
+In Browser flows session is stored in http-only cookie and `CredentialsStorage` is not used.
+
+In Api flows token is stored in `CredentialsStorage`.

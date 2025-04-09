@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
@@ -11,6 +10,8 @@ import 'package:leancode_kratos_client/src/common/api/verification_flow_dto.dart
 import 'package:leancode_kratos_client/src/login/api/login_error.dart'
     as login_error;
 import 'package:leancode_kratos_client/src/login/api/login_success.dart';
+import 'package:leancode_kratos_client/src/logout/api/logout_flow_dto.dart';
+import 'package:leancode_kratos_client/src/recovery/api/recovery_flow_dto.dart';
 import 'package:leancode_kratos_client/src/registration/api/registration_success.dart';
 import 'package:leancode_kratos_client/src/registration/api/token_exchange_success.dart';
 import 'package:leancode_kratos_client/src/utils/create_client.dart'
@@ -195,11 +196,11 @@ class KratosClient {
     if (effectiveIdToken == null) {
       SdkResult? sdkResult;
 
-      if (Platform.isAndroid &&
+      if (!kIsWeb &&
           provider == OidcProvider.google &&
           googleSdkCallback != null) {
         sdkResult = await googleSdkCallback();
-      } else if (Platform.isIOS &&
+      } else if (!kIsWeb &&
           provider == OidcProvider.apple &&
           appleSdkCallback != null) {
         sdkResult = await appleSdkCallback();
@@ -636,22 +637,52 @@ class KratosClient {
     }
 
     try {
+      if (kIsWeb) {
+        return await _logoutWeb();
+      }
+
       final logoutResult = await _client.delete(
         _buildUri(path: 'self-service/logout/$_flowType'),
         headers: _commonHeaders,
-        body: jsonEncode({'session_token': sessionToken}),
+        body: jsonEncode({
+          'session_token': sessionToken,
+        }),
       );
 
-      if (logoutResult.statusCode == 204) {
-        return const LogoutSuccessResult();
-      } else {
-        return const LogoutUnknownErrorResult();
-      }
+      return switch (logoutResult.statusCode) {
+        204 => const LogoutSuccessResult(),
+        _ => const LogoutUnknownErrorResult(),
+      };
     } catch (e, st) {
       _logger.warning('Logout failed.', e, st);
 
       return const LogoutUnknownErrorResult();
     }
+  }
+
+  Future<LogoutResult> _logoutWeb() async {
+    final initLogoutResult = await _client.get(
+      _buildUri(path: 'self-service/logout/$_flowType'),
+      headers: _commonHeaders,
+    );
+
+    if (initLogoutResult.statusCode != 200) {
+      return const LogoutUnknownErrorResult();
+    }
+
+    final logoutFlowDto = LogoutFlowDto.fromJson(
+      jsonDecode(initLogoutResult.body),
+    );
+
+    final logoutResult = await _client.get(
+      Uri.parse(logoutFlowDto.logoutUrl),
+      headers: _commonHeaders,
+    );
+
+    return switch (logoutResult.statusCode) {
+      204 => const LogoutSuccessResult(),
+      _ => const LogoutUnknownErrorResult(),
+    };
   }
 
   Future<VerificationResult> verifyAccount({
@@ -801,22 +832,52 @@ class KratosClient {
   }
 
   Future<RecoveryFlowResult> getRecoveryFlow() async {
-    final recoveryFlow = await _client.get(
-      _buildUri(path: 'self-service/recovery/$_flowType'),
-    );
     try {
-      final decodedResult =
-          jsonDecode(recoveryFlow.body) as Map<String, dynamic>;
-      final dynamic recoveryFlowId = decodedResult['id'];
-      switch (recoveryFlowId) {
-        case String _:
-          return RecoveryFlow(recoveryFlowId);
-        default:
-          return RecoveryFlowError();
-      }
+      final recoveryFlowDto = await _getRecoveryFlow();
+
+      return switch (recoveryFlowDto) {
+        RecoveryFlowDto(:final id) => RecoveryFlow(id),
+        _ => RecoveryFlowError(),
+      };
     } catch (e, st) {
       _logger.warning('Error getting recovery flow', e, st);
       return RecoveryFlowError();
+    }
+  }
+
+  Future<RecoveryFlowDto?> _getRecoveryFlow({
+    String? flowId,
+    bool addFlowType = true,
+  }) async {
+    try {
+      var path = 'self-service/recovery';
+      if (addFlowType) {
+        path += '/$_flowType';
+      }
+
+      final streamedResponse = await _client.send(
+        http.Request(
+          'GET',
+          _buildUri(
+            path: path,
+            queryParameters: {
+              if (flowId != null) 'flow': flowId,
+            },
+          ),
+        )
+          ..headers.addAll(_commonHeaders)
+          ..followRedirects = false,
+      );
+
+      final response = await http.Response.fromStream(streamedResponse);
+
+      return switch (response.statusCode) {
+        200 => RecoveryFlowDto.fromJson(json.decode(response.body)),
+        _ => null,
+      };
+    } catch (e, st) {
+      _logger.warning('Error getting recovery flow', e, st);
+      return null;
     }
   }
 
@@ -824,32 +885,60 @@ class KratosClient {
     required String flowId,
     required String email,
   }) async {
-    final recoveryFlow = await _client.post(
+    final recoveryFlow = await _getRecoveryFlow(
+      flowId: flowId,
+    );
+
+    if (recoveryFlow == null) {
+      return false;
+    }
+
+    final recoveryResponse = await _client.post(
       _buildUri(
         path: 'self-service/recovery',
-        queryParameters: {'flow': flowId},
+        queryParameters: {
+          'flow': flowId,
+        },
       ),
       headers: _commonHeaders,
-      body: jsonEncode({'email': email, 'method': 'code'}),
+      body: jsonEncode({
+        'email': email,
+        'method': 'code',
+        'csrf_token': recoveryFlow.csrfToken,
+      }),
     );
-    return recoveryFlow.statusCode == 200;
+    return recoveryResponse.statusCode == 200;
   }
 
   Future<SettingsFlowResult> sendCodeRecoveryFlow({
     required String flowId,
     required String code,
   }) async {
-    final recoveryFlow = await _client.post(
+    final recoveryFlow = await _getRecoveryFlow(
+      flowId: flowId,
+    );
+
+    if (recoveryFlow == null) {
+      return SettingsFlowResultError();
+    }
+
+    final recoveryResponse = await _client.post(
       _buildUri(
         path: 'self-service/recovery',
-        queryParameters: {'flow': flowId},
+        queryParameters: {
+          'flow': flowId,
+        },
       ),
-      body: jsonEncode({'code': code, 'method': 'code'}),
+      body: jsonEncode({
+        'code': code,
+        'method': 'code',
+        'csrf_token': recoveryFlow.csrfToken,
+      }),
       headers: _commonHeaders,
     );
-    if (recoveryFlow.statusCode == 200) {
+    if (recoveryResponse.statusCode == 200) {
       final decodedResult =
-          jsonDecode(recoveryFlow.body) as Map<String, dynamic>;
+          jsonDecode(recoveryResponse.body) as Map<String, dynamic>;
       if (decodedResult
           case {
             'state': 'passed_challenge',
@@ -873,7 +962,7 @@ class KratosClient {
           }
         }
 
-        if (settingsFlowId == null || sessionToken == null) {
+        if (settingsFlowId == null) {
           return SettingsFlowResultError();
         } else {
           return SettingsFlowResultData(
@@ -892,7 +981,16 @@ class KratosClient {
     required SettingsFlowResultData flow,
     required String newPassword,
   }) async {
-    final settingsFlow = await _client.post(
+    final settingsFlow = await _getSettingsFlow(
+      flowId: flow.flowId,
+      token: flow.sessionToken,
+    );
+
+    if (settingsFlow == null) {
+      return false;
+    }
+
+    final setPasswordResponse = await _client.post(
       _buildUri(
         path: 'self-service/settings',
         queryParameters: {'flow': flow.flowId},
@@ -900,10 +998,11 @@ class KratosClient {
       body: jsonEncode({
         'method': 'password',
         'password': newPassword,
+        'csrf_token': settingsFlow.csrfToken,
       }),
       headers: _buildHeaders({'X-Session-Token': flow.sessionToken}),
     );
-    return settingsFlow.statusCode == 200;
+    return setPasswordResponse.statusCode == 200;
   }
 
   Future<AddPasskeyResult> addPasskey({
@@ -915,7 +1014,7 @@ class KratosClient {
         return const AddPasskeyErrorResult();
       }
 
-      final settingsFlow = await _initSettingsFlow();
+      final settingsFlow = await _getSettingsFlow();
       if (settingsFlow == null) {
         return const AddPasskeyErrorResult();
       }
@@ -975,7 +1074,7 @@ class KratosClient {
         return const RemovePasskeyErrorResult();
       }
 
-      final settingsFlow = await _initSettingsFlow();
+      final settingsFlow = await _getSettingsFlow();
 
       final removePasskeyResponse = await _client.post(
         _buildUri(
@@ -1016,7 +1115,7 @@ class KratosClient {
 
   Future<GetPasskeysResult> getPasskeys() async {
     try {
-      final settingsFlow = await _initSettingsFlow();
+      final settingsFlow = await _getSettingsFlow();
 
       if (settingsFlow == null) {
         return const GetPasskeysErrorResult();
@@ -1068,15 +1167,29 @@ class KratosClient {
     }
   }
 
-  Future<SettingsFlowDto?> _initSettingsFlow() async {
+  Future<SettingsFlowDto?> _getSettingsFlow({
+    String? flowId,
+    String? token,
+    bool addFlowType = true,
+  }) async {
     try {
-      final kratosToken = await _credentialsStorage.read();
+      final kratosToken = await _credentialsStorage.read() ?? token;
       if (!kIsWeb && kratosToken == null) {
         return null;
       }
 
+      var path = 'self-service/settings';
+      if (addFlowType) {
+        path += '/$_flowType';
+      }
+
       final settingsFlow = await _client.get(
-        _buildUri(path: 'self-service/settings/$_flowType'),
+        _buildUri(
+          path: path,
+          queryParameters: {
+            if (flowId != null) 'flow': flowId,
+          },
+        ),
         headers: _buildHeaders({'X-Session-Token': kratosToken}),
       );
 
@@ -1087,41 +1200,13 @@ class KratosClient {
     }
   }
 
-  Future<String?> _getSettingsFlowId() async {
-    final kratosToken = await _credentialsStorage.read();
-    if (!kIsWeb && kratosToken == null) {
-      return null;
-    }
-
-    final settingsFlow = await _client.get(
-      _buildUri(path: 'self-service/settings/$_flowType'),
-      headers: _buildHeaders({'X-Session-Token': kratosToken}),
-    );
-    if (settingsFlow.statusCode == 200) {
-      try {
-        final decodedResult =
-            jsonDecode(settingsFlow.body) as Map<String, dynamic>;
-        final dynamic flowId = decodedResult['id'];
-        switch (flowId) {
-          case String _:
-            return flowId;
-          default:
-            return null;
-        }
-      } catch (e, st) {
-        _logger.warning('Error getting recovery flow', e, st);
-      }
-    }
-    return null;
-  }
-
   Future<UpdateProfile> updateTraits({
     required List<ProfileTrait> traits,
   }) async {
-    final settingsFlowId = await _getSettingsFlowId();
+    final settingsFlow = await _getSettingsFlow();
     final kratosToken = await _credentialsStorage.read();
 
-    if ((!kIsWeb && kratosToken == null) || settingsFlowId == null) {
+    if ((!kIsWeb && kratosToken == null) || settingsFlow == null) {
       return ProfileUpdateFailure();
     }
 
@@ -1131,19 +1216,20 @@ class KratosClient {
       ),
     );
 
-    final settingsFlow = await _client.post(
+    final settingsResponse = await _client.post(
       _buildUri(
         path: 'self-service/settings',
-        queryParameters: {'flow': settingsFlowId},
+        queryParameters: {'flow': settingsFlow.id},
       ),
       body: jsonEncode({
         'method': 'profile',
         'traits': jsonEncode(traitsMap),
+        'csrf_token': settingsFlow.csrfToken,
       }),
       headers: _buildHeaders({'X-Session-Token': kratosToken}),
     );
 
-    return switch (settingsFlow.statusCode) {
+    return switch (settingsResponse.statusCode) {
       200 => ProfileUpdateSuccess(),
       403 => ProfileUpdateRequiresReauthorization(),
       _ => ProfileUpdateFailure(),
@@ -1153,69 +1239,107 @@ class KratosClient {
   Future<UpdatePassword> updatePassword({
     required String password,
   }) async {
-    final settingsFlowId = await _getSettingsFlowId();
+    final settingsFlow = await _getSettingsFlow();
     final kratosToken = await _credentialsStorage.read();
 
-    if ((!kIsWeb && kratosToken == null) || settingsFlowId == null) {
+    if ((!kIsWeb && kratosToken == null) || settingsFlow == null) {
       return UpdateRequiresReauthorization();
     }
 
-    final settingsFlow = await _client.post(
+    final settingsResponse = await _client.post(
       _buildUri(
         path: 'self-service/settings',
-        queryParameters: {'flow': settingsFlowId},
+        queryParameters: {'flow': settingsFlow.id},
       ),
       body: jsonEncode({
         'method': 'password',
         'password': password,
+        'csrf_token': settingsFlow.csrfToken,
       }),
       headers: _buildHeaders({'X-Session-Token': kratosToken}),
     );
 
-    return switch (settingsFlow.statusCode) {
+    return switch (settingsResponse.statusCode) {
       200 => UpdateSuccess(),
       403 => UpdateRequiresReauthorization(),
-      400 => UpdateFailure(error: _handleChangePasswordError(settingsFlow)),
+      400 => UpdateFailure(error: _handleChangePasswordError(settingsResponse)),
       _ => UpdateFailure(error: null),
     };
   }
 
-  Future<UserProfile> getUserProfile() async {
+  Future<SessionResult> getSession() async {
     final kratosToken = await _credentialsStorage.read();
+    if (!kIsWeb && kratosToken == null) {
+      return const SessionErrorResult();
+    }
 
-    if (kratosToken == null) {
+    try {
+      final whoamiResponse = await _client.get(
+        _buildUri(path: 'sessions/whoami'),
+        headers: _buildHeaders({'X-Session-Token': kratosToken}),
+      );
+
+      if (whoamiResponse.statusCode == 200) {
+        return SessionSuccessResult(
+          Session.fromJson(
+            json.decode(whoamiResponse.body) as Map<String, dynamic>,
+          ),
+        );
+      }
+
+      return const SessionErrorResult();
+    } catch (e, st) {
+      _logger.warning('Error getting session', e, st);
+      return const SessionErrorResult();
+    }
+  }
+
+  Future<UserProfile> getUserProfile() async {
+    final sessionResult = await getSession();
+    if (sessionResult is! SessionSuccessResult) {
       return ErrorGettingUserProfile();
     }
 
-    final whoamiResponse = await _client.get(
-      _buildUri(path: 'sessions/whoami'),
-      headers: _buildHeaders({'X-Session-Token': kratosToken}),
-    );
+    final session = sessionResult.session;
 
-    if (whoamiResponse.statusCode == 200) {
-      try {
-        final session = Session.fromJson(
-          json.decode(whoamiResponse.body) as Map<String, dynamic>,
-        );
-        final userId = session.identity.id;
-        final traits = session.identity.traits;
-        final profileTraits = traits.entries
-            .map(
-              (e) => ProfileTrait(
-                traitName: e.key,
-                value: e.value,
-              ),
-            )
-            .toList();
-        return UserProfileData(
-          traits: profileTraits,
-          userId: userId,
-        );
-      } catch (e, st) {
-        _logger.warning('Error getting user profile', e, st);
-      }
+    final userId = session.identity.id;
+    final traits = session.identity.traits;
+    final profileTraits = traits.entries
+        .map(
+          (e) => ProfileTrait(
+            traitName: e.key,
+            value: e.value,
+          ),
+        )
+        .toList();
+    return UserProfileData(
+      traits: profileTraits,
+      userId: userId,
+    );
+  }
+
+  Future<SessionValidityResult> isSessionValid() async {
+    if (!kIsWeb) {
+      final token = await _credentialsStorage.read();
+      final expiresAt = await _credentialsStorage.readExpirationDate();
+
+      return SessionValiditySuccessResult(
+        isValid: token != null &&
+            expiresAt != null &&
+            expiresAt.isAfter(DateTime.now()),
+        expiresAt: expiresAt,
+      );
     }
-    return ErrorGettingUserProfile();
+
+    final sessionResult = await getSession();
+
+    return switch (sessionResult) {
+      SessionSuccessResult(:final session) => SessionValiditySuccessResult(
+          isValid: session.expiresAt.isAfter(DateTime.now()),
+          expiresAt: session.expiresAt,
+        ),
+      _ => const SessionValidityErrorResult(),
+    };
   }
 
   Uri _buildUri({
