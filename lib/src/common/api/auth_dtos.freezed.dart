@@ -12,7 +12,7 @@ part of 'auth_dtos.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 AuthFlowDto _$AuthFlowDtoFromJson(Map<String, dynamic> json) {
   return _AuthFlowDto.fromJson(json);
@@ -30,8 +30,12 @@ mixin _$AuthFlowDto {
   UiDto get ui => throw _privateConstructorUsedError;
   String? get sessionTokenExchangeCode => throw _privateConstructorUsedError;
 
+  /// Serializes this AuthFlowDto to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of AuthFlowDto
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $AuthFlowDtoCopyWith<AuthFlowDto> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -66,6 +70,8 @@ class _$AuthFlowDtoCopyWithImpl<$Res, $Val extends AuthFlowDto>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of AuthFlowDto
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -119,6 +125,8 @@ class _$AuthFlowDtoCopyWithImpl<$Res, $Val extends AuthFlowDto>
     ) as $Val);
   }
 
+  /// Create a copy of AuthFlowDto
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $UiDtoCopyWith<$Res> get ui {
@@ -129,11 +137,11 @@ class _$AuthFlowDtoCopyWithImpl<$Res, $Val extends AuthFlowDto>
 }
 
 /// @nodoc
-abstract class _$$_AuthFlowDtoCopyWith<$Res>
+abstract class _$$AuthFlowDtoImplCopyWith<$Res>
     implements $AuthFlowDtoCopyWith<$Res> {
-  factory _$$_AuthFlowDtoCopyWith(
-          _$_AuthFlowDto value, $Res Function(_$_AuthFlowDto) then) =
-      __$$_AuthFlowDtoCopyWithImpl<$Res>;
+  factory _$$AuthFlowDtoImplCopyWith(
+          _$AuthFlowDtoImpl value, $Res Function(_$AuthFlowDtoImpl) then) =
+      __$$AuthFlowDtoImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -152,13 +160,15 @@ abstract class _$$_AuthFlowDtoCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_AuthFlowDtoCopyWithImpl<$Res>
-    extends _$AuthFlowDtoCopyWithImpl<$Res, _$_AuthFlowDto>
-    implements _$$_AuthFlowDtoCopyWith<$Res> {
-  __$$_AuthFlowDtoCopyWithImpl(
-      _$_AuthFlowDto _value, $Res Function(_$_AuthFlowDto) _then)
+class __$$AuthFlowDtoImplCopyWithImpl<$Res>
+    extends _$AuthFlowDtoCopyWithImpl<$Res, _$AuthFlowDtoImpl>
+    implements _$$AuthFlowDtoImplCopyWith<$Res> {
+  __$$AuthFlowDtoImplCopyWithImpl(
+      _$AuthFlowDtoImpl _value, $Res Function(_$AuthFlowDtoImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of AuthFlowDto
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -172,7 +182,7 @@ class __$$_AuthFlowDtoCopyWithImpl<$Res>
     Object? ui = null,
     Object? sessionTokenExchangeCode = freezed,
   }) {
-    return _then(_$_AuthFlowDto(
+    return _then(_$AuthFlowDtoImpl(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -215,8 +225,8 @@ class __$$_AuthFlowDtoCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_AuthFlowDto extends _AuthFlowDto {
-  const _$_AuthFlowDto(
+class _$AuthFlowDtoImpl extends _AuthFlowDto {
+  const _$AuthFlowDtoImpl(
       {required this.id,
       this.oauth2LoginChallenge,
       required this.type,
@@ -228,8 +238,8 @@ class _$_AuthFlowDto extends _AuthFlowDto {
       this.sessionTokenExchangeCode})
       : super._();
 
-  factory _$_AuthFlowDto.fromJson(Map<String, dynamic> json) =>
-      _$$_AuthFlowDtoFromJson(json);
+  factory _$AuthFlowDtoImpl.fromJson(Map<String, dynamic> json) =>
+      _$$AuthFlowDtoImplFromJson(json);
 
   @override
   final String id;
@@ -256,10 +266,10 @@ class _$_AuthFlowDto extends _AuthFlowDto {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_AuthFlowDto &&
+            other is _$AuthFlowDtoImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.oauth2LoginChallenge, oauth2LoginChallenge) ||
                 other.oauth2LoginChallenge == oauth2LoginChallenge) &&
@@ -278,20 +288,22 @@ class _$_AuthFlowDto extends _AuthFlowDto {
                 other.sessionTokenExchangeCode == sessionTokenExchangeCode));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, id, oauth2LoginChallenge, type,
       expiresAt, issuedAt, requestUrl, returnTo, ui, sessionTokenExchangeCode);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AuthFlowDto
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$_AuthFlowDtoCopyWith<_$_AuthFlowDto> get copyWith =>
-      __$$_AuthFlowDtoCopyWithImpl<_$_AuthFlowDto>(this, _$identity);
+  _$$AuthFlowDtoImplCopyWith<_$AuthFlowDtoImpl> get copyWith =>
+      __$$AuthFlowDtoImplCopyWithImpl<_$AuthFlowDtoImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_AuthFlowDtoToJson(
+    return _$$AuthFlowDtoImplToJson(
       this,
     );
   }
@@ -307,11 +319,11 @@ abstract class _AuthFlowDto extends AuthFlowDto {
       required final String requestUrl,
       final String? returnTo,
       required final UiDto ui,
-      final String? sessionTokenExchangeCode}) = _$_AuthFlowDto;
+      final String? sessionTokenExchangeCode}) = _$AuthFlowDtoImpl;
   const _AuthFlowDto._() : super._();
 
   factory _AuthFlowDto.fromJson(Map<String, dynamic> json) =
-      _$_AuthFlowDto.fromJson;
+      _$AuthFlowDtoImpl.fromJson;
 
   @override
   String get id;
@@ -331,9 +343,12 @@ abstract class _AuthFlowDto extends AuthFlowDto {
   UiDto get ui;
   @override
   String? get sessionTokenExchangeCode;
+
+  /// Create a copy of AuthFlowDto
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
-  _$$_AuthFlowDtoCopyWith<_$_AuthFlowDto> get copyWith =>
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$AuthFlowDtoImplCopyWith<_$AuthFlowDtoImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -348,8 +363,12 @@ mixin _$UiDto {
   List<NodeDto> get nodes => throw _privateConstructorUsedError;
   List<MessageDto>? get messages => throw _privateConstructorUsedError;
 
+  /// Serializes this UiDto to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of UiDto
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $UiDtoCopyWith<UiDto> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -375,6 +394,8 @@ class _$UiDtoCopyWithImpl<$Res, $Val extends UiDto>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of UiDto
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -405,9 +426,10 @@ class _$UiDtoCopyWithImpl<$Res, $Val extends UiDto>
 }
 
 /// @nodoc
-abstract class _$$_UiDtoCopyWith<$Res> implements $UiDtoCopyWith<$Res> {
-  factory _$$_UiDtoCopyWith(_$_UiDto value, $Res Function(_$_UiDto) then) =
-      __$$_UiDtoCopyWithImpl<$Res>;
+abstract class _$$UiDtoImplCopyWith<$Res> implements $UiDtoCopyWith<$Res> {
+  factory _$$UiDtoImplCopyWith(
+          _$UiDtoImpl value, $Res Function(_$UiDtoImpl) then) =
+      __$$UiDtoImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -418,11 +440,15 @@ abstract class _$$_UiDtoCopyWith<$Res> implements $UiDtoCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$_UiDtoCopyWithImpl<$Res> extends _$UiDtoCopyWithImpl<$Res, _$_UiDto>
-    implements _$$_UiDtoCopyWith<$Res> {
-  __$$_UiDtoCopyWithImpl(_$_UiDto _value, $Res Function(_$_UiDto) _then)
+class __$$UiDtoImplCopyWithImpl<$Res>
+    extends _$UiDtoCopyWithImpl<$Res, _$UiDtoImpl>
+    implements _$$UiDtoImplCopyWith<$Res> {
+  __$$UiDtoImplCopyWithImpl(
+      _$UiDtoImpl _value, $Res Function(_$UiDtoImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of UiDto
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -431,7 +457,7 @@ class __$$_UiDtoCopyWithImpl<$Res> extends _$UiDtoCopyWithImpl<$Res, _$_UiDto>
     Object? nodes = null,
     Object? messages = freezed,
   }) {
-    return _then(_$_UiDto(
+    return _then(_$UiDtoImpl(
       action: null == action
           ? _value.action
           : action // ignore: cast_nullable_to_non_nullable
@@ -454,8 +480,8 @@ class __$$_UiDtoCopyWithImpl<$Res> extends _$UiDtoCopyWithImpl<$Res, _$_UiDto>
 
 /// @nodoc
 @JsonSerializable()
-class _$_UiDto extends _UiDto {
-  const _$_UiDto(
+class _$UiDtoImpl extends _UiDto {
+  const _$UiDtoImpl(
       {required this.action,
       required this.method,
       required final List<NodeDto> nodes,
@@ -464,8 +490,8 @@ class _$_UiDto extends _UiDto {
         _messages = messages,
         super._();
 
-  factory _$_UiDto.fromJson(Map<String, dynamic> json) =>
-      _$$_UiDtoFromJson(json);
+  factory _$UiDtoImpl.fromJson(Map<String, dynamic> json) =>
+      _$$UiDtoImplFromJson(json);
 
   @override
   final String action;
@@ -495,17 +521,17 @@ class _$_UiDto extends _UiDto {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_UiDto &&
+            other is _$UiDtoImpl &&
             (identical(other.action, action) || other.action == action) &&
             (identical(other.method, method) || other.method == method) &&
             const DeepCollectionEquality().equals(other._nodes, _nodes) &&
             const DeepCollectionEquality().equals(other._messages, _messages));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -514,15 +540,17 @@ class _$_UiDto extends _UiDto {
       const DeepCollectionEquality().hash(_nodes),
       const DeepCollectionEquality().hash(_messages));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of UiDto
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$_UiDtoCopyWith<_$_UiDto> get copyWith =>
-      __$$_UiDtoCopyWithImpl<_$_UiDto>(this, _$identity);
+  _$$UiDtoImplCopyWith<_$UiDtoImpl> get copyWith =>
+      __$$UiDtoImplCopyWithImpl<_$UiDtoImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_UiDtoToJson(
+    return _$$UiDtoImplToJson(
       this,
     );
   }
@@ -533,10 +561,10 @@ abstract class _UiDto extends UiDto {
       {required final String action,
       required final String method,
       required final List<NodeDto> nodes,
-      final List<MessageDto>? messages}) = _$_UiDto;
+      final List<MessageDto>? messages}) = _$UiDtoImpl;
   const _UiDto._() : super._();
 
-  factory _UiDto.fromJson(Map<String, dynamic> json) = _$_UiDto.fromJson;
+  factory _UiDto.fromJson(Map<String, dynamic> json) = _$UiDtoImpl.fromJson;
 
   @override
   String get action;
@@ -546,9 +574,12 @@ abstract class _UiDto extends UiDto {
   List<NodeDto> get nodes;
   @override
   List<MessageDto>? get messages;
+
+  /// Create a copy of UiDto
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
-  _$$_UiDtoCopyWith<_$_UiDto> get copyWith =>
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$UiDtoImplCopyWith<_$UiDtoImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -564,8 +595,12 @@ mixin _$NodeDto {
   List<MessageDto> get messages => throw _privateConstructorUsedError;
   MetaDto get meta => throw _privateConstructorUsedError;
 
+  /// Serializes this NodeDto to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of NodeDto
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $NodeDtoCopyWith<NodeDto> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -595,6 +630,8 @@ class _$NodeDtoCopyWithImpl<$Res, $Val extends NodeDto>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of NodeDto
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -628,6 +665,8 @@ class _$NodeDtoCopyWithImpl<$Res, $Val extends NodeDto>
     ) as $Val);
   }
 
+  /// Create a copy of NodeDto
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $AttributesDtoCopyWith<$Res> get attributes {
@@ -636,6 +675,8 @@ class _$NodeDtoCopyWithImpl<$Res, $Val extends NodeDto>
     });
   }
 
+  /// Create a copy of NodeDto
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $MetaDtoCopyWith<$Res> get meta {
@@ -646,10 +687,10 @@ class _$NodeDtoCopyWithImpl<$Res, $Val extends NodeDto>
 }
 
 /// @nodoc
-abstract class _$$_NodeDtoCopyWith<$Res> implements $NodeDtoCopyWith<$Res> {
-  factory _$$_NodeDtoCopyWith(
-          _$_NodeDto value, $Res Function(_$_NodeDto) then) =
-      __$$_NodeDtoCopyWithImpl<$Res>;
+abstract class _$$NodeDtoImplCopyWith<$Res> implements $NodeDtoCopyWith<$Res> {
+  factory _$$NodeDtoImplCopyWith(
+          _$NodeDtoImpl value, $Res Function(_$NodeDtoImpl) then) =
+      __$$NodeDtoImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -666,12 +707,15 @@ abstract class _$$_NodeDtoCopyWith<$Res> implements $NodeDtoCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$_NodeDtoCopyWithImpl<$Res>
-    extends _$NodeDtoCopyWithImpl<$Res, _$_NodeDto>
-    implements _$$_NodeDtoCopyWith<$Res> {
-  __$$_NodeDtoCopyWithImpl(_$_NodeDto _value, $Res Function(_$_NodeDto) _then)
+class __$$NodeDtoImplCopyWithImpl<$Res>
+    extends _$NodeDtoCopyWithImpl<$Res, _$NodeDtoImpl>
+    implements _$$NodeDtoImplCopyWith<$Res> {
+  __$$NodeDtoImplCopyWithImpl(
+      _$NodeDtoImpl _value, $Res Function(_$NodeDtoImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of NodeDto
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -681,7 +725,7 @@ class __$$_NodeDtoCopyWithImpl<$Res>
     Object? messages = null,
     Object? meta = null,
   }) {
-    return _then(_$_NodeDto(
+    return _then(_$NodeDtoImpl(
       type: null == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
@@ -708,8 +752,8 @@ class __$$_NodeDtoCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_NodeDto extends _NodeDto {
-  const _$_NodeDto(
+class _$NodeDtoImpl extends _NodeDto {
+  const _$NodeDtoImpl(
       {required this.type,
       required this.group,
       required this.attributes,
@@ -718,8 +762,8 @@ class _$_NodeDto extends _NodeDto {
       : _messages = messages,
         super._();
 
-  factory _$_NodeDto.fromJson(Map<String, dynamic> json) =>
-      _$$_NodeDtoFromJson(json);
+  factory _$NodeDtoImpl.fromJson(Map<String, dynamic> json) =>
+      _$$NodeDtoImplFromJson(json);
 
   @override
   final String type;
@@ -744,10 +788,10 @@ class _$_NodeDto extends _NodeDto {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_NodeDto &&
+            other is _$NodeDtoImpl &&
             (identical(other.type, type) || other.type == type) &&
             (identical(other.group, group) || other.group == group) &&
             (identical(other.attributes, attributes) ||
@@ -756,20 +800,22 @@ class _$_NodeDto extends _NodeDto {
             (identical(other.meta, meta) || other.meta == meta));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, type, group, attributes,
       const DeepCollectionEquality().hash(_messages), meta);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of NodeDto
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$_NodeDtoCopyWith<_$_NodeDto> get copyWith =>
-      __$$_NodeDtoCopyWithImpl<_$_NodeDto>(this, _$identity);
+  _$$NodeDtoImplCopyWith<_$NodeDtoImpl> get copyWith =>
+      __$$NodeDtoImplCopyWithImpl<_$NodeDtoImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_NodeDtoToJson(
+    return _$$NodeDtoImplToJson(
       this,
     );
   }
@@ -781,10 +827,10 @@ abstract class _NodeDto extends NodeDto {
       required final String group,
       required final AttributesDto attributes,
       required final List<MessageDto> messages,
-      required final MetaDto meta}) = _$_NodeDto;
+      required final MetaDto meta}) = _$NodeDtoImpl;
   const _NodeDto._() : super._();
 
-  factory _NodeDto.fromJson(Map<String, dynamic> json) = _$_NodeDto.fromJson;
+  factory _NodeDto.fromJson(Map<String, dynamic> json) = _$NodeDtoImpl.fromJson;
 
   @override
   String get type;
@@ -796,9 +842,12 @@ abstract class _NodeDto extends NodeDto {
   List<MessageDto> get messages;
   @override
   MetaDto get meta;
+
+  /// Create a copy of NodeDto
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
-  _$$_NodeDtoCopyWith<_$_NodeDto> get copyWith =>
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$NodeDtoImplCopyWith<_$NodeDtoImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -816,8 +865,12 @@ mixin _$AttributesDto {
   String? get nodeType => throw _privateConstructorUsedError;
   String? get autocomplete => throw _privateConstructorUsedError;
 
+  /// Serializes this AttributesDto to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of AttributesDto
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $AttributesDtoCopyWith<AttributesDto> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -848,6 +901,8 @@ class _$AttributesDtoCopyWithImpl<$Res, $Val extends AttributesDto>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of AttributesDto
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -893,11 +948,11 @@ class _$AttributesDtoCopyWithImpl<$Res, $Val extends AttributesDto>
 }
 
 /// @nodoc
-abstract class _$$_AttributesDtoCopyWith<$Res>
+abstract class _$$AttributesDtoImplCopyWith<$Res>
     implements $AttributesDtoCopyWith<$Res> {
-  factory _$$_AttributesDtoCopyWith(
-          _$_AttributesDto value, $Res Function(_$_AttributesDto) then) =
-      __$$_AttributesDtoCopyWithImpl<$Res>;
+  factory _$$AttributesDtoImplCopyWith(
+          _$AttributesDtoImpl value, $Res Function(_$AttributesDtoImpl) then) =
+      __$$AttributesDtoImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -911,13 +966,15 @@ abstract class _$$_AttributesDtoCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_AttributesDtoCopyWithImpl<$Res>
-    extends _$AttributesDtoCopyWithImpl<$Res, _$_AttributesDto>
-    implements _$$_AttributesDtoCopyWith<$Res> {
-  __$$_AttributesDtoCopyWithImpl(
-      _$_AttributesDto _value, $Res Function(_$_AttributesDto) _then)
+class __$$AttributesDtoImplCopyWithImpl<$Res>
+    extends _$AttributesDtoCopyWithImpl<$Res, _$AttributesDtoImpl>
+    implements _$$AttributesDtoImplCopyWith<$Res> {
+  __$$AttributesDtoImplCopyWithImpl(
+      _$AttributesDtoImpl _value, $Res Function(_$AttributesDtoImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of AttributesDto
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -929,7 +986,7 @@ class __$$_AttributesDtoCopyWithImpl<$Res>
     Object? nodeType = freezed,
     Object? autocomplete = freezed,
   }) {
-    return _then(_$_AttributesDto(
+    return _then(_$AttributesDtoImpl(
       name: freezed == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -964,8 +1021,8 @@ class __$$_AttributesDtoCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_AttributesDto implements _AttributesDto {
-  const _$_AttributesDto(
+class _$AttributesDtoImpl implements _AttributesDto {
+  const _$AttributesDtoImpl(
       {this.name,
       this.type,
       this.value,
@@ -974,8 +1031,8 @@ class _$_AttributesDto implements _AttributesDto {
       this.nodeType,
       this.autocomplete});
 
-  factory _$_AttributesDto.fromJson(Map<String, dynamic> json) =>
-      _$$_AttributesDtoFromJson(json);
+  factory _$AttributesDtoImpl.fromJson(Map<String, dynamic> json) =>
+      _$$AttributesDtoImplFromJson(json);
 
   @override
   final String? name;
@@ -998,10 +1055,10 @@ class _$_AttributesDto implements _AttributesDto {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_AttributesDto &&
+            other is _$AttributesDtoImpl &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.type, type) || other.type == type) &&
             const DeepCollectionEquality().equals(other.value, value) &&
@@ -1015,7 +1072,7 @@ class _$_AttributesDto implements _AttributesDto {
                 other.autocomplete == autocomplete));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -1027,15 +1084,17 @@ class _$_AttributesDto implements _AttributesDto {
       nodeType,
       autocomplete);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AttributesDto
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$_AttributesDtoCopyWith<_$_AttributesDto> get copyWith =>
-      __$$_AttributesDtoCopyWithImpl<_$_AttributesDto>(this, _$identity);
+  _$$AttributesDtoImplCopyWith<_$AttributesDtoImpl> get copyWith =>
+      __$$AttributesDtoImplCopyWithImpl<_$AttributesDtoImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_AttributesDtoToJson(
+    return _$$AttributesDtoImplToJson(
       this,
     );
   }
@@ -1049,10 +1108,10 @@ abstract class _AttributesDto implements AttributesDto {
       final bool? required,
       final bool? disabled,
       final String? nodeType,
-      final String? autocomplete}) = _$_AttributesDto;
+      final String? autocomplete}) = _$AttributesDtoImpl;
 
   factory _AttributesDto.fromJson(Map<String, dynamic> json) =
-      _$_AttributesDto.fromJson;
+      _$AttributesDtoImpl.fromJson;
 
   @override
   String? get name;
@@ -1068,9 +1127,12 @@ abstract class _AttributesDto implements AttributesDto {
   String? get nodeType;
   @override
   String? get autocomplete;
+
+  /// Create a copy of AttributesDto
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
-  _$$_AttributesDtoCopyWith<_$_AttributesDto> get copyWith =>
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$AttributesDtoImplCopyWith<_$AttributesDtoImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -1085,8 +1147,12 @@ mixin _$MessageDto {
   String get type => throw _privateConstructorUsedError;
   MessageContextDto? get context => throw _privateConstructorUsedError;
 
+  /// Serializes this MessageDto to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of MessageDto
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $MessageDtoCopyWith<MessageDto> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1112,6 +1178,8 @@ class _$MessageDtoCopyWithImpl<$Res, $Val extends MessageDto>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of MessageDto
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1140,6 +1208,8 @@ class _$MessageDtoCopyWithImpl<$Res, $Val extends MessageDto>
     ) as $Val);
   }
 
+  /// Create a copy of MessageDto
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $MessageContextDtoCopyWith<$Res>? get context {
@@ -1154,11 +1224,11 @@ class _$MessageDtoCopyWithImpl<$Res, $Val extends MessageDto>
 }
 
 /// @nodoc
-abstract class _$$_MessageDtoCopyWith<$Res>
+abstract class _$$MessageDtoImplCopyWith<$Res>
     implements $MessageDtoCopyWith<$Res> {
-  factory _$$_MessageDtoCopyWith(
-          _$_MessageDto value, $Res Function(_$_MessageDto) then) =
-      __$$_MessageDtoCopyWithImpl<$Res>;
+  factory _$$MessageDtoImplCopyWith(
+          _$MessageDtoImpl value, $Res Function(_$MessageDtoImpl) then) =
+      __$$MessageDtoImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({int id, String text, String type, MessageContextDto? context});
@@ -1168,13 +1238,15 @@ abstract class _$$_MessageDtoCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_MessageDtoCopyWithImpl<$Res>
-    extends _$MessageDtoCopyWithImpl<$Res, _$_MessageDto>
-    implements _$$_MessageDtoCopyWith<$Res> {
-  __$$_MessageDtoCopyWithImpl(
-      _$_MessageDto _value, $Res Function(_$_MessageDto) _then)
+class __$$MessageDtoImplCopyWithImpl<$Res>
+    extends _$MessageDtoCopyWithImpl<$Res, _$MessageDtoImpl>
+    implements _$$MessageDtoImplCopyWith<$Res> {
+  __$$MessageDtoImplCopyWithImpl(
+      _$MessageDtoImpl _value, $Res Function(_$MessageDtoImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of MessageDto
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1183,7 +1255,7 @@ class __$$_MessageDtoCopyWithImpl<$Res>
     Object? type = null,
     Object? context = freezed,
   }) {
-    return _then(_$_MessageDto(
+    return _then(_$MessageDtoImpl(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -1206,13 +1278,13 @@ class __$$_MessageDtoCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_MessageDto extends _MessageDto {
-  const _$_MessageDto(
+class _$MessageDtoImpl extends _MessageDto {
+  const _$MessageDtoImpl(
       {required this.id, required this.text, required this.type, this.context})
       : super._();
 
-  factory _$_MessageDto.fromJson(Map<String, dynamic> json) =>
-      _$$_MessageDtoFromJson(json);
+  factory _$MessageDtoImpl.fromJson(Map<String, dynamic> json) =>
+      _$$MessageDtoImplFromJson(json);
 
   @override
   final int id;
@@ -1229,29 +1301,31 @@ class _$_MessageDto extends _MessageDto {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_MessageDto &&
+            other is _$MessageDtoImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.text, text) || other.text == text) &&
             (identical(other.type, type) || other.type == type) &&
             (identical(other.context, context) || other.context == context));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, id, text, type, context);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of MessageDto
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$_MessageDtoCopyWith<_$_MessageDto> get copyWith =>
-      __$$_MessageDtoCopyWithImpl<_$_MessageDto>(this, _$identity);
+  _$$MessageDtoImplCopyWith<_$MessageDtoImpl> get copyWith =>
+      __$$MessageDtoImplCopyWithImpl<_$MessageDtoImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_MessageDtoToJson(
+    return _$$MessageDtoImplToJson(
       this,
     );
   }
@@ -1262,11 +1336,11 @@ abstract class _MessageDto extends MessageDto {
       {required final int id,
       required final String text,
       required final String type,
-      final MessageContextDto? context}) = _$_MessageDto;
+      final MessageContextDto? context}) = _$MessageDtoImpl;
   const _MessageDto._() : super._();
 
   factory _MessageDto.fromJson(Map<String, dynamic> json) =
-      _$_MessageDto.fromJson;
+      _$MessageDtoImpl.fromJson;
 
   @override
   int get id;
@@ -1276,9 +1350,12 @@ abstract class _MessageDto extends MessageDto {
   String get type;
   @override
   MessageContextDto? get context;
+
+  /// Create a copy of MessageDto
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
-  _$$_MessageDtoCopyWith<_$_MessageDto> get copyWith =>
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$MessageDtoImplCopyWith<_$MessageDtoImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -1290,8 +1367,12 @@ MessageContextDto _$MessageContextDtoFromJson(Map<String, dynamic> json) {
 mixin _$MessageContextDto {
   String? get reason => throw _privateConstructorUsedError;
 
+  /// Serializes this MessageContextDto to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of MessageContextDto
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $MessageContextDtoCopyWith<MessageContextDto> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1315,6 +1396,8 @@ class _$MessageContextDtoCopyWithImpl<$Res, $Val extends MessageContextDto>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of MessageContextDto
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1330,30 +1413,32 @@ class _$MessageContextDtoCopyWithImpl<$Res, $Val extends MessageContextDto>
 }
 
 /// @nodoc
-abstract class _$$_MessageContextDtoCopyWith<$Res>
+abstract class _$$MessageContextDtoImplCopyWith<$Res>
     implements $MessageContextDtoCopyWith<$Res> {
-  factory _$$_MessageContextDtoCopyWith(_$_MessageContextDto value,
-          $Res Function(_$_MessageContextDto) then) =
-      __$$_MessageContextDtoCopyWithImpl<$Res>;
+  factory _$$MessageContextDtoImplCopyWith(_$MessageContextDtoImpl value,
+          $Res Function(_$MessageContextDtoImpl) then) =
+      __$$MessageContextDtoImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String? reason});
 }
 
 /// @nodoc
-class __$$_MessageContextDtoCopyWithImpl<$Res>
-    extends _$MessageContextDtoCopyWithImpl<$Res, _$_MessageContextDto>
-    implements _$$_MessageContextDtoCopyWith<$Res> {
-  __$$_MessageContextDtoCopyWithImpl(
-      _$_MessageContextDto _value, $Res Function(_$_MessageContextDto) _then)
+class __$$MessageContextDtoImplCopyWithImpl<$Res>
+    extends _$MessageContextDtoCopyWithImpl<$Res, _$MessageContextDtoImpl>
+    implements _$$MessageContextDtoImplCopyWith<$Res> {
+  __$$MessageContextDtoImplCopyWithImpl(_$MessageContextDtoImpl _value,
+      $Res Function(_$MessageContextDtoImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of MessageContextDto
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? reason = freezed,
   }) {
-    return _then(_$_MessageContextDto(
+    return _then(_$MessageContextDtoImpl(
       reason: freezed == reason
           ? _value.reason
           : reason // ignore: cast_nullable_to_non_nullable
@@ -1364,11 +1449,11 @@ class __$$_MessageContextDtoCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_MessageContextDto implements _MessageContextDto {
-  const _$_MessageContextDto({this.reason});
+class _$MessageContextDtoImpl implements _MessageContextDto {
+  const _$MessageContextDtoImpl({this.reason});
 
-  factory _$_MessageContextDto.fromJson(Map<String, dynamic> json) =>
-      _$$_MessageContextDtoFromJson(json);
+  factory _$MessageContextDtoImpl.fromJson(Map<String, dynamic> json) =>
+      _$$MessageContextDtoImplFromJson(json);
 
   @override
   final String? reason;
@@ -1379,27 +1464,29 @@ class _$_MessageContextDto implements _MessageContextDto {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_MessageContextDto &&
+            other is _$MessageContextDtoImpl &&
             (identical(other.reason, reason) || other.reason == reason));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, reason);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of MessageContextDto
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$_MessageContextDtoCopyWith<_$_MessageContextDto> get copyWith =>
-      __$$_MessageContextDtoCopyWithImpl<_$_MessageContextDto>(
+  _$$MessageContextDtoImplCopyWith<_$MessageContextDtoImpl> get copyWith =>
+      __$$MessageContextDtoImplCopyWithImpl<_$MessageContextDtoImpl>(
           this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_MessageContextDtoToJson(
+    return _$$MessageContextDtoImplToJson(
       this,
     );
   }
@@ -1407,16 +1494,19 @@ class _$_MessageContextDto implements _MessageContextDto {
 
 abstract class _MessageContextDto implements MessageContextDto {
   const factory _MessageContextDto({final String? reason}) =
-      _$_MessageContextDto;
+      _$MessageContextDtoImpl;
 
   factory _MessageContextDto.fromJson(Map<String, dynamic> json) =
-      _$_MessageContextDto.fromJson;
+      _$MessageContextDtoImpl.fromJson;
 
   @override
   String? get reason;
+
+  /// Create a copy of MessageContextDto
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
-  _$$_MessageContextDtoCopyWith<_$_MessageContextDto> get copyWith =>
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$MessageContextDtoImplCopyWith<_$MessageContextDtoImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -1428,8 +1518,12 @@ MetaDto _$MetaDtoFromJson(Map<String, dynamic> json) {
 mixin _$MetaDto {
   LabelDto? get label => throw _privateConstructorUsedError;
 
+  /// Serializes this MetaDto to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of MetaDto
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $MetaDtoCopyWith<MetaDto> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -1453,6 +1547,8 @@ class _$MetaDtoCopyWithImpl<$Res, $Val extends MetaDto>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of MetaDto
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1466,6 +1562,8 @@ class _$MetaDtoCopyWithImpl<$Res, $Val extends MetaDto>
     ) as $Val);
   }
 
+  /// Create a copy of MetaDto
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $LabelDtoCopyWith<$Res>? get label {
@@ -1480,10 +1578,10 @@ class _$MetaDtoCopyWithImpl<$Res, $Val extends MetaDto>
 }
 
 /// @nodoc
-abstract class _$$_MetaDtoCopyWith<$Res> implements $MetaDtoCopyWith<$Res> {
-  factory _$$_MetaDtoCopyWith(
-          _$_MetaDto value, $Res Function(_$_MetaDto) then) =
-      __$$_MetaDtoCopyWithImpl<$Res>;
+abstract class _$$MetaDtoImplCopyWith<$Res> implements $MetaDtoCopyWith<$Res> {
+  factory _$$MetaDtoImplCopyWith(
+          _$MetaDtoImpl value, $Res Function(_$MetaDtoImpl) then) =
+      __$$MetaDtoImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({LabelDto? label});
@@ -1493,18 +1591,21 @@ abstract class _$$_MetaDtoCopyWith<$Res> implements $MetaDtoCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$_MetaDtoCopyWithImpl<$Res>
-    extends _$MetaDtoCopyWithImpl<$Res, _$_MetaDto>
-    implements _$$_MetaDtoCopyWith<$Res> {
-  __$$_MetaDtoCopyWithImpl(_$_MetaDto _value, $Res Function(_$_MetaDto) _then)
+class __$$MetaDtoImplCopyWithImpl<$Res>
+    extends _$MetaDtoCopyWithImpl<$Res, _$MetaDtoImpl>
+    implements _$$MetaDtoImplCopyWith<$Res> {
+  __$$MetaDtoImplCopyWithImpl(
+      _$MetaDtoImpl _value, $Res Function(_$MetaDtoImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of MetaDto
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? label = freezed,
   }) {
-    return _then(_$_MetaDto(
+    return _then(_$MetaDtoImpl(
       label: freezed == label
           ? _value.label
           : label // ignore: cast_nullable_to_non_nullable
@@ -1515,11 +1616,11 @@ class __$$_MetaDtoCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_MetaDto implements _MetaDto {
-  const _$_MetaDto({this.label});
+class _$MetaDtoImpl implements _MetaDto {
+  const _$MetaDtoImpl({this.label});
 
-  factory _$_MetaDto.fromJson(Map<String, dynamic> json) =>
-      _$$_MetaDtoFromJson(json);
+  factory _$MetaDtoImpl.fromJson(Map<String, dynamic> json) =>
+      _$$MetaDtoImplFromJson(json);
 
   @override
   final LabelDto? label;
@@ -1530,41 +1631,46 @@ class _$_MetaDto implements _MetaDto {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_MetaDto &&
+            other is _$MetaDtoImpl &&
             (identical(other.label, label) || other.label == label));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, label);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of MetaDto
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$_MetaDtoCopyWith<_$_MetaDto> get copyWith =>
-      __$$_MetaDtoCopyWithImpl<_$_MetaDto>(this, _$identity);
+  _$$MetaDtoImplCopyWith<_$MetaDtoImpl> get copyWith =>
+      __$$MetaDtoImplCopyWithImpl<_$MetaDtoImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_MetaDtoToJson(
+    return _$$MetaDtoImplToJson(
       this,
     );
   }
 }
 
 abstract class _MetaDto implements MetaDto {
-  const factory _MetaDto({final LabelDto? label}) = _$_MetaDto;
+  const factory _MetaDto({final LabelDto? label}) = _$MetaDtoImpl;
 
-  factory _MetaDto.fromJson(Map<String, dynamic> json) = _$_MetaDto.fromJson;
+  factory _MetaDto.fromJson(Map<String, dynamic> json) = _$MetaDtoImpl.fromJson;
 
   @override
   LabelDto? get label;
+
+  /// Create a copy of MetaDto
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
-  _$$_MetaDtoCopyWith<_$_MetaDto> get copyWith =>
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$MetaDtoImplCopyWith<_$MetaDtoImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -1577,10 +1683,14 @@ mixin _$LabelDto {
   int get id => throw _privateConstructorUsedError;
   String get text => throw _privateConstructorUsedError;
   String get type => throw _privateConstructorUsedError;
-  ContextDto? get context => throw _privateConstructorUsedError;
+  Map<String, dynamic>? get context => throw _privateConstructorUsedError;
 
+  /// Serializes this LabelDto to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of LabelDto
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $LabelDtoCopyWith<LabelDto> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1590,9 +1700,7 @@ abstract class $LabelDtoCopyWith<$Res> {
   factory $LabelDtoCopyWith(LabelDto value, $Res Function(LabelDto) then) =
       _$LabelDtoCopyWithImpl<$Res, LabelDto>;
   @useResult
-  $Res call({int id, String text, String type, ContextDto? context});
-
-  $ContextDtoCopyWith<$Res>? get context;
+  $Res call({int id, String text, String type, Map<String, dynamic>? context});
 }
 
 /// @nodoc
@@ -1605,6 +1713,8 @@ class _$LabelDtoCopyWithImpl<$Res, $Val extends LabelDto>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of LabelDto
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1629,44 +1739,32 @@ class _$LabelDtoCopyWithImpl<$Res, $Val extends LabelDto>
       context: freezed == context
           ? _value.context
           : context // ignore: cast_nullable_to_non_nullable
-              as ContextDto?,
+              as Map<String, dynamic>?,
     ) as $Val);
   }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $ContextDtoCopyWith<$Res>? get context {
-    if (_value.context == null) {
-      return null;
-    }
-
-    return $ContextDtoCopyWith<$Res>(_value.context!, (value) {
-      return _then(_value.copyWith(context: value) as $Val);
-    });
-  }
 }
 
 /// @nodoc
-abstract class _$$_LabelDtoCopyWith<$Res> implements $LabelDtoCopyWith<$Res> {
-  factory _$$_LabelDtoCopyWith(
-          _$_LabelDto value, $Res Function(_$_LabelDto) then) =
-      __$$_LabelDtoCopyWithImpl<$Res>;
+abstract class _$$LabelDtoImplCopyWith<$Res>
+    implements $LabelDtoCopyWith<$Res> {
+  factory _$$LabelDtoImplCopyWith(
+          _$LabelDtoImpl value, $Res Function(_$LabelDtoImpl) then) =
+      __$$LabelDtoImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int id, String text, String type, ContextDto? context});
-
-  @override
-  $ContextDtoCopyWith<$Res>? get context;
+  $Res call({int id, String text, String type, Map<String, dynamic>? context});
 }
 
 /// @nodoc
-class __$$_LabelDtoCopyWithImpl<$Res>
-    extends _$LabelDtoCopyWithImpl<$Res, _$_LabelDto>
-    implements _$$_LabelDtoCopyWith<$Res> {
-  __$$_LabelDtoCopyWithImpl(
-      _$_LabelDto _value, $Res Function(_$_LabelDto) _then)
+class __$$LabelDtoImplCopyWithImpl<$Res>
+    extends _$LabelDtoCopyWithImpl<$Res, _$LabelDtoImpl>
+    implements _$$LabelDtoImplCopyWith<$Res> {
+  __$$LabelDtoImplCopyWithImpl(
+      _$LabelDtoImpl _value, $Res Function(_$LabelDtoImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of LabelDto
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1675,7 +1773,7 @@ class __$$_LabelDtoCopyWithImpl<$Res>
     Object? type = null,
     Object? context = freezed,
   }) {
-    return _then(_$_LabelDto(
+    return _then(_$LabelDtoImpl(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -1689,21 +1787,25 @@ class __$$_LabelDtoCopyWithImpl<$Res>
           : type // ignore: cast_nullable_to_non_nullable
               as String,
       context: freezed == context
-          ? _value.context
+          ? _value._context
           : context // ignore: cast_nullable_to_non_nullable
-              as ContextDto?,
+              as Map<String, dynamic>?,
     ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$_LabelDto implements _LabelDto {
-  const _$_LabelDto(
-      {required this.id, required this.text, required this.type, this.context});
+class _$LabelDtoImpl implements _LabelDto {
+  const _$LabelDtoImpl(
+      {required this.id,
+      required this.text,
+      required this.type,
+      final Map<String, dynamic>? context})
+      : _context = context;
 
-  factory _$_LabelDto.fromJson(Map<String, dynamic> json) =>
-      _$$_LabelDtoFromJson(json);
+  factory _$LabelDtoImpl.fromJson(Map<String, dynamic> json) =>
+      _$$LabelDtoImplFromJson(json);
 
   @override
   final int id;
@@ -1711,8 +1813,15 @@ class _$_LabelDto implements _LabelDto {
   final String text;
   @override
   final String type;
+  final Map<String, dynamic>? _context;
   @override
-  final ContextDto? context;
+  Map<String, dynamic>? get context {
+    final value = _context;
+    if (value == null) return null;
+    if (_context is EqualUnmodifiableMapView) return _context;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(value);
+  }
 
   @override
   String toString() {
@@ -1720,29 +1829,32 @@ class _$_LabelDto implements _LabelDto {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_LabelDto &&
+            other is _$LabelDtoImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.text, text) || other.text == text) &&
             (identical(other.type, type) || other.type == type) &&
-            (identical(other.context, context) || other.context == context));
+            const DeepCollectionEquality().equals(other._context, _context));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, text, type, context);
+  int get hashCode => Object.hash(runtimeType, id, text, type,
+      const DeepCollectionEquality().hash(_context));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of LabelDto
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$_LabelDtoCopyWith<_$_LabelDto> get copyWith =>
-      __$$_LabelDtoCopyWithImpl<_$_LabelDto>(this, _$identity);
+  _$$LabelDtoImplCopyWith<_$LabelDtoImpl> get copyWith =>
+      __$$LabelDtoImplCopyWithImpl<_$LabelDtoImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_LabelDtoToJson(
+    return _$$LabelDtoImplToJson(
       this,
     );
   }
@@ -1753,9 +1865,10 @@ abstract class _LabelDto implements LabelDto {
       {required final int id,
       required final String text,
       required final String type,
-      final ContextDto? context}) = _$_LabelDto;
+      final Map<String, dynamic>? context}) = _$LabelDtoImpl;
 
-  factory _LabelDto.fromJson(Map<String, dynamic> json) = _$_LabelDto.fromJson;
+  factory _LabelDto.fromJson(Map<String, dynamic> json) =
+      _$LabelDtoImpl.fromJson;
 
   @override
   int get id;
@@ -1764,90 +1877,12 @@ abstract class _LabelDto implements LabelDto {
   @override
   String get type;
   @override
-  ContextDto? get context;
+  Map<String, dynamic>? get context;
+
+  /// Create a copy of LabelDto
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
-  _$$_LabelDtoCopyWith<_$_LabelDto> get copyWith =>
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$LabelDtoImplCopyWith<_$LabelDtoImpl> get copyWith =>
       throw _privateConstructorUsedError;
-}
-
-ContextDto _$ContextDtoFromJson(Map<String, dynamic> json) {
-  return _ContextDto.fromJson(json);
-}
-
-/// @nodoc
-mixin _$ContextDto {
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $ContextDtoCopyWith<$Res> {
-  factory $ContextDtoCopyWith(
-          ContextDto value, $Res Function(ContextDto) then) =
-      _$ContextDtoCopyWithImpl<$Res, ContextDto>;
-}
-
-/// @nodoc
-class _$ContextDtoCopyWithImpl<$Res, $Val extends ContextDto>
-    implements $ContextDtoCopyWith<$Res> {
-  _$ContextDtoCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-}
-
-/// @nodoc
-abstract class _$$_ContextDtoCopyWith<$Res> {
-  factory _$$_ContextDtoCopyWith(
-          _$_ContextDto value, $Res Function(_$_ContextDto) then) =
-      __$$_ContextDtoCopyWithImpl<$Res>;
-}
-
-/// @nodoc
-class __$$_ContextDtoCopyWithImpl<$Res>
-    extends _$ContextDtoCopyWithImpl<$Res, _$_ContextDto>
-    implements _$$_ContextDtoCopyWith<$Res> {
-  __$$_ContextDtoCopyWithImpl(
-      _$_ContextDto _value, $Res Function(_$_ContextDto) _then)
-      : super(_value, _then);
-}
-
-/// @nodoc
-@JsonSerializable()
-class _$_ContextDto implements _ContextDto {
-  const _$_ContextDto();
-
-  factory _$_ContextDto.fromJson(Map<String, dynamic> json) =>
-      _$$_ContextDtoFromJson(json);
-
-  @override
-  String toString() {
-    return 'ContextDto()';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$_ContextDto);
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$_ContextDtoToJson(
-      this,
-    );
-  }
-}
-
-abstract class _ContextDto implements ContextDto {
-  const factory _ContextDto() = _$_ContextDto;
-
-  factory _ContextDto.fromJson(Map<String, dynamic> json) =
-      _$_ContextDto.fromJson;
 }

@@ -12,7 +12,7 @@ part of 'token_exchange_success.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 TokenExchangeSuccess _$TokenExchangeSuccessFromJson(Map<String, dynamic> json) {
   return _TokenExchangeSuccess.fromJson(json);
@@ -23,8 +23,12 @@ mixin _$TokenExchangeSuccess {
   String? get sessionToken => throw _privateConstructorUsedError;
   Session get session => throw _privateConstructorUsedError;
 
+  /// Serializes this TokenExchangeSuccess to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of TokenExchangeSuccess
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $TokenExchangeSuccessCopyWith<TokenExchangeSuccess> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -51,6 +55,8 @@ class _$TokenExchangeSuccessCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of TokenExchangeSuccess
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -69,6 +75,8 @@ class _$TokenExchangeSuccessCopyWithImpl<$Res,
     ) as $Val);
   }
 
+  /// Create a copy of TokenExchangeSuccess
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $SessionCopyWith<$Res> get session {
@@ -79,11 +87,11 @@ class _$TokenExchangeSuccessCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_TokenExchangeSuccessCopyWith<$Res>
+abstract class _$$TokenExchangeSuccessImplCopyWith<$Res>
     implements $TokenExchangeSuccessCopyWith<$Res> {
-  factory _$$_TokenExchangeSuccessCopyWith(_$_TokenExchangeSuccess value,
-          $Res Function(_$_TokenExchangeSuccess) then) =
-      __$$_TokenExchangeSuccessCopyWithImpl<$Res>;
+  factory _$$TokenExchangeSuccessImplCopyWith(_$TokenExchangeSuccessImpl value,
+          $Res Function(_$TokenExchangeSuccessImpl) then) =
+      __$$TokenExchangeSuccessImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String? sessionToken, Session session});
@@ -93,20 +101,22 @@ abstract class _$$_TokenExchangeSuccessCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_TokenExchangeSuccessCopyWithImpl<$Res>
-    extends _$TokenExchangeSuccessCopyWithImpl<$Res, _$_TokenExchangeSuccess>
-    implements _$$_TokenExchangeSuccessCopyWith<$Res> {
-  __$$_TokenExchangeSuccessCopyWithImpl(_$_TokenExchangeSuccess _value,
-      $Res Function(_$_TokenExchangeSuccess) _then)
+class __$$TokenExchangeSuccessImplCopyWithImpl<$Res>
+    extends _$TokenExchangeSuccessCopyWithImpl<$Res, _$TokenExchangeSuccessImpl>
+    implements _$$TokenExchangeSuccessImplCopyWith<$Res> {
+  __$$TokenExchangeSuccessImplCopyWithImpl(_$TokenExchangeSuccessImpl _value,
+      $Res Function(_$TokenExchangeSuccessImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of TokenExchangeSuccess
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? sessionToken = freezed,
     Object? session = null,
   }) {
-    return _then(_$_TokenExchangeSuccess(
+    return _then(_$TokenExchangeSuccessImpl(
       sessionToken: freezed == sessionToken
           ? _value.sessionToken
           : sessionToken // ignore: cast_nullable_to_non_nullable
@@ -121,11 +131,11 @@ class __$$_TokenExchangeSuccessCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_TokenExchangeSuccess implements _TokenExchangeSuccess {
-  const _$_TokenExchangeSuccess({this.sessionToken, required this.session});
+class _$TokenExchangeSuccessImpl implements _TokenExchangeSuccess {
+  const _$TokenExchangeSuccessImpl({this.sessionToken, required this.session});
 
-  factory _$_TokenExchangeSuccess.fromJson(Map<String, dynamic> json) =>
-      _$$_TokenExchangeSuccessFromJson(json);
+  factory _$TokenExchangeSuccessImpl.fromJson(Map<String, dynamic> json) =>
+      _$$TokenExchangeSuccessImplFromJson(json);
 
   @override
   final String? sessionToken;
@@ -138,29 +148,32 @@ class _$_TokenExchangeSuccess implements _TokenExchangeSuccess {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_TokenExchangeSuccess &&
+            other is _$TokenExchangeSuccessImpl &&
             (identical(other.sessionToken, sessionToken) ||
                 other.sessionToken == sessionToken) &&
             (identical(other.session, session) || other.session == session));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, sessionToken, session);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of TokenExchangeSuccess
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$_TokenExchangeSuccessCopyWith<_$_TokenExchangeSuccess> get copyWith =>
-      __$$_TokenExchangeSuccessCopyWithImpl<_$_TokenExchangeSuccess>(
-          this, _$identity);
+  _$$TokenExchangeSuccessImplCopyWith<_$TokenExchangeSuccessImpl>
+      get copyWith =>
+          __$$TokenExchangeSuccessImplCopyWithImpl<_$TokenExchangeSuccessImpl>(
+              this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_TokenExchangeSuccessToJson(
+    return _$$TokenExchangeSuccessImplToJson(
       this,
     );
   }
@@ -169,17 +182,20 @@ class _$_TokenExchangeSuccess implements _TokenExchangeSuccess {
 abstract class _TokenExchangeSuccess implements TokenExchangeSuccess {
   const factory _TokenExchangeSuccess(
       {final String? sessionToken,
-      required final Session session}) = _$_TokenExchangeSuccess;
+      required final Session session}) = _$TokenExchangeSuccessImpl;
 
   factory _TokenExchangeSuccess.fromJson(Map<String, dynamic> json) =
-      _$_TokenExchangeSuccess.fromJson;
+      _$TokenExchangeSuccessImpl.fromJson;
 
   @override
   String? get sessionToken;
   @override
   Session get session;
+
+  /// Create a copy of TokenExchangeSuccess
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
-  _$$_TokenExchangeSuccessCopyWith<_$_TokenExchangeSuccess> get copyWith =>
-      throw _privateConstructorUsedError;
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$TokenExchangeSuccessImplCopyWith<_$TokenExchangeSuccessImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }

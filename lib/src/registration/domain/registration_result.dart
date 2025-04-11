@@ -32,8 +32,8 @@ class RegistrationSocialFinishResult extends RegistrationResult {
   final List<(String fieldName, dynamic value)> values;
 }
 
-class RegistractionLinkAccountResult extends RegistrationResult {
-  const RegistractionLinkAccountResult(this.flowInfo);
+class RegistrationLinkAccountResult extends RegistrationResult {
+  const RegistrationLinkAccountResult(this.flowInfo);
 
   final AuthFlowInfo flowInfo;
 }
@@ -60,35 +60,39 @@ RegistrationResult mapRegistrationSuccessResponse(
   RegistrationSuccessResponse response,
 ) {
   if (response.flow case final AuthFlowDto flow) {
-    return RegistractionLinkAccountResult(flow.info);
+    return RegistrationLinkAccountResult(flow.info);
   }
 
   final continueWith = response.continueWith;
 
-  return continueWith?.map(
-        (element) {
-          return switch (element) {
-            ContinueWith(
-              action: 'show_verification_ui',
-              flow: Flow(
-                id: final flowId?,
-                verifiableAddress: final emailToVerify?
-              )
-            ) =>
-              RegistrationVerifyEmailResult(
-                flowId: flowId,
-                emailToVerify: emailToVerify,
-              ),
-            ContinueWith(
-              action: 'set_ory_session_token',
-              flow: null,
-            ) =>
-              const RegistrationSuccessResult(),
-            _ => const RegistrationUnknownErrorResult(),
-          };
-        },
-      ).firstOrNull ??
-      const RegistrationSuccessResult();
+  final result = continueWith?.map(
+    (element) {
+      return switch (element) {
+        ContinueWith(
+          action: 'show_verification_ui',
+          flow: Flow(
+            id: final flowId?,
+            verifiableAddress: final emailToVerify?,
+          )
+        ) =>
+          RegistrationVerifyEmailResult(
+            flowId: flowId,
+            emailToVerify: emailToVerify,
+          ),
+        ContinueWith(
+          action: 'set_ory_session_token',
+          flow: null,
+        ) =>
+          const RegistrationSuccessResult(),
+        _ => const RegistrationUnknownErrorResult(),
+      };
+    },
+  ).firstWhere(
+    (element) => element is! RegistrationUnknownErrorResult,
+    orElse: () => const RegistrationUnknownErrorResult(),
+  );
+
+  return result ?? const RegistrationUnknownErrorResult();
 }
 
 RegistrationResult mapRegistrationErrorResponse(AuthFlowDto response) {

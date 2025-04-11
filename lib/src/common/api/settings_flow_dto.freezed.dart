@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'login_error.dart';
+part of 'settings_flow_dto.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -14,92 +14,79 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-LoginErrorResponse _$LoginErrorResponseFromJson(Map<String, dynamic> json) {
-  return _LoginErrorResponse.fromJson(json);
+SettingsFlowDto _$SettingsFlowDtoFromJson(Map<String, dynamic> json) {
+  return _SettingsFlowDto.fromJson(json);
 }
 
 /// @nodoc
-mixin _$LoginErrorResponse {
+mixin _$SettingsFlowDto {
   String get id => throw _privateConstructorUsedError;
-  dynamic get oauth2LoginChallenge => throw _privateConstructorUsedError;
   String get type => throw _privateConstructorUsedError;
   DateTime get expiresAt => throw _privateConstructorUsedError;
   DateTime get issuedAt => throw _privateConstructorUsedError;
   String get requestUrl => throw _privateConstructorUsedError;
+  String? get returnTo => throw _privateConstructorUsedError;
   UiDto get ui => throw _privateConstructorUsedError;
-  DateTime get createdAt => throw _privateConstructorUsedError;
-  DateTime get updatedAt => throw _privateConstructorUsedError;
-  bool get refresh => throw _privateConstructorUsedError;
-  String get requestedAal => throw _privateConstructorUsedError;
+  String? get sessionTokenExchangeCode => throw _privateConstructorUsedError;
 
-  /// Serializes this LoginErrorResponse to a JSON map.
+  /// Serializes this SettingsFlowDto to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
-  /// Create a copy of LoginErrorResponse
+  /// Create a copy of SettingsFlowDto
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $LoginErrorResponseCopyWith<LoginErrorResponse> get copyWith =>
+  $SettingsFlowDtoCopyWith<SettingsFlowDto> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $LoginErrorResponseCopyWith<$Res> {
-  factory $LoginErrorResponseCopyWith(
-          LoginErrorResponse value, $Res Function(LoginErrorResponse) then) =
-      _$LoginErrorResponseCopyWithImpl<$Res, LoginErrorResponse>;
+abstract class $SettingsFlowDtoCopyWith<$Res> {
+  factory $SettingsFlowDtoCopyWith(
+          SettingsFlowDto value, $Res Function(SettingsFlowDto) then) =
+      _$SettingsFlowDtoCopyWithImpl<$Res, SettingsFlowDto>;
   @useResult
   $Res call(
       {String id,
-      dynamic oauth2LoginChallenge,
       String type,
       DateTime expiresAt,
       DateTime issuedAt,
       String requestUrl,
+      String? returnTo,
       UiDto ui,
-      DateTime createdAt,
-      DateTime updatedAt,
-      bool refresh,
-      String requestedAal});
+      String? sessionTokenExchangeCode});
 
   $UiDtoCopyWith<$Res> get ui;
 }
 
 /// @nodoc
-class _$LoginErrorResponseCopyWithImpl<$Res, $Val extends LoginErrorResponse>
-    implements $LoginErrorResponseCopyWith<$Res> {
-  _$LoginErrorResponseCopyWithImpl(this._value, this._then);
+class _$SettingsFlowDtoCopyWithImpl<$Res, $Val extends SettingsFlowDto>
+    implements $SettingsFlowDtoCopyWith<$Res> {
+  _$SettingsFlowDtoCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of LoginErrorResponse
+  /// Create a copy of SettingsFlowDto
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? id = null,
-    Object? oauth2LoginChallenge = freezed,
     Object? type = null,
     Object? expiresAt = null,
     Object? issuedAt = null,
     Object? requestUrl = null,
+    Object? returnTo = freezed,
     Object? ui = null,
-    Object? createdAt = null,
-    Object? updatedAt = null,
-    Object? refresh = null,
-    Object? requestedAal = null,
+    Object? sessionTokenExchangeCode = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      oauth2LoginChallenge: freezed == oauth2LoginChallenge
-          ? _value.oauth2LoginChallenge
-          : oauth2LoginChallenge // ignore: cast_nullable_to_non_nullable
-              as dynamic,
       type: null == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
@@ -116,30 +103,22 @@ class _$LoginErrorResponseCopyWithImpl<$Res, $Val extends LoginErrorResponse>
           ? _value.requestUrl
           : requestUrl // ignore: cast_nullable_to_non_nullable
               as String,
+      returnTo: freezed == returnTo
+          ? _value.returnTo
+          : returnTo // ignore: cast_nullable_to_non_nullable
+              as String?,
       ui: null == ui
           ? _value.ui
           : ui // ignore: cast_nullable_to_non_nullable
               as UiDto,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      updatedAt: null == updatedAt
-          ? _value.updatedAt
-          : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      refresh: null == refresh
-          ? _value.refresh
-          : refresh // ignore: cast_nullable_to_non_nullable
-              as bool,
-      requestedAal: null == requestedAal
-          ? _value.requestedAal
-          : requestedAal // ignore: cast_nullable_to_non_nullable
-              as String,
+      sessionTokenExchangeCode: freezed == sessionTokenExchangeCode
+          ? _value.sessionTokenExchangeCode
+          : sessionTokenExchangeCode // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 
-  /// Create a copy of LoginErrorResponse
+  /// Create a copy of SettingsFlowDto
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
@@ -151,64 +130,54 @@ class _$LoginErrorResponseCopyWithImpl<$Res, $Val extends LoginErrorResponse>
 }
 
 /// @nodoc
-abstract class _$$LoginErrorResponseImplCopyWith<$Res>
-    implements $LoginErrorResponseCopyWith<$Res> {
-  factory _$$LoginErrorResponseImplCopyWith(_$LoginErrorResponseImpl value,
-          $Res Function(_$LoginErrorResponseImpl) then) =
-      __$$LoginErrorResponseImplCopyWithImpl<$Res>;
+abstract class _$$SettingsFlowDtoImplCopyWith<$Res>
+    implements $SettingsFlowDtoCopyWith<$Res> {
+  factory _$$SettingsFlowDtoImplCopyWith(_$SettingsFlowDtoImpl value,
+          $Res Function(_$SettingsFlowDtoImpl) then) =
+      __$$SettingsFlowDtoImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
       {String id,
-      dynamic oauth2LoginChallenge,
       String type,
       DateTime expiresAt,
       DateTime issuedAt,
       String requestUrl,
+      String? returnTo,
       UiDto ui,
-      DateTime createdAt,
-      DateTime updatedAt,
-      bool refresh,
-      String requestedAal});
+      String? sessionTokenExchangeCode});
 
   @override
   $UiDtoCopyWith<$Res> get ui;
 }
 
 /// @nodoc
-class __$$LoginErrorResponseImplCopyWithImpl<$Res>
-    extends _$LoginErrorResponseCopyWithImpl<$Res, _$LoginErrorResponseImpl>
-    implements _$$LoginErrorResponseImplCopyWith<$Res> {
-  __$$LoginErrorResponseImplCopyWithImpl(_$LoginErrorResponseImpl _value,
-      $Res Function(_$LoginErrorResponseImpl) _then)
+class __$$SettingsFlowDtoImplCopyWithImpl<$Res>
+    extends _$SettingsFlowDtoCopyWithImpl<$Res, _$SettingsFlowDtoImpl>
+    implements _$$SettingsFlowDtoImplCopyWith<$Res> {
+  __$$SettingsFlowDtoImplCopyWithImpl(
+      _$SettingsFlowDtoImpl _value, $Res Function(_$SettingsFlowDtoImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of LoginErrorResponse
+  /// Create a copy of SettingsFlowDto
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? id = null,
-    Object? oauth2LoginChallenge = freezed,
     Object? type = null,
     Object? expiresAt = null,
     Object? issuedAt = null,
     Object? requestUrl = null,
+    Object? returnTo = freezed,
     Object? ui = null,
-    Object? createdAt = null,
-    Object? updatedAt = null,
-    Object? refresh = null,
-    Object? requestedAal = null,
+    Object? sessionTokenExchangeCode = freezed,
   }) {
-    return _then(_$LoginErrorResponseImpl(
+    return _then(_$SettingsFlowDtoImpl(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      oauth2LoginChallenge: freezed == oauth2LoginChallenge
-          ? _value.oauth2LoginChallenge
-          : oauth2LoginChallenge // ignore: cast_nullable_to_non_nullable
-              as dynamic,
       type: null == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
@@ -225,53 +194,41 @@ class __$$LoginErrorResponseImplCopyWithImpl<$Res>
           ? _value.requestUrl
           : requestUrl // ignore: cast_nullable_to_non_nullable
               as String,
+      returnTo: freezed == returnTo
+          ? _value.returnTo
+          : returnTo // ignore: cast_nullable_to_non_nullable
+              as String?,
       ui: null == ui
           ? _value.ui
           : ui // ignore: cast_nullable_to_non_nullable
               as UiDto,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      updatedAt: null == updatedAt
-          ? _value.updatedAt
-          : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      refresh: null == refresh
-          ? _value.refresh
-          : refresh // ignore: cast_nullable_to_non_nullable
-              as bool,
-      requestedAal: null == requestedAal
-          ? _value.requestedAal
-          : requestedAal // ignore: cast_nullable_to_non_nullable
-              as String,
+      sessionTokenExchangeCode: freezed == sessionTokenExchangeCode
+          ? _value.sessionTokenExchangeCode
+          : sessionTokenExchangeCode // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$LoginErrorResponseImpl implements _LoginErrorResponse {
-  const _$LoginErrorResponseImpl(
+class _$SettingsFlowDtoImpl extends _SettingsFlowDto {
+  const _$SettingsFlowDtoImpl(
       {required this.id,
-      required this.oauth2LoginChallenge,
       required this.type,
       required this.expiresAt,
       required this.issuedAt,
       required this.requestUrl,
+      this.returnTo,
       required this.ui,
-      required this.createdAt,
-      required this.updatedAt,
-      required this.refresh,
-      required this.requestedAal});
+      this.sessionTokenExchangeCode})
+      : super._();
 
-  factory _$LoginErrorResponseImpl.fromJson(Map<String, dynamic> json) =>
-      _$$LoginErrorResponseImplFromJson(json);
+  factory _$SettingsFlowDtoImpl.fromJson(Map<String, dynamic> json) =>
+      _$$SettingsFlowDtoImplFromJson(json);
 
   @override
   final String id;
-  @override
-  final dynamic oauth2LoginChallenge;
   @override
   final String type;
   @override
@@ -281,29 +238,23 @@ class _$LoginErrorResponseImpl implements _LoginErrorResponse {
   @override
   final String requestUrl;
   @override
+  final String? returnTo;
+  @override
   final UiDto ui;
   @override
-  final DateTime createdAt;
-  @override
-  final DateTime updatedAt;
-  @override
-  final bool refresh;
-  @override
-  final String requestedAal;
+  final String? sessionTokenExchangeCode;
 
   @override
   String toString() {
-    return 'LoginErrorResponse(id: $id, oauth2LoginChallenge: $oauth2LoginChallenge, type: $type, expiresAt: $expiresAt, issuedAt: $issuedAt, requestUrl: $requestUrl, ui: $ui, createdAt: $createdAt, updatedAt: $updatedAt, refresh: $refresh, requestedAal: $requestedAal)';
+    return 'SettingsFlowDto(id: $id, type: $type, expiresAt: $expiresAt, issuedAt: $issuedAt, requestUrl: $requestUrl, returnTo: $returnTo, ui: $ui, sessionTokenExchangeCode: $sessionTokenExchangeCode)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$LoginErrorResponseImpl &&
+            other is _$SettingsFlowDtoImpl &&
             (identical(other.id, id) || other.id == id) &&
-            const DeepCollectionEquality()
-                .equals(other.oauth2LoginChallenge, oauth2LoginChallenge) &&
             (identical(other.type, type) || other.type == type) &&
             (identical(other.expiresAt, expiresAt) ||
                 other.expiresAt == expiresAt) &&
@@ -311,70 +262,53 @@ class _$LoginErrorResponseImpl implements _LoginErrorResponse {
                 other.issuedAt == issuedAt) &&
             (identical(other.requestUrl, requestUrl) ||
                 other.requestUrl == requestUrl) &&
+            (identical(other.returnTo, returnTo) ||
+                other.returnTo == returnTo) &&
             (identical(other.ui, ui) || other.ui == ui) &&
-            (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt) &&
-            (identical(other.updatedAt, updatedAt) ||
-                other.updatedAt == updatedAt) &&
-            (identical(other.refresh, refresh) || other.refresh == refresh) &&
-            (identical(other.requestedAal, requestedAal) ||
-                other.requestedAal == requestedAal));
+            (identical(
+                    other.sessionTokenExchangeCode, sessionTokenExchangeCode) ||
+                other.sessionTokenExchangeCode == sessionTokenExchangeCode));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      const DeepCollectionEquality().hash(oauth2LoginChallenge),
-      type,
-      expiresAt,
-      issuedAt,
-      requestUrl,
-      ui,
-      createdAt,
-      updatedAt,
-      refresh,
-      requestedAal);
+  int get hashCode => Object.hash(runtimeType, id, type, expiresAt, issuedAt,
+      requestUrl, returnTo, ui, sessionTokenExchangeCode);
 
-  /// Create a copy of LoginErrorResponse
+  /// Create a copy of SettingsFlowDto
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$LoginErrorResponseImplCopyWith<_$LoginErrorResponseImpl> get copyWith =>
-      __$$LoginErrorResponseImplCopyWithImpl<_$LoginErrorResponseImpl>(
+  _$$SettingsFlowDtoImplCopyWith<_$SettingsFlowDtoImpl> get copyWith =>
+      __$$SettingsFlowDtoImplCopyWithImpl<_$SettingsFlowDtoImpl>(
           this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$LoginErrorResponseImplToJson(
+    return _$$SettingsFlowDtoImplToJson(
       this,
     );
   }
 }
 
-abstract class _LoginErrorResponse implements LoginErrorResponse {
-  const factory _LoginErrorResponse(
+abstract class _SettingsFlowDto extends SettingsFlowDto {
+  const factory _SettingsFlowDto(
       {required final String id,
-      required final dynamic oauth2LoginChallenge,
       required final String type,
       required final DateTime expiresAt,
       required final DateTime issuedAt,
       required final String requestUrl,
+      final String? returnTo,
       required final UiDto ui,
-      required final DateTime createdAt,
-      required final DateTime updatedAt,
-      required final bool refresh,
-      required final String requestedAal}) = _$LoginErrorResponseImpl;
+      final String? sessionTokenExchangeCode}) = _$SettingsFlowDtoImpl;
+  const _SettingsFlowDto._() : super._();
 
-  factory _LoginErrorResponse.fromJson(Map<String, dynamic> json) =
-      _$LoginErrorResponseImpl.fromJson;
+  factory _SettingsFlowDto.fromJson(Map<String, dynamic> json) =
+      _$SettingsFlowDtoImpl.fromJson;
 
   @override
   String get id;
-  @override
-  dynamic get oauth2LoginChallenge;
   @override
   String get type;
   @override
@@ -384,20 +318,16 @@ abstract class _LoginErrorResponse implements LoginErrorResponse {
   @override
   String get requestUrl;
   @override
+  String? get returnTo;
+  @override
   UiDto get ui;
   @override
-  DateTime get createdAt;
-  @override
-  DateTime get updatedAt;
-  @override
-  bool get refresh;
-  @override
-  String get requestedAal;
+  String? get sessionTokenExchangeCode;
 
-  /// Create a copy of LoginErrorResponse
+  /// Create a copy of SettingsFlowDto
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$LoginErrorResponseImplCopyWith<_$LoginErrorResponseImpl> get copyWith =>
+  _$$SettingsFlowDtoImplCopyWith<_$SettingsFlowDtoImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

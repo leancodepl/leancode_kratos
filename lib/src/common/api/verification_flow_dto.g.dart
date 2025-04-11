@@ -6,9 +6,9 @@ part of 'verification_flow_dto.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_VerificationFlowDto _$$_VerificationFlowDtoFromJson(
+_$VerificationFlowDtoImpl _$$VerificationFlowDtoImplFromJson(
         Map<String, dynamic> json) =>
-    _$_VerificationFlowDto(
+    _$VerificationFlowDtoImpl(
       active: json['active'] as String?,
       expiresAt: json['expires_at'] == null
           ? null
@@ -24,8 +24,8 @@ _$_VerificationFlowDto _$$_VerificationFlowDtoFromJson(
       ui: UiDto.fromJson(json['ui'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$$_VerificationFlowDtoToJson(
-        _$_VerificationFlowDto instance) =>
+Map<String, dynamic> _$$VerificationFlowDtoImplToJson(
+        _$VerificationFlowDtoImpl instance) =>
     <String, dynamic>{
       'active': instance.active,
       'expires_at': instance.expiresAt?.toIso8601String(),

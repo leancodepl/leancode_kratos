@@ -10,8 +10,9 @@ SuccessLoginResponse loginSuccessResponseFromJson(String str) =>
 
 @freezed
 class SuccessLoginResponse with _$SuccessLoginResponse {
+  /// - [sessionToken] may be null on Web.
   const factory SuccessLoginResponse({
-    required String sessionToken,
+    required String? sessionToken,
     required Session session,
   }) = _SuccessLoginResponse;
 

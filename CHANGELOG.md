@@ -1,3 +1,8 @@
-## 0.0.2
+## 0.1.0
 
-* TODO: Describe initial release.
+* **Feature**: Web support
+* **Feature**: Passkeys support
+
+## 0.0.1
+
+* Initial release
