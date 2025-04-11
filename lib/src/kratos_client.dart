@@ -1333,18 +1333,6 @@ class KratosClient {
   }
 
   Future<SessionValidityResult> isSessionValid() async {
-    if (!kIsWeb) {
-      final token = await _credentialsStorage.read();
-      final expiresAt = await _credentialsStorage.readExpirationDate();
-
-      return SessionValiditySuccessResult(
-        isValid: token != null &&
-            expiresAt != null &&
-            expiresAt.isAfter(DateTime.now()),
-        expiresAt: expiresAt,
-      );
-    }
-
     final sessionResult = await getSession();
 
     return switch (sessionResult) {
