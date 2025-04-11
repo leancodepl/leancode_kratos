@@ -642,20 +642,9 @@ class KratosClient {
     try {
       if (kIsWeb) {
         return await _logoutWeb();
+      } else {
+        return await _logoutNative(sessionToken!);
       }
-
-      final logoutResult = await _client.delete(
-        _buildUri(path: 'self-service/logout/$_flowType'),
-        headers: _commonHeaders,
-        body: jsonEncode({
-          'session_token': sessionToken,
-        }),
-      );
-
-      return switch (logoutResult.statusCode) {
-        204 => const LogoutSuccessResult(),
-        _ => const LogoutUnknownErrorResult(),
-      };
     } catch (e, st) {
       _logger.warning('Logout failed.', e, st);
 
@@ -680,6 +669,28 @@ class KratosClient {
     final logoutResult = await _client.get(
       Uri.parse(logoutFlowDto.logoutUrl),
       headers: _commonHeaders,
+    );
+
+    return switch (logoutResult.statusCode) {
+      204 => const LogoutSuccessResult(),
+      _ => const LogoutUnknownErrorResult(),
+    };
+  }
+
+  Future<LogoutResult> _logoutNative(String token) async {
+    final sessionToken = await _credentialsStorage.read();
+    await _credentialsStorage.clear();
+
+    if (!kIsWeb && sessionToken == null) {
+      return const LogoutUnknownErrorResult();
+    }
+
+    final logoutResult = await _client.delete(
+      _buildUri(path: 'self-service/logout/$_flowType'),
+      headers: _commonHeaders,
+      body: jsonEncode({
+        'session_token': sessionToken,
+      }),
     );
 
     return switch (logoutResult.statusCode) {
