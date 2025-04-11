@@ -7,7 +7,7 @@ class SettingsFlowResultData extends SettingsFlowResult {
   });
 
   final String flowId;
-  final String sessionToken;
+  final String? sessionToken;
 }
 
 class SettingsFlowResultError extends SettingsFlowResult {}
