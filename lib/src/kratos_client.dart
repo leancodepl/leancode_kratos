@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
@@ -197,10 +198,12 @@ class KratosClient {
       SdkResult? sdkResult;
 
       if (!kIsWeb &&
+          Platform.isAndroid &&
           provider == OidcProvider.google &&
           googleSdkCallback != null) {
         sdkResult = await googleSdkCallback();
       } else if (!kIsWeb &&
+          Platform.isIOS &&
           provider == OidcProvider.apple &&
           appleSdkCallback != null) {
         sdkResult = await appleSdkCallback();
