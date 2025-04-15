@@ -1365,7 +1365,7 @@ MessageContextDto _$MessageContextDtoFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$MessageContextDto {
-  String? get reason => throw _privateConstructorUsedError;
+  Map<String, String>? get parametersMap => throw _privateConstructorUsedError;
 
   /// Serializes this MessageContextDto to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -1383,7 +1383,7 @@ abstract class $MessageContextDtoCopyWith<$Res> {
           MessageContextDto value, $Res Function(MessageContextDto) then) =
       _$MessageContextDtoCopyWithImpl<$Res, MessageContextDto>;
   @useResult
-  $Res call({String? reason});
+  $Res call({Map<String, String>? parametersMap});
 }
 
 /// @nodoc
@@ -1401,13 +1401,13 @@ class _$MessageContextDtoCopyWithImpl<$Res, $Val extends MessageContextDto>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? reason = freezed,
+    Object? parametersMap = freezed,
   }) {
     return _then(_value.copyWith(
-      reason: freezed == reason
-          ? _value.reason
-          : reason // ignore: cast_nullable_to_non_nullable
-              as String?,
+      parametersMap: freezed == parametersMap
+          ? _value.parametersMap
+          : parametersMap // ignore: cast_nullable_to_non_nullable
+              as Map<String, String>?,
     ) as $Val);
   }
 }
@@ -1420,7 +1420,7 @@ abstract class _$$MessageContextDtoImplCopyWith<$Res>
       __$$MessageContextDtoImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String? reason});
+  $Res call({Map<String, String>? parametersMap});
 }
 
 /// @nodoc
@@ -1436,13 +1436,13 @@ class __$$MessageContextDtoImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? reason = freezed,
+    Object? parametersMap = freezed,
   }) {
     return _then(_$MessageContextDtoImpl(
-      reason: freezed == reason
-          ? _value.reason
-          : reason // ignore: cast_nullable_to_non_nullable
-              as String?,
+      parametersMap: freezed == parametersMap
+          ? _value._parametersMap
+          : parametersMap // ignore: cast_nullable_to_non_nullable
+              as Map<String, String>?,
     ));
   }
 }
@@ -1450,17 +1450,25 @@ class __$$MessageContextDtoImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$MessageContextDtoImpl implements _MessageContextDto {
-  const _$MessageContextDtoImpl({this.reason});
+  const _$MessageContextDtoImpl({final Map<String, String>? parametersMap})
+      : _parametersMap = parametersMap;
 
   factory _$MessageContextDtoImpl.fromJson(Map<String, dynamic> json) =>
       _$$MessageContextDtoImplFromJson(json);
 
+  final Map<String, String>? _parametersMap;
   @override
-  final String? reason;
+  Map<String, String>? get parametersMap {
+    final value = _parametersMap;
+    if (value == null) return null;
+    if (_parametersMap is EqualUnmodifiableMapView) return _parametersMap;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(value);
+  }
 
   @override
   String toString() {
-    return 'MessageContextDto(reason: $reason)';
+    return 'MessageContextDto(parametersMap: $parametersMap)';
   }
 
   @override
@@ -1468,12 +1476,14 @@ class _$MessageContextDtoImpl implements _MessageContextDto {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$MessageContextDtoImpl &&
-            (identical(other.reason, reason) || other.reason == reason));
+            const DeepCollectionEquality()
+                .equals(other._parametersMap, _parametersMap));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, reason);
+  int get hashCode => Object.hash(
+      runtimeType, const DeepCollectionEquality().hash(_parametersMap));
 
   /// Create a copy of MessageContextDto
   /// with the given fields replaced by the non-null parameter values.
@@ -1493,14 +1503,14 @@ class _$MessageContextDtoImpl implements _MessageContextDto {
 }
 
 abstract class _MessageContextDto implements MessageContextDto {
-  const factory _MessageContextDto({final String? reason}) =
+  const factory _MessageContextDto({final Map<String, String>? parametersMap}) =
       _$MessageContextDtoImpl;
 
   factory _MessageContextDto.fromJson(Map<String, dynamic> json) =
       _$MessageContextDtoImpl.fromJson;
 
   @override
-  String? get reason;
+  Map<String, String>? get parametersMap;
 
   /// Create a copy of MessageContextDto
   /// with the given fields replaced by the non-null parameter values.
