@@ -146,17 +146,48 @@ class MessageDto with _$MessageDto {
 
   const MessageDto._();
 
-  KratosMessage toKratosMessage() => KratosMessage.forId(id);
+  KratosMessage toKratosMessage() => KratosMessage.forId(
+        id,
+        contextParameters: context?.parametersMap,
+      );
 }
 
+@JsonSerializable(converters: [MessageContextConverter()])
 @freezed
 class MessageContextDto with _$MessageContextDto {
   const factory MessageContextDto({
-    String? reason,
+    Map<String, String>? parametersMap,
   }) = _MessageContextDto;
 
   factory MessageContextDto.fromJson(Map<String, dynamic> json) =>
       _$MessageContextDtoFromJson(json);
+}
+
+class MessageContextConverter
+    implements JsonConverter<Map<String, String>?, Map<String, dynamic>?> {
+  const MessageContextConverter();
+
+  @override
+  Map<String, String>? fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      return null;
+    }
+
+    final result = <String, String>{};
+
+    json.forEach((key, value) {
+      if (value is String) {
+        result[key] = value;
+      } else if (value is List) {
+        result[key] = value.map((e) => e.toString()).join(', ');
+      }
+    });
+
+    return result;
+  }
+
+  @override
+  Map<String, dynamic>? toJson(Map<String, String>? data) => data;
 }
 
 @freezed
