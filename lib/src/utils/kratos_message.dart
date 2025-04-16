@@ -19,7 +19,8 @@ sealed class KratosMessage {
         return const InfoSelfServiceLogin();
       case InfoSelfServiceLoginWith.id: // 1010002
         return InfoSelfServiceLoginWith.maybeFromParameters(
-                contextParameters) ??
+              contextParameters,
+            ) ??
             _defaultFallback;
       case InfoSelfServiceLoginReAuth.id: // 1010003
         return const InfoSelfServiceLoginReAuth();
