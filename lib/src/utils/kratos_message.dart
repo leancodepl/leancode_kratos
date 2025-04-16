@@ -1,8 +1,8 @@
 // https://raw.githubusercontent.com/ory/docs/master/docs/kratos/concepts/messages.json
 sealed class KratosMessage {
-  const KratosMessage(this.code);
+  const KratosMessage(this.id);
 
-  final int code;
+  final int id;
 
   static KratosMessage forIdWithParameters(
     int id, {
