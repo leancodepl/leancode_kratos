@@ -146,7 +146,10 @@ class MessageDto with _$MessageDto {
 
   const MessageDto._();
 
-  KratosMessage toKratosMessage() => KratosMessage.forIdWithParameters(id);
+  KratosMessage toKratosMessage() => KratosMessage.forIdWithParameters(
+        id,
+        contextParameters: context?.parametersMap,
+      );
 }
 
 @JsonSerializable(converters: [MessageContextConverter()])
