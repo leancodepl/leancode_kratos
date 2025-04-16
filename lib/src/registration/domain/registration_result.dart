@@ -99,8 +99,7 @@ RegistrationResult mapRegistrationErrorResponse(AuthFlowDto response) {
   final nodes = response.ui.nodes;
 
   if (nodes.any(
-    (node) =>
-        node.meta.label?.id == const InfoSelfServiceRegistrationContinue().id,
+    (node) => node.meta.label?.id == InfoSelfServiceRegistrationContinue.id,
   )) {
     final values = nodes
         .map(
