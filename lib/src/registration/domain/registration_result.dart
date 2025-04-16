@@ -101,7 +101,7 @@ RegistrationResult mapRegistrationErrorResponse(AuthFlowDto response) {
   if (nodes.any(
     (node) =>
         node.meta.label?.id ==
-        KratosMessage.infoSelfServiceRegistrationContinue.id,
+        const InfoSelfServiceRegistrationContinue().code,
   )) {
     final values = nodes
         .map(
