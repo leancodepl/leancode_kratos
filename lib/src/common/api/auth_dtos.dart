@@ -179,7 +179,6 @@ class MessageContextConverter
       if (value is String) {
         result[key] = value;
       } else if (value is List) {
-        // Join list elements with comma and space
         result[key] = value.map((e) => e.toString()).join(', ');
       }
     });
