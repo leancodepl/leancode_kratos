@@ -497,16 +497,6 @@ final class InfoSelfServiceSignInWithCode extends KratosMessage {
   static const id = 1010015;
 }
 
-extension on ContextParameters? {
-  bool contextHasAllNonEmptyParameters(List<String> parameters) {
-    if (this == null) {
-      return false;
-    }
-    return parameters.every((parameter) =>
-        this![parameter] != null && this![parameter]!.isNotEmpty);
-  }
-}
-
 final class InfoSelfServiceSigningInWillLinkYourAccount extends KratosMessage {
   const InfoSelfServiceSigningInWillLinkYourAccount._({
     required this.duplicateIdentifier,
@@ -516,13 +506,13 @@ final class InfoSelfServiceSigningInWillLinkYourAccount extends KratosMessage {
   static InfoSelfServiceSigningInWillLinkYourAccount? maybeFromParameters(
     ContextParameters? contextParameters,
   ) {
-    if (contextParameters.contextHasAllNonEmptyParameters([
-      'duplicateIdentifier',
-      'provider',
-    ])) {
+    final duplicateIdentifier = contextParameters?['duplicateIdentifier'];
+    final provider = contextParameters?['provider'];
+
+    if (duplicateIdentifier != null && provider != null) {
       return InfoSelfServiceSigningInWillLinkYourAccount._(
-        duplicateIdentifier: contextParameters!['duplicateIdentifier']!,
-        provider: contextParameters['provider']!,
+        duplicateIdentifier: duplicateIdentifier,
+        provider: provider,
       );
     }
     return null;
@@ -1271,22 +1261,30 @@ final class ErrorValidationCredentialAlreadyUsedByAnotherAccount
     extends KratosMessage {
   const ErrorValidationCredentialAlreadyUsedByAnotherAccount._({
     required this.credentialIdentifierHint,
+    required this.availableCredentialTypesList,
   });
 
   static ErrorValidationCredentialAlreadyUsedByAnotherAccount?
       maybeFromParameters(
     ContextParameters? contextParameters,
   ) {
-    if (contextParameters?['credential_identifier_hint']
-        case final credentialIdentifierHint?) {
+    final credentialIdentifierHint =
+        contextParameters?['credential_identifier_hint'];
+    final availableCredentialTypesList =
+        contextParameters?['available_credential_types_list'];
+
+    if (credentialIdentifierHint != null &&
+        availableCredentialTypesList != null) {
       return ErrorValidationCredentialAlreadyUsedByAnotherAccount._(
         credentialIdentifierHint: credentialIdentifierHint,
+        availableCredentialTypesList: availableCredentialTypesList,
       );
     }
     return null;
   }
 
   final String credentialIdentifierHint;
+  final String availableCredentialTypesList;
 
   static const id = 4000028;
 }
