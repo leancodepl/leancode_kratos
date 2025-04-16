@@ -1,1027 +1,1464 @@
 // https://raw.githubusercontent.com/ory/docs/master/docs/kratos/concepts/messages.json
-sealed class KratosMessage {
-  const KratosMessage(
-    this.id,
-  );
 
-  final int id;
+typedef ContextParameters = Map<String, String>;
+
+sealed class KratosMessage {
+  const KratosMessage();
+
+  static const _defaultFallback = ErrorSystemGeneric();
 
   static KratosMessage forIdWithParameters(
     int id, {
     Map<String, String>? contextParameters,
   }) {
     switch (id) {
-      // Login
-      case 1010000:
+      // Login (1010000-1010099)
+      case InfoSelfServiceLoginRoot.id: // 1010000
         return const InfoSelfServiceLoginRoot();
-      case 1010001:
+      case InfoSelfServiceLogin.id: // 1010001
         return const InfoSelfServiceLogin();
-      case 1010002:
-        if (contextParameters
-            .containsAll(InfoSelfServiceLoginWith.parameterNames)) {
-          return InfoSelfServiceLoginWith(
-            provider: contextParameters!['provider']!,
-          );
-        }
-      case 1010003:
+      case InfoSelfServiceLoginWith.id: // 1010002
+        return InfoSelfServiceLoginWith.maybeFromParameters(
+                contextParameters) ??
+            _defaultFallback;
+      case InfoSelfServiceLoginReAuth.id: // 1010003
         return const InfoSelfServiceLoginReAuth();
-      case 1010004:
+      case InfoSelfServiceLoginMFA.id: // 1010004
         return const InfoSelfServiceLoginMFA();
-      case 1010005:
+      case InfoSelfServiceLoginVerify.id: // 1010005
         return const InfoSelfServiceLoginVerify();
-      case 1010006:
+      case InfoSelfServiceLoginTOTPLabel.id: // 1010006
         return const InfoSelfServiceLoginTOTPLabel();
-      case 1010007:
+      case InfoLoginLookupLabel.id: // 1010007
         return const InfoLoginLookupLabel();
-      case 1010008:
+      case InfoSelfServiceLoginWebAuthn.id: // 1010008
         return const InfoSelfServiceLoginWebAuthn();
-      case 1010009:
+      case InfoLoginTOTP.id: // 1010009
         return const InfoLoginTOTP();
-      case 1010010:
+      case InfoLoginLookup.id: // 1010010
         return const InfoLoginLookup();
-      case 1010011:
+      case InfoSelfServiceLoginContinueWebAuthn.id: // 1010011
         return const InfoSelfServiceLoginContinueWebAuthn();
-      case 1010012:
+      case InfoSelfServiceLoginWebAuthnPasswordless.id: // 1010012
         return const InfoSelfServiceLoginWebAuthnPasswordless();
-      case 1010013:
+      case InfoSelfServiceLoginContinue.id: // 1010013
         return const InfoSelfServiceLoginContinue();
-      case 1010014:
+      case InfoSelfServiceEmailHasBeenSent.id: // 1010014
         return const InfoSelfServiceEmailHasBeenSent();
-      case 1010015:
+      case InfoSelfServiceSignInWithCode.id: // 1010015
         return const InfoSelfServiceSignInWithCode();
-      case 1010016:
-        final duplicateIdentifier = contextParameters?['duplicateIdentifier'] ??
-            contextParameters?['duplicate_identifier'] ??
-            '';
-        final provider = contextParameters?['provider'] ?? '';
-        return InfoSelfServiceSigningInWillLinkYourAccount(
-          duplicateIdentifier: duplicateIdentifier,
-          provider: provider,
-        );
-      case 1010017:
+      case InfoSelfServiceSigningInWillLinkYourAccount.id: // 1010016
+        return InfoSelfServiceSigningInWillLinkYourAccount.maybeFromParameters(
+              contextParameters,
+            ) ??
+            _defaultFallback;
+      case InfoSelfServiceSignInAndLink.id: // 1010017
         return const InfoSelfServiceSignInAndLink();
-      case 1010018:
-        final provider = contextParameters?['provider'] ?? '';
-        return InfoSelfserviceSignInAndLinkCredential(provider: provider);
-      case 1010023:
-        final address = contextParameters?['address'] ?? '';
-        return InfoSendCodeTo(address: address);
+      case InfoSelfserviceSignInAndLinkCredential.id: // 1010018
+        return InfoSelfserviceSignInAndLinkCredential.maybeFromParameters(
+              contextParameters,
+            ) ??
+            _defaultFallback;
+      case InfoSendCodeTo.id: // 1010023
+        return InfoSendCodeTo.maybeFromParameters(
+              contextParameters,
+            ) ??
+            _defaultFallback;
 
-      // Logout
-      case 1020000:
+      // Logout (1020000-1020099)
+      case InfoSelfServiceLogout.id: // 1020000
         return const InfoSelfServiceLogout();
 
-      // MFA and Registration
-      case 1030000:
+      // MFA and Registration (1030000-1040099)
+      case InfoSelfServiceMFA.id: // 1030000
         return const InfoSelfServiceMFA();
-      case 1040000:
+      case InfoSelfServiceRegistrationRoot.id: // 1040000
         return const InfoSelfServiceRegistrationRoot();
-      case 1040001:
+      case InfoSelfServiceRegistration.id: // 1040001
         return const InfoSelfServiceRegistration();
-      case 1040002:
-        final provider = contextParameters?['provider'];
-        return InfoSelfServiceRegistrationWith(provider: provider);
-      case 1040003:
+      case InfoSelfServiceRegistrationWith.id: // 1040002
+        return InfoSelfServiceRegistrationWith.maybeFromParameters(
+            contextParameters);
+      case InfoSelfServiceRegistrationContinue.id: // 1040003
         return const InfoSelfServiceRegistrationContinue();
-      case 1040004:
+      case InfoSelfServiceRegistrationRegisterWebAuthn.id: // 1040004
         return const InfoSelfServiceRegistrationRegisterWebAuthn();
-      case 1040005:
+      case InfoSelfServiceRegistrationEmailHasBeenSent.id: // 1040005
         return const InfoSelfServiceRegistrationEmailHasBeenSent();
-      case 1040006:
+      case InfoSelfServiceRegistrationRegisterWithCode.id: // 1040006
         return const InfoSelfServiceRegistrationRegisterWithCode();
 
-      // Settings
-      case 1050000:
+      // Settings (1050000-1050099)
+      case InfoSelfServiceSettings.id: // 1050000
         return const InfoSelfServiceSettings();
-      case 1050001:
+      case InfoSelfServiceSettingsUpdateSuccess.id: // 1050001
         return const InfoSelfServiceSettingsUpdateSuccess();
-      case 1050002:
-        final provider = contextParameters?['provider'];
-        return InfoSelfServiceSettingsUpdateLinkOidc(provider: provider);
-      case 1050003:
+      case InfoSelfServiceSettingsUpdateLinkOidc.id: // 1050002
+        return InfoSelfServiceSettingsUpdateLinkOidc.maybeFromParameters(
+              contextParameters,
+            ) ??
+            _defaultFallback;
+      case InfoSelfServiceSettingsUpdateUnlinkOidc.id: // 1050003
         final provider = contextParameters?['provider'];
         return InfoSelfServiceSettingsUpdateUnlinkOidc(provider: provider);
-      case 1050004:
+      case InfoSelfServiceSettingsUpdateUnlinkTOTP.id: // 1050004
         return const InfoSelfServiceSettingsUpdateUnlinkTOTP();
-      case 1050005:
+      case InfoSelfServiceSettingsTOTPQRCode.id: // 1050005
         return const InfoSelfServiceSettingsTOTPQRCode();
-      case 1050006:
+      case InfoSelfServiceSettingsTOTPSecret.id: // 1050006
         final secret = contextParameters?['secret'];
         return InfoSelfServiceSettingsTOTPSecret(secret: secret);
-      case 1050007:
+      case InfoSelfServiceSettingsRevealLookup.id: // 1050007
         return const InfoSelfServiceSettingsRevealLookup();
-      case 1050008:
+      case InfoSelfServiceSettingsRegenerateLookup.id: // 1050008
         return const InfoSelfServiceSettingsRegenerateLookup();
-      case 1050009:
+      case InfoSelfServiceSettingsLookupSecret.id: // 1050009
         final secret = contextParameters?['secret'];
         return InfoSelfServiceSettingsLookupSecret(secret: secret);
-      case 1050010:
+      case InfoSelfServiceSettingsLookupSecretLabel.id: // 1050010
         return const InfoSelfServiceSettingsLookupSecretLabel();
-      case 1050011:
+      case InfoSelfServiceSettingsLookupConfirm.id: // 1050011
         return const InfoSelfServiceSettingsLookupConfirm();
-      case 1050012:
+      case InfoSelfServiceSettingsRegisterWebAuthn.id: // 1050012
         return const InfoSelfServiceSettingsRegisterWebAuthn();
-      case 1050013:
+      case InfoSelfServiceSettingsRegisterWebAuthnDisplayName.id: // 1050013
         return const InfoSelfServiceSettingsRegisterWebAuthnDisplayName();
-      case 1050014:
+      case InfoSelfServiceSettingsLookupSecretUsed.id: // 1050014
         return const InfoSelfServiceSettingsLookupSecretUsed();
-      case 1050015:
+      case InfoSelfServiceSettingsLookupSecretList.id: // 1050015
         return const InfoSelfServiceSettingsLookupSecretList();
-      case 1050016:
+      case InfoSelfServiceSettingsDisableLookup.id: // 1050016
         return const InfoSelfServiceSettingsDisableLookup();
-      case 1050017:
+      case InfoSelfServiceSettingsTOTPSecretLabel.id: // 1050017
         return const InfoSelfServiceSettingsTOTPSecretLabel();
-      case 1050018:
+      case InfoSelfServiceSettingsRemoveWebAuthn.id: // 1050018
         final displayName = contextParameters?['display_name'];
         return InfoSelfServiceSettingsRemoveWebAuthn(displayName: displayName);
-      case 1050020:
+      case InfoSelfServiceSettingsRemovePasskey.id: // 1050020
         final displayName = contextParameters?['display_name'];
         return InfoSelfServiceSettingsRemovePasskey(displayName: displayName);
 
-      // Recovery
-      case 1060000:
+      // Recovery (1060000-1060099)
+      case InfoSelfServiceRecovery.id: // 1060000
         return const InfoSelfServiceRecovery();
-      case 1060001:
+      case InfoSelfServiceRecoverySuccessful.id: // 1060001
         return const InfoSelfServiceRecoverySuccessful();
-      case 1060002:
+      case InfoSelfServiceRecoveryEmailSent.id: // 1060002
         return const InfoSelfServiceRecoveryEmailSent();
-      case 1060003:
+      case InfoSelfServiceRecoveryEmailWithCodeSent.id: // 1060003
         return const InfoSelfServiceRecoveryEmailWithCodeSent();
 
-      // Node Labels
-      case 1070000:
+      // Node Labels (1070000-1070099)
+      case InfoNodeLabel.id: // 1070000
         return const InfoNodeLabel();
-      case 1070001:
+      case InfoNodeLabelInputPassword.id: // 1070001
         return const InfoNodeLabelInputPassword();
-      case 1070002:
+      case InfoNodeLabelGenerated.id: // 1070002
         final title = contextParameters?['title'];
         return InfoNodeLabelGenerated(title: title);
-      case 1070003:
+      case InfoNodeLabelSave.id: // 1070003
         return const InfoNodeLabelSave();
-      case 1070004:
+      case InfoNodeLabelID.id: // 1070004
         return const InfoNodeLabelID();
-      case 1070005:
+      case InfoNodeLabelSubmit.id: // 1070005
         return const InfoNodeLabelSubmit();
-      case 1070006:
+      case InfoNodeLabelVerifyOTP.id: // 1070006
         return const InfoNodeLabelVerifyOTP();
-      case 1070007:
+      case InfoNodeLabelEmail.id: // 1070007
         return const InfoNodeLabelEmail();
-      case 1070008:
+      case InfoNodeLabelResendOTP.id: // 1070008
         return const InfoNodeLabelResendOTP();
-      case 1070009:
+      case InfoNodeLabelContinue.id: // 1070009
         return const InfoNodeLabelContinue();
-      case 1070010:
+      case InfoNodeLabelRecoveryCode.id: // 1070010
         return const InfoNodeLabelRecoveryCode();
-      case 1070011:
+      case InfoNodeLabelVerificationCode.id: // 1070011
         return const InfoNodeLabelVerificationCode();
-      case 1070012:
+      case InfoNodeLabelRegistrationCode.id: // 1070012
         return const InfoNodeLabelRegistrationCode();
-      case 1070013:
+      case InfoNodeLabelLoginCode.id: // 1070013
         return const InfoNodeLabelLoginCode();
-      case 1070014:
+      case InfoNodeLabelLoginAndLinkCredential.id: // 1070014
         return const InfoNodeLabelLoginAndLinkCredential();
 
-      // Verification
-      case 1080000:
+      // Verification (1080000-1080099)
+      case InfoSelfServiceVerification.id: // 1080000
         return const InfoSelfServiceVerification();
-      case 1080001:
+      case InfoSelfServiceVerificationEmailSent.id: // 1080001
         return const InfoSelfServiceVerificationEmailSent();
-      case 1080002:
+      case InfoSelfServiceVerificationSuccessful.id: // 1080002
         return const InfoSelfServiceVerificationSuccessful();
-      case 1080003:
+      case InfoSelfServiceVerificationEmailWithCodeSent.id: // 1080003
         return const InfoSelfServiceVerificationEmailWithCodeSent();
 
-      // Validation Error
-      case 4000000:
+      // Validation Error (4000000-4000099)
+      case ErrorValidation.id: // 4000000
         return const ErrorValidation();
-      case 4000001:
+      case ErrorValidationGeneric.id: // 4000001
         final reason = contextParameters?['reason'];
         return ErrorValidationGeneric(reason: reason);
-      case 4000002:
+      case ErrorValidationRequired.id: // 4000002
         final property = contextParameters?['property'];
         return ErrorValidationRequired(property: property);
-      case 4000003:
+      case ErrorValidationMinLength.id: // 4000003
         return const ErrorValidationMinLength();
-      case 4000004:
+      case ErrorValidationInvalidFormat.id: // 4000004
         final pattern = contextParameters?['pattern'];
         return ErrorValidationInvalidFormat(pattern: pattern);
-      case 4000005:
+      case ErrorValidationPasswordPolicyViolation.id: // 4000005
         final reason = contextParameters?['reason'];
         return ErrorValidationPasswordPolicyViolation(reason: reason);
-      case 4000006:
+      case ErrorValidationInvalidCredentials.id: // 4000006
         return const ErrorValidationInvalidCredentials();
-      case 4000007:
+      case ErrorValidationDuplicateCredentials.id: // 4000007
         return const ErrorValidationDuplicateCredentials();
-      case 4000008:
+      case ErrorValidationTOTPVerifierWrong.id: // 4000008
         return const ErrorValidationTOTPVerifierWrong();
-      case 4000009:
+      case ErrorValidationIdentifierMissing.id: // 4000009
         return const ErrorValidationIdentifierMissing();
-      case 4000010:
+      case ErrorValidationAddressNotVerified.id: // 4000010
         return const ErrorValidationAddressNotVerified();
-      case 4000011:
+      case ErrorValidationNoTOTPDevice.id: // 4000011
         return const ErrorValidationNoTOTPDevice();
-      case 4000012:
+      case ErrorValidationLookupAlreadyUsed.id: // 4000012
         return const ErrorValidationLookupAlreadyUsed();
-      case 4000013:
+      case ErrorValidationNoWebAuthnDevice.id: // 4000013
         return const ErrorValidationNoWebAuthnDevice();
-      case 4000014:
+      case ErrorValidationNoLookup.id: // 4000014
         return const ErrorValidationNoLookup();
-      case 4000015:
+      case ErrorValidationSuchNoWebAuthnUser.id: // 4000015
         return const ErrorValidationSuchNoWebAuthnUser();
-      case 4000016:
+      case ErrorValidationLookupInvalid.id: // 4000016
         return const ErrorValidationLookupInvalid();
-      case 4000017:
+      case ErrorValidationMaxLength.id: // 4000017
         return const ErrorValidationMaxLength();
-      case 4000018:
+      case ErrorValidationMinimum.id: // 4000018
         return const ErrorValidationMinimum();
-      case 4000019:
+      case ErrorValidationExclusiveMinimum.id: // 4000019
         return const ErrorValidationExclusiveMinimum();
-      case 4000020:
+      case ErrorValidationMaximum.id: // 4000020
         return const ErrorValidationMaximum();
-      case 4000021:
+      case ErrorValidationExclusiveMaximum.id: // 4000021
         return const ErrorValidationExclusiveMaximum();
-      case 4000022:
+      case ErrorValidationMultipleOf.id: // 4000022
         return const ErrorValidationMultipleOf();
-      case 4000023:
+      case ErrorValidationMaxItems.id: // 4000023
         return const ErrorValidationMaxItems();
-      case 4000024:
+      case ErrorValidationMinItems.id: // 4000024
         return const ErrorValidationMinItems();
-      case 4000025:
+      case ErrorValidationUniqueItems.id: // 4000025
         return const ErrorValidationUniqueItems();
-      case 4000026:
+      case ErrorValidationWrongType.id: // 4000026
         final actualType = contextParameters?['actual_type'];
         return ErrorValidationWrongType(actualType: actualType);
-      case 4000027:
+      case ErrorValidationDuplicateCredentialsOnOIDCLink.id: // 4000027
         return const ErrorValidationDuplicateCredentialsOnOIDCLink();
-      case 4000028:
+      case ErrorValidationCredentialAlreadyUsedByAnotherAccount.id: // 4000028
         final credentialIdentifierHint =
             contextParameters?['credential_identifier_hint'];
         return ErrorValidationCredentialAlreadyUsedByAnotherAccount(
           credentialIdentifierHint: credentialIdentifierHint,
         );
-      case 4000029:
+      case ErrorValidationMustBeEqualToConstant.id: // 4000029
         final expected = contextParameters?['expected'];
         return ErrorValidationMustBeEqualToConstant(expected: expected);
-      case 4000030:
+      case ErrorValidationConstFailed.id: // 4000030
         return const ErrorValidationConstFailed();
-      case 4000031:
+      case ErrorValidationPasswordTooSimilarToIdentifier.id: // 4000031
         return const ErrorValidationPasswordTooSimilarToIdentifier();
-      case 4000032:
+      case ErrorValidationPasswordTooShort.id: // 4000032
         return const ErrorValidationPasswordTooShort();
-      case 4000033:
+      case ErrorValidationPasswordTooLong.id: // 4000033
         return const ErrorValidationPasswordTooLong();
-      case 4000034:
+      case ErrorValidationPasswordFoundInDataBreaches.id: // 4000034
         return const ErrorValidationPasswordFoundInDataBreaches();
-      case 4000035:
+      case ErrorValidationNoAccountOrNoCodeSignInSetUp.id: // 4000035
         return const ErrorValidationNoAccountOrNoCodeSignInSetUp();
-      case 4000036:
+      case ErrorValidationTraitsDontMatchPreviouslyAssociated.id: // 4000036
         return const ErrorValidationTraitsDontMatchPreviouslyAssociated();
 
-      // Login Validation Error
-      case 4010000:
+      // Login Validation Error (4010000-4010099)
+      case ErrorValidationLogin.id: // 4010000
         return const ErrorValidationLogin();
-      case 4010001:
+      case ErrorValidationLoginFlowExpired.id: // 4010001
         return const ErrorValidationLoginFlowExpired();
-      case 4010002:
+      case ErrorValidationLoginNoStrategyFound.id: // 4010002
         return const ErrorValidationLoginNoStrategyFound();
-      case 4010003:
+      case ErrorValidationRegistrationNoStrategyFound.id: // 4010003
         return const ErrorValidationRegistrationNoStrategyFound();
-      case 4010004:
+      case ErrorValidationSettingsNoStrategyFound.id: // 4010004
         return const ErrorValidationSettingsNoStrategyFound();
-      case 4010005:
+      case ErrorValidationRecoveryNoStrategyFound.id: // 4010005
         return const ErrorValidationRecoveryNoStrategyFound();
-      case 4010006:
+      case ErrorValidationVerificationNoStrategyFound.id: // 4010006
         return const ErrorValidationVerificationNoStrategyFound();
-      case 4010007:
+      case ErrorValidationLoginRequestAlreadyCompleted.id: // 4010007
         return const ErrorValidationLoginRequestAlreadyCompleted();
-      case 4010008:
+      case ErrorValidationLoginCodeInvalidOrAlreadyUsed.id: // 4010008
         return const ErrorValidationLoginCodeInvalidOrAlreadyUsed();
-      case 4010009:
+      case ErrorValidationLinkedCredentialsDoNotMatch.id: // 4010009
         return const ErrorValidationLinkedCredentialsDoNotMatch();
 
-      // Registration Validation Error
-      case 4040000:
+      // Registration Validation Error (4040000-4040099)
+      case ErrorValidationRegistration.id: // 4040000
         return const ErrorValidationRegistration();
-      case 4040001:
+      case ErrorValidationRegistrationFlowExpired.id: // 4040001
         return const ErrorValidationRegistrationFlowExpired();
-      case 4040002:
+      case ErrorValidationRegistrationRequestAlreadyCompleted.id: // 4040002
         return const ErrorValidationRegistrationRequestAlreadyCompleted();
-      case 4040003:
+      case ErrorValidationRegistrationCodeInvalidOrAlreadyUsed.id: // 4040003
         return const ErrorValidationRegistrationCodeInvalidOrAlreadyUsed();
 
-      // Settings Validation Error
-      case 4050000:
+      // Settings Validation Error (4050000-4050099)
+      case ErrorValidationSettings.id: // 4050000
         return const ErrorValidationSettings();
-      case 4050001:
+      case ErrorValidationSettingsFlowExpired.id: // 4050001
         return const ErrorValidationSettingsFlowExpired();
 
-      // Recovery Validation Error
-      case 4060000:
+      // Recovery Validation Error (4060000-4060099)
+      case ErrorValidationRecovery.id: // 4060000
         return const ErrorValidationRecovery();
-      case 4060001:
+      case ErrorValidationRecoveryRetrySuccess.id: // 4060001
         return const ErrorValidationRecoveryRetrySuccess();
-      case 4060002:
+      case ErrorValidationRecoveryStateFailure.id: // 4060002
         return const ErrorValidationRecoveryStateFailure();
-      case 4060003:
+      case ErrorValidationRecoveryMissingRecoveryToken.id: // 4060003
         return const ErrorValidationRecoveryMissingRecoveryToken();
-      case 4060004:
+      case ErrorValidationRecoveryTokenInvalidOrAlreadyUsed.id: // 4060004
         return const ErrorValidationRecoveryTokenInvalidOrAlreadyUsed();
-      case 4060005:
+      case ErrorValidationRecoveryFlowExpired.id: // 4060005
         return const ErrorValidationRecoveryFlowExpired();
-      case 4060006:
+      case ErrorValidationRecoveryCodeInvalidOrAlreadyUsed.id: // 4060006
         return const ErrorValidationRecoveryCodeInvalidOrAlreadyUsed();
 
-      // Verification Validation Error
-      case 4070000:
+      // Verification Validation Error (4070000-4070099)
+      case ErrorValidationVerification.id: // 4070000
         return const ErrorValidationVerification();
-      case 4070001:
+      case ErrorValidationVerificationTokenInvalidOrAlreadyUsed.id: // 4070001
         return const ErrorValidationVerificationTokenInvalidOrAlreadyUsed();
-      case 4070002:
+      case ErrorValidationVerificationRetrySuccess.id: // 4070002
         return const ErrorValidationVerificationRetrySuccess();
-      case 4070003:
+      case ErrorValidationVerificationStateFailure.id: // 4070003
         return const ErrorValidationVerificationStateFailure();
-      case 4070004:
+      case ErrorValidationVerificationMissingVerificationToken.id: // 4070004
         return const ErrorValidationVerificationMissingVerificationToken();
-      case 4070005:
+      case ErrorValidationVerificationFlowExpired.id: // 4070005
         return const ErrorValidationVerificationFlowExpired();
-      case 4070006:
+      case ErrorValidationVerificationCodeInvalidOrAlreadyUsed.id: // 4070006
         return const ErrorValidationVerificationCodeInvalidOrAlreadyUsed();
 
-      // System Error
-      case 5000000:
+      // System Error (5000000-5000099)
+      case ErrorSystem.id: // 5000000
         return const ErrorSystem();
-      case 5000001:
+      case ErrorSystemGeneric.id: // 5000001
         return const ErrorSystemGeneric();
 
       default:
         return const ErrorSystemGeneric();
     }
-    return const ErrorSystemGeneric();
   }
 }
 
 // === Login related messages ===
 final class InfoSelfServiceLoginRoot extends KratosMessage {
-  const InfoSelfServiceLoginRoot() : super(1010000);
+  const InfoSelfServiceLoginRoot();
+
+  static const id = 1010000;
 }
 
 final class InfoSelfServiceLogin extends KratosMessage {
-  const InfoSelfServiceLogin() : super(1010001);
+  const InfoSelfServiceLogin();
+
+  static const id = 1010001;
 }
 
 final class InfoSelfServiceLoginWith extends KratosMessage {
-  const InfoSelfServiceLoginWith({
+  const InfoSelfServiceLoginWith._({
     required this.provider,
-  }) : super(1010002);
+  });
+
+  static InfoSelfServiceLoginWith? maybeFromParameters(
+    ContextParameters? contextParameters,
+  ) {
+    if (contextParameters?['provider'] case final provider?) {
+      return InfoSelfServiceLoginWith._(
+        provider: provider,
+      );
+    }
+    return null;
+  }
 
   final String provider;
 
-  static const parameterNames = ['provider'];
+  static const id = 1010002;
 }
 
 final class InfoSelfServiceLoginReAuth extends KratosMessage {
-  const InfoSelfServiceLoginReAuth() : super(1010003);
+  const InfoSelfServiceLoginReAuth();
+
+  static const id = 1010003;
 }
 
 final class InfoSelfServiceLoginMFA extends KratosMessage {
-  const InfoSelfServiceLoginMFA() : super(1010004);
+  const InfoSelfServiceLoginMFA();
+
+  static const id = 1010004;
 }
 
 final class InfoSelfServiceLoginVerify extends KratosMessage {
-  const InfoSelfServiceLoginVerify() : super(1010005);
+  const InfoSelfServiceLoginVerify();
+
+  static const id = 1010005;
 }
 
 final class InfoSelfServiceLoginTOTPLabel extends KratosMessage {
-  const InfoSelfServiceLoginTOTPLabel() : super(1010006);
+  const InfoSelfServiceLoginTOTPLabel();
+
+  static const id = 1010006;
 }
 
 final class InfoLoginLookupLabel extends KratosMessage {
-  const InfoLoginLookupLabel() : super(1010007);
+  const InfoLoginLookupLabel();
+
+  static const id = 1010007;
 }
 
 final class InfoSelfServiceLoginWebAuthn extends KratosMessage {
-  const InfoSelfServiceLoginWebAuthn() : super(1010008);
+  const InfoSelfServiceLoginWebAuthn();
+
+  static const id = 1010008;
 }
 
 final class InfoLoginTOTP extends KratosMessage {
-  const InfoLoginTOTP() : super(1010009);
+  const InfoLoginTOTP();
+
+  static const id = 1010009;
 }
 
 final class InfoLoginLookup extends KratosMessage {
-  const InfoLoginLookup() : super(1010010);
+  const InfoLoginLookup();
+
+  static const id = 1010010;
 }
 
 final class InfoSelfServiceLoginContinueWebAuthn extends KratosMessage {
-  const InfoSelfServiceLoginContinueWebAuthn() : super(1010011);
+  const InfoSelfServiceLoginContinueWebAuthn();
+
+  static const id = 1010011;
 }
 
 final class InfoSelfServiceLoginWebAuthnPasswordless extends KratosMessage {
-  const InfoSelfServiceLoginWebAuthnPasswordless() : super(1010012);
+  const InfoSelfServiceLoginWebAuthnPasswordless();
+
+  static const id = 1010012;
 }
 
 final class InfoSelfServiceLoginContinue extends KratosMessage {
-  const InfoSelfServiceLoginContinue() : super(1010013);
+  const InfoSelfServiceLoginContinue();
+
+  static const id = 1010013;
 }
 
 final class InfoSelfServiceEmailHasBeenSent extends KratosMessage {
-  const InfoSelfServiceEmailHasBeenSent() : super(1010014);
+  const InfoSelfServiceEmailHasBeenSent();
+
+  static const id = 1010014;
 }
 
 final class InfoSelfServiceSignInWithCode extends KratosMessage {
-  const InfoSelfServiceSignInWithCode() : super(1010015);
+  const InfoSelfServiceSignInWithCode();
+
+  static const id = 1010015;
+}
+
+extension on ContextParameters? {
+  bool contextHasAllNonEmptyParameters(List<String> parameters) {
+    if (this == null) {
+      return false;
+    }
+    return parameters.every((parameter) =>
+        this![parameter] != null && this![parameter]!.isNotEmpty);
+  }
 }
 
 final class InfoSelfServiceSigningInWillLinkYourAccount extends KratosMessage {
-  const InfoSelfServiceSigningInWillLinkYourAccount({
+  const InfoSelfServiceSigningInWillLinkYourAccount._({
     required this.duplicateIdentifier,
     required this.provider,
-  }) : super(1010016);
+  });
 
-  final String? duplicateIdentifier;
-  final String? provider;
+  static InfoSelfServiceSigningInWillLinkYourAccount? maybeFromParameters(
+    ContextParameters? contextParameters,
+  ) {
+    if (contextParameters.contextHasAllNonEmptyParameters([
+      'duplicateIdentifier',
+      'provider',
+    ])) {
+      return InfoSelfServiceSigningInWillLinkYourAccount._(
+        duplicateIdentifier: contextParameters!['duplicateIdentifier']!,
+        provider: contextParameters['provider']!,
+      );
+    }
+    return null;
+  }
+
+  final String duplicateIdentifier;
+  final String provider;
+
+  static const id = 1010016;
 }
 
 final class InfoSelfServiceSignInAndLink extends KratosMessage {
-  const InfoSelfServiceSignInAndLink() : super(1010017);
+  const InfoSelfServiceSignInAndLink();
+
+  static const id = 1010017;
 }
 
 final class InfoSelfserviceSignInAndLinkCredential extends KratosMessage {
-  const InfoSelfserviceSignInAndLinkCredential({
+  const InfoSelfserviceSignInAndLinkCredential._({
     required this.provider,
-  }) : super(1010018);
-  final String? provider;
+  });
+
+  static InfoSelfserviceSignInAndLinkCredential? maybeFromParameters(
+    ContextParameters? contextParameters,
+  ) {
+    if (contextParameters?['provider'] case final provider?) {
+      return InfoSelfserviceSignInAndLinkCredential._(
+        provider: provider,
+      );
+    }
+    return null;
+  }
+
+  final String provider;
+
+  static const id = 1010018;
 }
 
 final class InfoSendCodeTo extends KratosMessage {
-  const InfoSendCodeTo({
+  const InfoSendCodeTo._({
     required this.address,
-  }) : super(1010023);
+  });
 
-  final String? address;
+  static InfoSendCodeTo? maybeFromParameters(
+    ContextParameters? contextParameters,
+  ) {
+    if (contextParameters?['address'] case final address?) {
+      return InfoSendCodeTo._(
+        address: address,
+      );
+    }
+    return null;
+  }
+
+  final String address;
+
+  static const id = 1010023;
 }
 
 // === Logout related messages ===
 final class InfoSelfServiceLogout extends KratosMessage {
-  const InfoSelfServiceLogout() : super(1020000);
+  const InfoSelfServiceLogout();
+
+  static const id = 1020000;
 }
 
 // === MFA and Registration messages ===
 final class InfoSelfServiceMFA extends KratosMessage {
-  const InfoSelfServiceMFA() : super(1030000);
+  const InfoSelfServiceMFA();
+
+  static const id = 1030000;
 }
 
 final class InfoSelfServiceRegistrationRoot extends KratosMessage {
-  const InfoSelfServiceRegistrationRoot() : super(1040000);
+  const InfoSelfServiceRegistrationRoot();
+
+  static const id = 1040000;
 }
 
 final class InfoSelfServiceRegistration extends KratosMessage {
-  const InfoSelfServiceRegistration() : super(1040001);
+  const InfoSelfServiceRegistration();
+
+  static const id = 1040001;
 }
 
 final class InfoSelfServiceRegistrationWith extends KratosMessage {
   const InfoSelfServiceRegistrationWith({
     required this.provider,
-  }) : super(1040002);
+  });
+
+  factory InfoSelfServiceRegistrationWith.maybeFromParameters(
+      ContextParameters? contextParemeters) {
+    if (contextParemeters.contextHasAllNonEmptyParameters([
+      'provider',
+    ])) {
+      return InfoSelfServiceRegistrationWith(
+        provider: contextParemeters['provider'],
+      );
+    } else {
+      return ErrorSystemGeneric();
+    }
+  }
 
   final String? provider;
+
+  static const id = 1040002;
 }
 
 final class InfoSelfServiceRegistrationContinue extends KratosMessage {
-  const InfoSelfServiceRegistrationContinue() : super(1040003);
+  const InfoSelfServiceRegistrationContinue();
+
+  static const id = 1040003;
 }
 
 final class InfoSelfServiceRegistrationRegisterWebAuthn extends KratosMessage {
-  const InfoSelfServiceRegistrationRegisterWebAuthn() : super(1040004);
+  const InfoSelfServiceRegistrationRegisterWebAuthn();
+
+  static const id = 1040004;
 }
 
 final class InfoSelfServiceRegistrationEmailHasBeenSent extends KratosMessage {
-  const InfoSelfServiceRegistrationEmailHasBeenSent() : super(1040005);
+  const InfoSelfServiceRegistrationEmailHasBeenSent();
+
+  static const id = 1040005;
 }
 
 final class InfoSelfServiceRegistrationRegisterWithCode extends KratosMessage {
-  const InfoSelfServiceRegistrationRegisterWithCode() : super(1040006);
+  const InfoSelfServiceRegistrationRegisterWithCode();
+
+  static const id = 1040006;
 }
 
 // === Settings messages ===
 final class InfoSelfServiceSettings extends KratosMessage {
-  const InfoSelfServiceSettings() : super(1050000);
+  const InfoSelfServiceSettings();
+
+  static const id = 1050000;
 }
 
 final class InfoSelfServiceSettingsUpdateSuccess extends KratosMessage {
-  const InfoSelfServiceSettingsUpdateSuccess() : super(1050001);
+  const InfoSelfServiceSettingsUpdateSuccess();
+
+  static const id = 1050001;
 }
 
 final class InfoSelfServiceSettingsUpdateLinkOidc extends KratosMessage {
-  const InfoSelfServiceSettingsUpdateLinkOidc({
+  const InfoSelfServiceSettingsUpdateLinkOidc._({
     required this.provider,
-  }) : super(1050002);
-  final String? provider;
+  });
+
+  static InfoSelfServiceSettingsUpdateLinkOidc? maybeFromParameters(
+    ContextParameters? contextParameters,
+  ) {
+    if (contextParameters?['provider'] case final provider?) {
+      return InfoSelfServiceSettingsUpdateLinkOidc._(
+        provider: provider,
+      );
+    }
+    return null;
+  }
+
+  final String provider;
+
+  static const id = 1050002;
 }
 
 final class InfoSelfServiceSettingsUpdateUnlinkOidc extends KratosMessage {
-  const InfoSelfServiceSettingsUpdateUnlinkOidc({
+  const InfoSelfServiceSettingsUpdateUnlinkOidc._({
     required this.provider,
-  }) : super(1050003);
-  final String? provider;
+  });
+
+  static InfoSelfServiceSettingsUpdateUnlinkOidc? maybeFromParameters(
+    ContextParameters? contextParameters,
+  ) {
+    if (contextParameters?['provider'] case final provider?) {
+      return InfoSelfServiceSettingsUpdateUnlinkOidc._(
+        provider: provider,
+      );
+    }
+    return null;
+  }
+
+  final String provider;
+
+  static const id = 1050003;
 }
 
 final class InfoSelfServiceSettingsUpdateUnlinkTOTP extends KratosMessage {
-  const InfoSelfServiceSettingsUpdateUnlinkTOTP() : super(1050004);
+  const InfoSelfServiceSettingsUpdateUnlinkTOTP();
+
+  static const id = 1050004;
 }
 
 final class InfoSelfServiceSettingsTOTPQRCode extends KratosMessage {
-  const InfoSelfServiceSettingsTOTPQRCode() : super(1050005);
+  const InfoSelfServiceSettingsTOTPQRCode();
+
+  static const id = 1050005;
 }
 
 final class InfoSelfServiceSettingsTOTPSecret extends KratosMessage {
-  const InfoSelfServiceSettingsTOTPSecret({
+  const InfoSelfServiceSettingsTOTPSecret._({
     required this.secret,
-  }) : super(1050006);
-  final String? secret;
+  });
+
+  static InfoSelfServiceSettingsTOTPSecret? maybeFromParameters(
+    ContextParameters? contextParameters,
+  ) {
+    if (contextParameters?['secret'] case final secret?) {
+      return InfoSelfServiceSettingsTOTPSecret._(
+        secret: secret,
+      );
+    }
+    return null;
+  }
+
+  final String secret;
+
+  static const id = 1050006;
 }
 
 final class InfoSelfServiceSettingsRevealLookup extends KratosMessage {
-  const InfoSelfServiceSettingsRevealLookup() : super(1050007);
+  const InfoSelfServiceSettingsRevealLookup();
+
+  static const id = 1050007;
 }
 
 final class InfoSelfServiceSettingsRegenerateLookup extends KratosMessage {
-  const InfoSelfServiceSettingsRegenerateLookup() : super(1050008);
+  const InfoSelfServiceSettingsRegenerateLookup();
+
+  static const id = 1050008;
 }
 
 final class InfoSelfServiceSettingsLookupSecret extends KratosMessage {
-  const InfoSelfServiceSettingsLookupSecret({
+  const InfoSelfServiceSettingsLookupSecret._({
     required this.secret,
-  }) : super(1050009);
-  final String? secret;
+  });
+
+  static InfoSelfServiceSettingsLookupSecret? maybeFromParameters(
+    ContextParameters? contextParameters,
+  ) {
+    if (contextParameters?['secret'] case final secret?) {
+      return InfoSelfServiceSettingsLookupSecret._(
+        secret: secret,
+      );
+    }
+    return null;
+  }
+
+  final String secret;
+
+  static const id = 1050009;
 }
 
 final class InfoSelfServiceSettingsLookupSecretLabel extends KratosMessage {
-  const InfoSelfServiceSettingsLookupSecretLabel() : super(1050010);
+  const InfoSelfServiceSettingsLookupSecretLabel();
+
+  static const id = 1050010;
 }
 
 final class InfoSelfServiceSettingsLookupConfirm extends KratosMessage {
-  const InfoSelfServiceSettingsLookupConfirm() : super(1050011);
+  const InfoSelfServiceSettingsLookupConfirm();
+
+  static const id = 1050011;
 }
 
 final class InfoSelfServiceSettingsRegisterWebAuthn extends KratosMessage {
-  const InfoSelfServiceSettingsRegisterWebAuthn() : super(1050012);
+  const InfoSelfServiceSettingsRegisterWebAuthn();
+
+  static const id = 1050012;
 }
 
 final class InfoSelfServiceSettingsRegisterWebAuthnDisplayName
     extends KratosMessage {
-  const InfoSelfServiceSettingsRegisterWebAuthnDisplayName() : super(1050013);
+  const InfoSelfServiceSettingsRegisterWebAuthnDisplayName();
+
+  static const id = 1050013;
 }
 
 final class InfoSelfServiceSettingsLookupSecretUsed extends KratosMessage {
-  const InfoSelfServiceSettingsLookupSecretUsed() : super(1050014);
+  const InfoSelfServiceSettingsLookupSecretUsed();
+
+  static const id = 1050014;
 }
 
 final class InfoSelfServiceSettingsLookupSecretList extends KratosMessage {
-  const InfoSelfServiceSettingsLookupSecretList() : super(1050015);
+  const InfoSelfServiceSettingsLookupSecretList();
+
+  static const id = 1050015;
 }
 
 final class InfoSelfServiceSettingsDisableLookup extends KratosMessage {
-  const InfoSelfServiceSettingsDisableLookup() : super(1050016);
+  const InfoSelfServiceSettingsDisableLookup();
+
+  static const id = 1050016;
 }
 
 final class InfoSelfServiceSettingsTOTPSecretLabel extends KratosMessage {
-  const InfoSelfServiceSettingsTOTPSecretLabel() : super(1050017);
+  const InfoSelfServiceSettingsTOTPSecretLabel();
+
+  static const id = 1050017;
 }
 
 final class InfoSelfServiceSettingsRemoveWebAuthn extends KratosMessage {
-  const InfoSelfServiceSettingsRemoveWebAuthn({
+  const InfoSelfServiceSettingsRemoveWebAuthn._({
     required this.displayName,
-  }) : super(1050018);
-  final String? displayName;
+  });
+
+  static InfoSelfServiceSettingsRemoveWebAuthn? maybeFromParameters(
+    ContextParameters? contextParameters,
+  ) {
+    if (contextParameters?['display_name'] case final displayName?) {
+      return InfoSelfServiceSettingsRemoveWebAuthn._(
+        displayName: displayName,
+      );
+    }
+    return null;
+  }
+
+  final String displayName;
+
+  static const id = 1050018;
 }
 
 final class InfoSelfServiceSettingsRemovePasskey extends KratosMessage {
-  const InfoSelfServiceSettingsRemovePasskey({
+  const InfoSelfServiceSettingsRemovePasskey._({
     required this.displayName,
-  }) : super(1050020);
-  final String? displayName;
+  });
+
+  static InfoSelfServiceSettingsRemovePasskey? maybeFromParameters(
+    ContextParameters? contextParameters,
+  ) {
+    if (contextParameters?['display_name'] case final displayName?) {
+      return InfoSelfServiceSettingsRemovePasskey._(
+        displayName: displayName,
+      );
+    }
+    return null;
+  }
+
+  final String displayName;
+
+  static const id = 1050020;
 }
 
 // === Recovery messages ===
 final class InfoSelfServiceRecovery extends KratosMessage {
-  const InfoSelfServiceRecovery() : super(1060000);
+  const InfoSelfServiceRecovery();
+
+  static const id = 1060000;
 }
 
 final class InfoSelfServiceRecoverySuccessful extends KratosMessage {
-  const InfoSelfServiceRecoverySuccessful() : super(1060001);
+  const InfoSelfServiceRecoverySuccessful();
+
+  static const id = 1060001;
 }
 
 final class InfoSelfServiceRecoveryEmailSent extends KratosMessage {
-  const InfoSelfServiceRecoveryEmailSent() : super(1060002);
+  const InfoSelfServiceRecoveryEmailSent();
+
+  static const id = 1060002;
 }
 
 final class InfoSelfServiceRecoveryEmailWithCodeSent extends KratosMessage {
-  const InfoSelfServiceRecoveryEmailWithCodeSent() : super(1060003);
+  const InfoSelfServiceRecoveryEmailWithCodeSent();
+
+  static const id = 1060003;
 }
 
 // === Node Label messages ===
 final class InfoNodeLabel extends KratosMessage {
-  const InfoNodeLabel() : super(1070000);
+  const InfoNodeLabel();
+
+  static const id = 1070000;
 }
 
 final class InfoNodeLabelInputPassword extends KratosMessage {
-  const InfoNodeLabelInputPassword() : super(1070001);
+  const InfoNodeLabelInputPassword();
+
+  static const id = 1070001;
 }
 
 final class InfoNodeLabelGenerated extends KratosMessage {
-  const InfoNodeLabelGenerated({
+  const InfoNodeLabelGenerated._({
     required this.title,
-  }) : super(1070002);
-  final String? title;
+  });
+
+  static InfoNodeLabelGenerated? maybeFromParameters(
+    ContextParameters? contextParameters,
+  ) {
+    if (contextParameters?['title'] case final title?) {
+      return InfoNodeLabelGenerated._(
+        title: title,
+      );
+    }
+    return null;
+  }
+
+  final String title;
+
+  static const id = 1070002;
 }
 
 final class InfoNodeLabelSave extends KratosMessage {
-  const InfoNodeLabelSave() : super(1070003);
+  const InfoNodeLabelSave();
+
+  static const id = 1070003;
 }
 
 final class InfoNodeLabelID extends KratosMessage {
-  const InfoNodeLabelID() : super(1070004);
+  const InfoNodeLabelID();
+
+  static const id = 1070004;
 }
 
 final class InfoNodeLabelSubmit extends KratosMessage {
-  const InfoNodeLabelSubmit() : super(1070005);
+  const InfoNodeLabelSubmit();
+
+  static const id = 1070005;
 }
 
 final class InfoNodeLabelVerifyOTP extends KratosMessage {
-  const InfoNodeLabelVerifyOTP() : super(1070006);
+  const InfoNodeLabelVerifyOTP();
+
+  static const id = 1070006;
 }
 
 final class InfoNodeLabelEmail extends KratosMessage {
-  const InfoNodeLabelEmail() : super(1070007);
+  const InfoNodeLabelEmail();
+
+  static const id = 1070007;
 }
 
 final class InfoNodeLabelResendOTP extends KratosMessage {
-  const InfoNodeLabelResendOTP() : super(1070008);
+  const InfoNodeLabelResendOTP();
+
+  static const id = 1070008;
 }
 
 final class InfoNodeLabelContinue extends KratosMessage {
-  const InfoNodeLabelContinue() : super(1070009);
+  const InfoNodeLabelContinue();
+
+  static const id = 1070009;
 }
 
 final class InfoNodeLabelRecoveryCode extends KratosMessage {
-  const InfoNodeLabelRecoveryCode() : super(1070010);
+  const InfoNodeLabelRecoveryCode();
+
+  static const id = 1070010;
 }
 
 final class InfoNodeLabelVerificationCode extends KratosMessage {
-  const InfoNodeLabelVerificationCode() : super(1070011);
+  const InfoNodeLabelVerificationCode();
+
+  static const id = 1070011;
 }
 
 final class InfoNodeLabelRegistrationCode extends KratosMessage {
-  const InfoNodeLabelRegistrationCode() : super(1070012);
+  const InfoNodeLabelRegistrationCode();
+
+  static const id = 1070012;
 }
 
 final class InfoNodeLabelLoginCode extends KratosMessage {
-  const InfoNodeLabelLoginCode() : super(1070013);
+  const InfoNodeLabelLoginCode();
+
+  static const id = 1070013;
 }
 
 final class InfoNodeLabelLoginAndLinkCredential extends KratosMessage {
-  const InfoNodeLabelLoginAndLinkCredential() : super(1070014);
+  const InfoNodeLabelLoginAndLinkCredential();
+
+  static const id = 1070014;
 }
 
 // === Verification messages ===
 final class InfoSelfServiceVerification extends KratosMessage {
-  const InfoSelfServiceVerification() : super(1080000);
+  const InfoSelfServiceVerification();
+
+  static const id = 1080000;
 }
 
 final class InfoSelfServiceVerificationEmailSent extends KratosMessage {
-  const InfoSelfServiceVerificationEmailSent() : super(1080001);
+  const InfoSelfServiceVerificationEmailSent();
+
+  static const id = 1080001;
 }
 
 final class InfoSelfServiceVerificationSuccessful extends KratosMessage {
-  const InfoSelfServiceVerificationSuccessful() : super(1080002);
+  const InfoSelfServiceVerificationSuccessful();
+
+  static const id = 1080002;
 }
 
 final class InfoSelfServiceVerificationEmailWithCodeSent extends KratosMessage {
-  const InfoSelfServiceVerificationEmailWithCodeSent() : super(1080003);
+  const InfoSelfServiceVerificationEmailWithCodeSent();
+
+  static const id = 1080003;
 }
 
 // === Validation Error messages ===
 final class ErrorValidation extends KratosMessage {
-  const ErrorValidation() : super(4000000);
+  const ErrorValidation();
+
+  static const id = 4000000;
 }
 
 final class ErrorValidationGeneric extends KratosMessage {
-  const ErrorValidationGeneric({
+  const ErrorValidationGeneric._({
     required this.reason,
-  }) : super(4000001);
-  final String? reason;
+  });
+
+  static ErrorValidationGeneric? maybeFromParameters(
+    ContextParameters? contextParameters,
+  ) {
+    if (contextParameters?['reason'] case final reason?) {
+      return ErrorValidationGeneric._(
+        reason: reason,
+      );
+    }
+    return null;
+  }
+
+  final String reason;
+
+  static const id = 4000001;
 }
 
 final class ErrorValidationRequired extends KratosMessage {
   const ErrorValidationRequired({
     required this.property,
-  }) : super(4000002);
+  });
   final String? property;
+
+  static const id = 4000002;
 }
 
 final class ErrorValidationMinLength extends KratosMessage {
-  const ErrorValidationMinLength() : super(4000003);
+  const ErrorValidationMinLength();
+
+  static const id = 4000003;
 }
 
 final class ErrorValidationInvalidFormat extends KratosMessage {
   const ErrorValidationInvalidFormat({
     required this.pattern,
-  }) : super(4000004);
+  });
   final String? pattern;
+
+  static const id = 4000004;
 }
 
 final class ErrorValidationPasswordPolicyViolation extends KratosMessage {
   const ErrorValidationPasswordPolicyViolation({
     required this.reason,
-  }) : super(4000005);
+  });
   final String? reason;
+
+  static const id = 4000005;
 }
 
 final class ErrorValidationInvalidCredentials extends KratosMessage {
-  const ErrorValidationInvalidCredentials() : super(4000006);
+  const ErrorValidationInvalidCredentials();
+
+  static const id = 4000006;
 }
 
 final class ErrorValidationDuplicateCredentials extends KratosMessage {
-  const ErrorValidationDuplicateCredentials() : super(4000007);
+  const ErrorValidationDuplicateCredentials();
+
+  static const id = 4000007;
 }
 
 final class ErrorValidationTOTPVerifierWrong extends KratosMessage {
-  const ErrorValidationTOTPVerifierWrong() : super(4000008);
+  const ErrorValidationTOTPVerifierWrong();
+
+  static const id = 4000008;
 }
 
 final class ErrorValidationIdentifierMissing extends KratosMessage {
-  const ErrorValidationIdentifierMissing() : super(4000009);
+  const ErrorValidationIdentifierMissing();
+
+  static const id = 4000009;
 }
 
 final class ErrorValidationAddressNotVerified extends KratosMessage {
-  const ErrorValidationAddressNotVerified() : super(4000010);
+  const ErrorValidationAddressNotVerified();
+
+  static const id = 4000010;
 }
 
 final class ErrorValidationNoTOTPDevice extends KratosMessage {
-  const ErrorValidationNoTOTPDevice() : super(4000011);
+  const ErrorValidationNoTOTPDevice();
+
+  static const id = 4000011;
 }
 
 final class ErrorValidationLookupAlreadyUsed extends KratosMessage {
-  const ErrorValidationLookupAlreadyUsed() : super(4000012);
+  const ErrorValidationLookupAlreadyUsed();
+
+  static const id = 4000012;
 }
 
 final class ErrorValidationNoWebAuthnDevice extends KratosMessage {
-  const ErrorValidationNoWebAuthnDevice() : super(4000013);
+  const ErrorValidationNoWebAuthnDevice();
+
+  static const id = 4000013;
 }
 
 final class ErrorValidationNoLookup extends KratosMessage {
-  const ErrorValidationNoLookup() : super(4000014);
+  const ErrorValidationNoLookup();
+
+  static const id = 4000014;
 }
 
 final class ErrorValidationSuchNoWebAuthnUser extends KratosMessage {
-  const ErrorValidationSuchNoWebAuthnUser() : super(4000015);
+  const ErrorValidationSuchNoWebAuthnUser();
+
+  static const id = 4000015;
 }
 
 final class ErrorValidationLookupInvalid extends KratosMessage {
-  const ErrorValidationLookupInvalid() : super(4000016);
+  const ErrorValidationLookupInvalid();
+
+  static const id = 4000016;
 }
 
 final class ErrorValidationMaxLength extends KratosMessage {
-  const ErrorValidationMaxLength() : super(4000017);
+  const ErrorValidationMaxLength();
+
+  static const id = 4000017;
 }
 
 final class ErrorValidationMinimum extends KratosMessage {
-  const ErrorValidationMinimum() : super(4000018);
+  const ErrorValidationMinimum();
+
+  static const id = 4000018;
 }
 
 final class ErrorValidationExclusiveMinimum extends KratosMessage {
-  const ErrorValidationExclusiveMinimum() : super(4000019);
+  const ErrorValidationExclusiveMinimum();
+
+  static const id = 4000019;
 }
 
 final class ErrorValidationMaximum extends KratosMessage {
-  const ErrorValidationMaximum() : super(4000020);
+  const ErrorValidationMaximum();
+
+  static const id = 4000020;
 }
 
 final class ErrorValidationExclusiveMaximum extends KratosMessage {
-  const ErrorValidationExclusiveMaximum() : super(4000021);
+  const ErrorValidationExclusiveMaximum();
+
+  static const id = 4000021;
 }
 
 final class ErrorValidationMultipleOf extends KratosMessage {
-  const ErrorValidationMultipleOf() : super(4000022);
+  const ErrorValidationMultipleOf();
+
+  static const id = 4000022;
 }
 
 final class ErrorValidationMaxItems extends KratosMessage {
-  const ErrorValidationMaxItems() : super(4000023);
+  const ErrorValidationMaxItems();
+
+  static const id = 4000023;
 }
 
 final class ErrorValidationMinItems extends KratosMessage {
-  const ErrorValidationMinItems() : super(4000024);
+  const ErrorValidationMinItems();
+
+  static const id = 4000024;
 }
 
 final class ErrorValidationUniqueItems extends KratosMessage {
-  const ErrorValidationUniqueItems() : super(4000025);
+  const ErrorValidationUniqueItems();
+
+  static const id = 4000025;
 }
 
 final class ErrorValidationWrongType extends KratosMessage {
   const ErrorValidationWrongType({
     required this.actualType,
-  }) : super(4000026);
+  });
   final String? actualType;
+
+  static const id = 4000026;
 }
 
 final class ErrorValidationDuplicateCredentialsOnOIDCLink
     extends KratosMessage {
-  const ErrorValidationDuplicateCredentialsOnOIDCLink() : super(4000027);
+  const ErrorValidationDuplicateCredentialsOnOIDCLink();
+
+  static const id = 4000027;
 }
 
 final class ErrorValidationCredentialAlreadyUsedByAnotherAccount
     extends KratosMessage {
   const ErrorValidationCredentialAlreadyUsedByAnotherAccount({
     required this.credentialIdentifierHint,
-  }) : super(4000028);
+  });
   final String? credentialIdentifierHint;
 
+  static const id = 4000028;
   static const parameterNames = ['credential_identifier_hint'];
 }
 
 final class ErrorValidationMustBeEqualToConstant extends KratosMessage {
   const ErrorValidationMustBeEqualToConstant({
     required this.expected,
-  }) : super(4000029);
+  });
   final String? expected;
+
+  static const id = 4000029;
 }
 
 final class ErrorValidationConstFailed extends KratosMessage {
-  const ErrorValidationConstFailed() : super(4000030);
+  const ErrorValidationConstFailed();
+
+  static const id = 4000030;
 }
 
 final class ErrorValidationPasswordTooSimilarToIdentifier
     extends KratosMessage {
-  const ErrorValidationPasswordTooSimilarToIdentifier() : super(4000031);
+  const ErrorValidationPasswordTooSimilarToIdentifier();
+
+  static const id = 4000031;
 }
 
 final class ErrorValidationPasswordTooShort extends KratosMessage {
-  const ErrorValidationPasswordTooShort() : super(4000032);
+  const ErrorValidationPasswordTooShort();
+
+  static const id = 4000032;
 }
 
 final class ErrorValidationPasswordTooLong extends KratosMessage {
-  const ErrorValidationPasswordTooLong() : super(4000033);
+  const ErrorValidationPasswordTooLong();
+
+  static const id = 4000033;
 }
 
 final class ErrorValidationPasswordFoundInDataBreaches extends KratosMessage {
-  const ErrorValidationPasswordFoundInDataBreaches() : super(4000034);
+  const ErrorValidationPasswordFoundInDataBreaches();
+
+  static const id = 4000034;
 }
 
 final class ErrorValidationNoAccountOrNoCodeSignInSetUp extends KratosMessage {
-  const ErrorValidationNoAccountOrNoCodeSignInSetUp() : super(4000035);
+  const ErrorValidationNoAccountOrNoCodeSignInSetUp();
+
+  static const id = 4000035;
 }
 
 final class ErrorValidationTraitsDontMatchPreviouslyAssociated
     extends KratosMessage {
-  const ErrorValidationTraitsDontMatchPreviouslyAssociated() : super(4000036);
+  const ErrorValidationTraitsDontMatchPreviouslyAssociated();
+
+  static const id = 4000036;
 }
 
 // === Login Validation Error messages ===
 final class ErrorValidationLogin extends KratosMessage {
-  const ErrorValidationLogin() : super(4010000);
+  const ErrorValidationLogin();
+
+  static const id = 4010000;
 }
 
 final class ErrorValidationLoginFlowExpired extends KratosMessage {
-  const ErrorValidationLoginFlowExpired() : super(4010001);
+  const ErrorValidationLoginFlowExpired();
+
+  static const id = 4010001;
 }
 
 final class ErrorValidationLoginNoStrategyFound extends KratosMessage {
-  const ErrorValidationLoginNoStrategyFound() : super(4010002);
+  const ErrorValidationLoginNoStrategyFound();
+
+  static const id = 4010002;
 }
 
 final class ErrorValidationRegistrationNoStrategyFound extends KratosMessage {
-  const ErrorValidationRegistrationNoStrategyFound() : super(4010003);
+  const ErrorValidationRegistrationNoStrategyFound();
+
+  static const id = 4010003;
 }
 
 final class ErrorValidationSettingsNoStrategyFound extends KratosMessage {
-  const ErrorValidationSettingsNoStrategyFound() : super(4010004);
+  const ErrorValidationSettingsNoStrategyFound();
+
+  static const id = 4010004;
 }
 
 final class ErrorValidationRecoveryNoStrategyFound extends KratosMessage {
-  const ErrorValidationRecoveryNoStrategyFound() : super(4010005);
+  const ErrorValidationRecoveryNoStrategyFound();
+
+  static const id = 4010005;
 }
 
 final class ErrorValidationVerificationNoStrategyFound extends KratosMessage {
-  const ErrorValidationVerificationNoStrategyFound() : super(4010006);
+  const ErrorValidationVerificationNoStrategyFound();
+
+  static const id = 4010006;
 }
 
 final class ErrorValidationLoginRequestAlreadyCompleted extends KratosMessage {
-  const ErrorValidationLoginRequestAlreadyCompleted() : super(4010007);
+  const ErrorValidationLoginRequestAlreadyCompleted();
+
+  static const id = 4010007;
 }
 
 final class ErrorValidationLoginCodeInvalidOrAlreadyUsed extends KratosMessage {
-  const ErrorValidationLoginCodeInvalidOrAlreadyUsed() : super(4010008);
+  const ErrorValidationLoginCodeInvalidOrAlreadyUsed();
+
+  static const id = 4010008;
 }
 
 final class ErrorValidationLinkedCredentialsDoNotMatch extends KratosMessage {
-  const ErrorValidationLinkedCredentialsDoNotMatch() : super(4010009);
+  const ErrorValidationLinkedCredentialsDoNotMatch();
+
+  static const id = 4010009;
 }
 
 // === Registration Validation Error messages ===
 final class ErrorValidationRegistration extends KratosMessage {
-  const ErrorValidationRegistration() : super(4040000);
+  const ErrorValidationRegistration();
+
+  static const id = 4040000;
 }
 
 final class ErrorValidationRegistrationFlowExpired extends KratosMessage {
-  const ErrorValidationRegistrationFlowExpired() : super(4040001);
+  const ErrorValidationRegistrationFlowExpired();
+
+  static const id = 4040001;
 }
 
 final class ErrorValidationRegistrationRequestAlreadyCompleted
     extends KratosMessage {
-  const ErrorValidationRegistrationRequestAlreadyCompleted() : super(4040002);
+  const ErrorValidationRegistrationRequestAlreadyCompleted();
+
+  static const id = 4040002;
 }
 
 final class ErrorValidationRegistrationCodeInvalidOrAlreadyUsed
     extends KratosMessage {
-  const ErrorValidationRegistrationCodeInvalidOrAlreadyUsed() : super(4040003);
+  const ErrorValidationRegistrationCodeInvalidOrAlreadyUsed();
+
+  static const id = 4040003;
 }
 
 // === Settings Validation Error messages ===
 final class ErrorValidationSettings extends KratosMessage {
-  const ErrorValidationSettings() : super(4050000);
+  const ErrorValidationSettings();
+
+  static const id = 4050000;
 }
 
 final class ErrorValidationSettingsFlowExpired extends KratosMessage {
-  const ErrorValidationSettingsFlowExpired() : super(4050001);
+  const ErrorValidationSettingsFlowExpired();
+
+  static const id = 4050001;
 }
 
 // === Recovery Validation Error messages ===
 final class ErrorValidationRecovery extends KratosMessage {
-  const ErrorValidationRecovery() : super(4060000);
+  const ErrorValidationRecovery();
+
+  static const id = 4060000;
 }
 
 final class ErrorValidationRecoveryRetrySuccess extends KratosMessage {
-  const ErrorValidationRecoveryRetrySuccess() : super(4060001);
+  const ErrorValidationRecoveryRetrySuccess();
+
+  static const id = 4060001;
 }
 
 final class ErrorValidationRecoveryStateFailure extends KratosMessage {
-  const ErrorValidationRecoveryStateFailure() : super(4060002);
+  const ErrorValidationRecoveryStateFailure();
+
+  static const id = 4060002;
 }
 
 final class ErrorValidationRecoveryMissingRecoveryToken extends KratosMessage {
-  const ErrorValidationRecoveryMissingRecoveryToken() : super(4060003);
+  const ErrorValidationRecoveryMissingRecoveryToken();
+
+  static const id = 4060003;
 }
 
 final class ErrorValidationRecoveryTokenInvalidOrAlreadyUsed
     extends KratosMessage {
-  const ErrorValidationRecoveryTokenInvalidOrAlreadyUsed() : super(4060004);
+  const ErrorValidationRecoveryTokenInvalidOrAlreadyUsed();
+
+  static const id = 4060004;
 }
 
 final class ErrorValidationRecoveryFlowExpired extends KratosMessage {
-  const ErrorValidationRecoveryFlowExpired() : super(4060005);
+  const ErrorValidationRecoveryFlowExpired();
+
+  static const id = 4060005;
 }
 
 final class ErrorValidationRecoveryCodeInvalidOrAlreadyUsed
     extends KratosMessage {
-  const ErrorValidationRecoveryCodeInvalidOrAlreadyUsed() : super(4060006);
+  const ErrorValidationRecoveryCodeInvalidOrAlreadyUsed();
+
+  static const id = 4060006;
 }
 
 // === Verification Validation Error messages ===
 final class ErrorValidationVerification extends KratosMessage {
-  const ErrorValidationVerification() : super(4070000);
+  const ErrorValidationVerification();
+
+  static const id = 4070000;
 }
 
 final class ErrorValidationVerificationTokenInvalidOrAlreadyUsed
     extends KratosMessage {
-  const ErrorValidationVerificationTokenInvalidOrAlreadyUsed() : super(4070001);
+  const ErrorValidationVerificationTokenInvalidOrAlreadyUsed();
+
+  static const id = 4070001;
 }
 
 final class ErrorValidationVerificationRetrySuccess extends KratosMessage {
-  const ErrorValidationVerificationRetrySuccess() : super(4070002);
+  const ErrorValidationVerificationRetrySuccess();
+
+  static const id = 4070002;
 }
 
 final class ErrorValidationVerificationStateFailure extends KratosMessage {
-  const ErrorValidationVerificationStateFailure() : super(4070003);
+  const ErrorValidationVerificationStateFailure();
+
+  static const id = 4070003;
 }
 
 final class ErrorValidationVerificationMissingVerificationToken
     extends KratosMessage {
-  const ErrorValidationVerificationMissingVerificationToken() : super(4070004);
+  const ErrorValidationVerificationMissingVerificationToken();
+
+  static const id = 4070004;
 }
 
 final class ErrorValidationVerificationFlowExpired extends KratosMessage {
-  const ErrorValidationVerificationFlowExpired() : super(4070005);
+  const ErrorValidationVerificationFlowExpired();
+
+  static const id = 4070005;
 }
 
 final class ErrorValidationVerificationCodeInvalidOrAlreadyUsed
     extends KratosMessage {
-  const ErrorValidationVerificationCodeInvalidOrAlreadyUsed() : super(4070006);
+  const ErrorValidationVerificationCodeInvalidOrAlreadyUsed();
+
+  static const id = 4070006;
 }
 
 // === System Error messages ===
 final class ErrorSystem extends KratosMessage {
-  const ErrorSystem() : super(5000000);
+  const ErrorSystem();
+
+  static const id = 5000000;
 }
 
 final class ErrorSystemGeneric extends KratosMessage {
-  const ErrorSystemGeneric() : super(5000001);
-}
+  const ErrorSystemGeneric();
 
-extension on Map<String, String>? {
-  bool containsAll(Iterable<String> keys) {
-    if (this == null) {
-      return false;
-    }
-    return keys.every(this!.containsKey);
-  }
+  static const id = 5000001;
 }
