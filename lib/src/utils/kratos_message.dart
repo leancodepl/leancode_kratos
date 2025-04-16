@@ -1,6 +1,8 @@
 // https://raw.githubusercontent.com/ory/docs/master/docs/kratos/concepts/messages.json
 sealed class KratosMessage {
-  const KratosMessage(this.id);
+  const KratosMessage(
+    this.id,
+  );
 
   final int id;
 
@@ -15,8 +17,12 @@ sealed class KratosMessage {
       case 1010001:
         return const InfoSelfServiceLogin();
       case 1010002:
-        final provider = contextParameters?['provider'] ?? '';
-        return InfoSelfServiceLoginWith(provider: provider);
+        if (contextParameters
+            .containsAll(InfoSelfServiceLoginWith.parameterNames)) {
+          return InfoSelfServiceLoginWith(
+            provider: contextParameters!['provider']!,
+          );
+        }
       case 1010003:
         return const InfoSelfServiceLoginReAuth();
       case 1010004:
@@ -350,6 +356,7 @@ sealed class KratosMessage {
       default:
         return const ErrorSystemGeneric();
     }
+    return const ErrorSystemGeneric();
   }
 }
 
@@ -367,7 +374,9 @@ final class InfoSelfServiceLoginWith extends KratosMessage {
     required this.provider,
   }) : super(1010002);
 
-  final String? provider;
+  final String provider;
+
+  static const parameterNames = ['provider'];
 }
 
 final class InfoSelfServiceLoginReAuth extends KratosMessage {
@@ -1006,4 +1015,13 @@ final class ErrorSystem extends KratosMessage {
 
 final class ErrorSystemGeneric extends KratosMessage {
   const ErrorSystemGeneric() : super(5000001);
+}
+
+extension on Map<String, String>? {
+  bool containsAll(Iterable<String> keys) {
+    if (this == null) {
+      return false;
+    }
+    return keys.every(this!.containsKey);
+  }
 }
