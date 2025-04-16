@@ -146,10 +146,7 @@ class MessageDto with _$MessageDto {
 
   const MessageDto._();
 
-  KratosMessage toKratosMessage() => KratosMessage.forId(
-        id,
-        contextParameters: context?.parametersMap,
-      );
+  KratosMessage toKratosMessage() => KratosMessage.forIdWithParameters(id);
 }
 
 @JsonSerializable(converters: [MessageContextConverter()])
@@ -179,6 +176,7 @@ class MessageContextConverter
       if (value is String) {
         result[key] = value;
       } else if (value is List) {
+        // Join list elements with comma and space
         result[key] = value.map((e) => e.toString()).join(', ');
       }
     });
