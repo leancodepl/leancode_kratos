@@ -329,9 +329,16 @@ class KratosClient {
     final errors = nodes
         .map((node) {
           return switch ((node.attributes.name, node.messages)) {
-            (final attributeName?, [MessageDto(:final id), ...]) => (
+            (
+              final attributeName?,
+              [MessageDto(:final id, :final context), ...]
+            ) =>
+              (
                 attributeName,
-                KratosMessage.forId(id),
+                KratosMessage.forIdWithParameters(
+                  id,
+                  contextParameters: context?.parametersMap,
+                ),
               ),
             _ => null
           };
@@ -515,8 +522,7 @@ class KratosClient {
             login_error.loginErrorResponseFromJson(loginFlowResult.body);
         final generalErrors = errorLoginResult.ui.getGeneralMessages();
 
-        if (generalErrors
-            .contains(KratosMessage.errorValidationAddressNotVerified)) {
+        if (generalErrors.contains(ErrorValidationAddressNotVerified)) {
           return LoginVerifyEmailResult(
             flowId: effectiveFlowInfo.id,
             emailToVerify: email,
@@ -605,8 +611,7 @@ class KratosClient {
               login_error.loginErrorResponseFromJson(loginResponse.body);
           final generalErrors = errorLoginResult.ui.getGeneralMessages();
 
-          if (generalErrors
-              .contains(KratosMessage.errorValidationAddressNotVerified)) {
+          if (generalErrors.contains(ErrorValidationAddressNotVerified)) {
             return PasskeyLoginVerifyEmailResult(
               flowId: flow.id,
             );
@@ -1124,7 +1129,7 @@ class KratosClient {
 
     final messages = dto.ui.nodes
         .expand((node) => node.messages)
-        .map((msg) => KratosMessage.forId(msg.id));
+        .map((msg) => KratosMessage.forIdWithParameters(msg.id));
 
     return messages.firstOrNull;
   }
