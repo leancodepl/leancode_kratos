@@ -146,9 +146,8 @@ class MessageDto with _$MessageDto {
 
   const MessageDto._();
 
-  KratosMessage toKratosMessage() => KratosMessage.forId(id, contextParameters: context);
+  KratosMessage toKratosMessage() => KratosMessage.forId(id, context: context);
 }
-
 
 @freezed
 class MetaDto with _$MetaDto {
