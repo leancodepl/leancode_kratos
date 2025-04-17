@@ -146,7 +146,7 @@ class MessageDto with _$MessageDto {
 
   const MessageDto._();
 
-  KratosMessage toKratosMessage() => KratosMessage.forIdWithParameters(
+  KratosMessage toKratosMessage() => KratosMessage.forId(
         id,
         contextParameters: context?.parametersMap,
       );
@@ -178,8 +178,8 @@ class MessageContextConverter
     json.forEach((key, value) {
       if (value is String) {
         result[key] = value;
-      } else if (value is List) {
-        result[key] = value.map((e) => e.toString()).join(', ');
+      } else if (value is List<String>) {
+        result[key] = value.join(', ');
       }
     });
 
@@ -187,7 +187,23 @@ class MessageContextConverter
   }
 
   @override
-  Map<String, dynamic>? toJson(Map<String, String>? data) => data;
+  Map<String, dynamic>? toJson(Map<String, String>? data) {
+    if (data == null) {
+      return null;
+    }
+
+    final result = <String, dynamic>{};
+    
+    data.forEach((key, value) {
+      if (value.contains(', ')) {
+        result[key] = value.split(', ');
+      } else {
+        result[key] = value;
+      }
+    });
+    
+    return result;
+  }
 }
 
 @freezed
