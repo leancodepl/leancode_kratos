@@ -158,9 +158,6 @@ class MessageContextDto with _$MessageContextDto {
   const factory MessageContextDto({
     Map<String, String>? parametersMap,
   }) = _MessageContextDto;
-
-  factory MessageContextDto.fromJson(Map<String, dynamic> json) =>
-      _$MessageContextDtoFromJson(json);
 }
 
 class MessageContextConverter
@@ -193,7 +190,7 @@ class MessageContextConverter
     }
 
     final result = <String, dynamic>{};
-    
+
     data.forEach((key, value) {
       if (value.contains(', ')) {
         result[key] = value.split(', ');
@@ -201,7 +198,7 @@ class MessageContextConverter
         result[key] = value;
       }
     });
-    
+
     return result;
   }
 }
