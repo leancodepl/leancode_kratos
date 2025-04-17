@@ -7,7 +7,7 @@ sealed class KratosMessage {
 
   factory KratosMessage.forId(
     int id, {
-    ContextParameters? contextParameters,
+    Map<String, dynamic>? contextParameters,
   }) {
     return switch (id) {
       // Login
@@ -435,24 +435,18 @@ final class InfoSelfServiceSignInWithCode extends KratosMessage {
 }
 
 final class InfoSelfServiceSigningInWillLinkYourAccount extends KratosMessage {
-  const InfoSelfServiceSigningInWillLinkYourAccount._({
+  const InfoSelfServiceSigningInWillLinkYourAccount({
     required this.duplicateIdentifier,
     required this.provider,
   });
 
-  static InfoSelfServiceSigningInWillLinkYourAccount? maybeFromParameters(
+  factory InfoSelfServiceSigningInWillLinkYourAccount.fromContext(
     ContextParameters? contextParameters,
   ) {
-    final duplicateIdentifier = contextParameters?['duplicateIdentifier'];
-    final provider = contextParameters?['provider'];
-
-    if (duplicateIdentifier != null && provider != null) {
-      return InfoSelfServiceSigningInWillLinkYourAccount._(
-        duplicateIdentifier: duplicateIdentifier,
-        provider: provider,
-      );
-    }
-    return null;
+    return InfoSelfServiceSigningInWillLinkYourAccount(
+      duplicateIdentifier: contextParameters!['duplicateIdentifier']!,
+      provider: contextParameters['provider']!,
+    );
   }
 
   final String duplicateIdentifier;
