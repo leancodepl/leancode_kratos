@@ -5,385 +5,327 @@ typedef ContextParameters = Map<String, String>;
 sealed class KratosMessage {
   const KratosMessage();
 
-  static const _defaultFallback = ErrorSystemGeneric();
-
-  static KratosMessage forIdWithParameters(
+  factory KratosMessage.forId(
     int id, {
-    Map<String, String>? contextParameters,
+    ContextParameters? contextParameters,
   }) {
-    switch (id) {
-      // Login (1010000-1010099)
-      case InfoSelfServiceLoginRoot.id: // 1010000
-        return const InfoSelfServiceLoginRoot();
-      case InfoSelfServiceLogin.id: // 1010001
-        return const InfoSelfServiceLogin();
-      case InfoSelfServiceLoginWith.id: // 1010002
-        return InfoSelfServiceLoginWith.maybeFromParameters(
+    return switch (id) {
+      // Login
+      InfoSelfServiceLoginRoot.id => const InfoSelfServiceLoginRoot(),
+      InfoSelfServiceLogin.id => const InfoSelfServiceLogin(),
+      InfoSelfServiceLoginWith.id =>
+        InfoSelfServiceLoginWith.maybeFromParameters(
               contextParameters,
             ) ??
-            _defaultFallback;
-      case InfoSelfServiceLoginReAuth.id: // 1010003
-        return const InfoSelfServiceLoginReAuth();
-      case InfoSelfServiceLoginMFA.id: // 1010004
-        return const InfoSelfServiceLoginMFA();
-      case InfoSelfServiceLoginVerify.id: // 1010005
-        return const InfoSelfServiceLoginVerify();
-      case InfoSelfServiceLoginTOTPLabel.id: // 1010006
-        return const InfoSelfServiceLoginTOTPLabel();
-      case InfoLoginLookupLabel.id: // 1010007
-        return const InfoLoginLookupLabel();
-      case InfoSelfServiceLoginWebAuthn.id: // 1010008
-        return const InfoSelfServiceLoginWebAuthn();
-      case InfoLoginTOTP.id: // 1010009
-        return const InfoLoginTOTP();
-      case InfoLoginLookup.id: // 1010010
-        return const InfoLoginLookup();
-      case InfoSelfServiceLoginContinueWebAuthn.id: // 1010011
-        return const InfoSelfServiceLoginContinueWebAuthn();
-      case InfoSelfServiceLoginWebAuthnPasswordless.id: // 1010012
-        return const InfoSelfServiceLoginWebAuthnPasswordless();
-      case InfoSelfServiceLoginContinue.id: // 1010013
-        return const InfoSelfServiceLoginContinue();
-      case InfoSelfServiceEmailHasBeenSent.id: // 1010014
-        return const InfoSelfServiceEmailHasBeenSent();
-      case InfoSelfServiceSignInWithCode.id: // 1010015
-        return const InfoSelfServiceSignInWithCode();
-      case InfoSelfServiceSigningInWillLinkYourAccount.id: // 1010016
-        return InfoSelfServiceSigningInWillLinkYourAccount.maybeFromParameters(
+            _defaultFallback,
+      InfoSelfServiceLoginReAuth.id => const InfoSelfServiceLoginReAuth(),
+      InfoSelfServiceLoginMFA.id => const InfoSelfServiceLoginMFA(),
+      InfoSelfServiceLoginVerify.id => const InfoSelfServiceLoginVerify(),
+      InfoSelfServiceLoginTOTPLabel.id => const InfoSelfServiceLoginTOTPLabel(),
+      InfoLoginLookupLabel.id => const InfoLoginLookupLabel(),
+      InfoSelfServiceLoginWebAuthn.id => const InfoSelfServiceLoginWebAuthn(),
+      InfoLoginTOTP.id => const InfoLoginTOTP(),
+      InfoLoginLookup.id => const InfoLoginLookup(),
+      InfoSelfServiceLoginContinueWebAuthn.id =>
+        const InfoSelfServiceLoginContinueWebAuthn(),
+      InfoSelfServiceLoginWebAuthnPasswordless.id =>
+        const InfoSelfServiceLoginWebAuthnPasswordless(),
+      InfoSelfServiceLoginContinue.id => const InfoSelfServiceLoginContinue(),
+      InfoSelfServiceEmailHasBeenSent.id =>
+        const InfoSelfServiceEmailHasBeenSent(),
+      InfoSelfServiceSignInWithCode.id => const InfoSelfServiceSignInWithCode(),
+      InfoSelfServiceSigningInWillLinkYourAccount.id =>
+        InfoSelfServiceSigningInWillLinkYourAccount.maybeFromParameters(
               contextParameters,
             ) ??
-            _defaultFallback;
-      case InfoSelfServiceSignInAndLink.id: // 1010017
-        return const InfoSelfServiceSignInAndLink();
-      case InfoSelfserviceSignInAndLinkCredential.id: // 1010018
-        return InfoSelfserviceSignInAndLinkCredential.maybeFromParameters(
+            _defaultFallback,
+      InfoSelfServiceSignInAndLink.id => const InfoSelfServiceSignInAndLink(),
+      InfoSelfserviceSignInAndLinkCredential.id =>
+        InfoSelfserviceSignInAndLinkCredential.maybeFromParameters(
               contextParameters,
             ) ??
-            _defaultFallback;
-      case InfoSendCodeTo.id: // 1010023
-        return InfoSendCodeTo.maybeFromParameters(
-              contextParameters,
-            ) ??
-            _defaultFallback;
+            _defaultFallback,
+      InfoSendCodeTo.id => InfoSendCodeTo.maybeFromParameters(
+            contextParameters,
+          ) ??
+          _defaultFallback,
 
-      // Logout (1020000-1020099)
-      case InfoSelfServiceLogout.id: // 1020000
-        return const InfoSelfServiceLogout();
+      // Logout
+      InfoSelfServiceLogout.id => const InfoSelfServiceLogout(),
 
       // MFA and Registration (1030000-1040099)
-      case InfoSelfServiceMFA.id: // 1030000
-        return const InfoSelfServiceMFA();
-      case InfoSelfServiceRegistrationRoot.id: // 1040000
-        return const InfoSelfServiceRegistrationRoot();
-      case InfoSelfServiceRegistration.id: // 1040001
-        return const InfoSelfServiceRegistration();
-      case InfoSelfServiceRegistrationWith.id: // 1040002
-        return InfoSelfServiceRegistrationWith.maybeFromParameters(
+      InfoSelfServiceMFA.id => const InfoSelfServiceMFA(),
+      InfoSelfServiceRegistrationRoot.id =>
+        const InfoSelfServiceRegistrationRoot(),
+      InfoSelfServiceRegistration.id => const InfoSelfServiceRegistration(),
+      InfoSelfServiceRegistrationWith.id =>
+        InfoSelfServiceRegistrationWith.maybeFromParameters(
               contextParameters,
             ) ??
-            _defaultFallback;
-      case InfoSelfServiceRegistrationContinue.id: // 1040003
-        return const InfoSelfServiceRegistrationContinue();
-      case InfoSelfServiceRegistrationRegisterWebAuthn.id: // 1040004
-        return const InfoSelfServiceRegistrationRegisterWebAuthn();
-      case InfoSelfServiceRegistrationEmailHasBeenSent.id: // 1040005
-        return const InfoSelfServiceRegistrationEmailHasBeenSent();
-      case InfoSelfServiceRegistrationRegisterWithCode.id: // 1040006
-        return const InfoSelfServiceRegistrationRegisterWithCode();
+            _defaultFallback,
+      InfoSelfServiceRegistrationContinue.id =>
+        const InfoSelfServiceRegistrationContinue(),
+      InfoSelfServiceRegistrationRegisterWebAuthn.id =>
+        const InfoSelfServiceRegistrationRegisterWebAuthn(),
+      InfoSelfServiceRegistrationEmailHasBeenSent.id =>
+        const InfoSelfServiceRegistrationEmailHasBeenSent(),
+      InfoSelfServiceRegistrationRegisterWithCode.id =>
+        const InfoSelfServiceRegistrationRegisterWithCode(),
 
       // Settings (1050000-1050099)
-      case InfoSelfServiceSettings.id: // 1050000
-        return const InfoSelfServiceSettings();
-      case InfoSelfServiceSettingsUpdateSuccess.id: // 1050001
-        return const InfoSelfServiceSettingsUpdateSuccess();
-      case InfoSelfServiceSettingsUpdateLinkOidc.id: // 1050002
-        return InfoSelfServiceSettingsUpdateLinkOidc.maybeFromParameters(
+      InfoSelfServiceSettings.id => const InfoSelfServiceSettings(),
+      InfoSelfServiceSettingsUpdateSuccess.id =>
+        const InfoSelfServiceSettingsUpdateSuccess(),
+      InfoSelfServiceSettingsUpdateLinkOidc.id =>
+        InfoSelfServiceSettingsUpdateLinkOidc.maybeFromParameters(
               contextParameters,
             ) ??
-            _defaultFallback;
-      case InfoSelfServiceSettingsUpdateUnlinkOidc.id: // 1050003
-        return InfoSelfServiceSettingsUpdateUnlinkOidc.maybeFromParameters(
+            _defaultFallback,
+      InfoSelfServiceSettingsUpdateUnlinkOidc.id =>
+        InfoSelfServiceSettingsUpdateUnlinkOidc.maybeFromParameters(
               contextParameters,
             ) ??
-            _defaultFallback;
-      case InfoSelfServiceSettingsUpdateUnlinkTOTP.id: // 1050004
-        return const InfoSelfServiceSettingsUpdateUnlinkTOTP();
-      case InfoSelfServiceSettingsTOTPQRCode.id: // 1050005
-        return const InfoSelfServiceSettingsTOTPQRCode();
-      case InfoSelfServiceSettingsTOTPSecret.id: // 1050006
-        return InfoSelfServiceSettingsTOTPSecret.maybeFromParameters(
+            _defaultFallback,
+      InfoSelfServiceSettingsUpdateUnlinkTOTP.id =>
+        const InfoSelfServiceSettingsUpdateUnlinkTOTP(),
+      InfoSelfServiceSettingsTOTPQRCode.id =>
+        const InfoSelfServiceSettingsTOTPQRCode(),
+      InfoSelfServiceSettingsTOTPSecret.id =>
+        InfoSelfServiceSettingsTOTPSecret.maybeFromParameters(
               contextParameters,
             ) ??
-            _defaultFallback;
-      case InfoSelfServiceSettingsRevealLookup.id: // 1050007
-        return const InfoSelfServiceSettingsRevealLookup();
-      case InfoSelfServiceSettingsRegenerateLookup.id: // 1050008
-        return const InfoSelfServiceSettingsRegenerateLookup();
-      case InfoSelfServiceSettingsLookupSecret.id: // 1050009
-        return InfoSelfServiceSettingsLookupSecret.maybeFromParameters(
+            _defaultFallback,
+      InfoSelfServiceSettingsRevealLookup.id =>
+        const InfoSelfServiceSettingsRevealLookup(),
+      InfoSelfServiceSettingsRegenerateLookup.id =>
+        const InfoSelfServiceSettingsRegenerateLookup(),
+      InfoSelfServiceSettingsLookupSecret.id =>
+        InfoSelfServiceSettingsLookupSecret.maybeFromParameters(
               contextParameters,
             ) ??
-            _defaultFallback;
-      case InfoSelfServiceSettingsLookupSecretLabel.id: // 1050010
-        return const InfoSelfServiceSettingsLookupSecretLabel();
-      case InfoSelfServiceSettingsLookupConfirm.id: // 1050011
-        return const InfoSelfServiceSettingsLookupConfirm();
-      case InfoSelfServiceSettingsRegisterWebAuthn.id: // 1050012
-        return const InfoSelfServiceSettingsRegisterWebAuthn();
-      case InfoSelfServiceSettingsRegisterWebAuthnDisplayName.id: // 1050013
-        return const InfoSelfServiceSettingsRegisterWebAuthnDisplayName();
-      case InfoSelfServiceSettingsLookupSecretUsed.id: // 1050014
-        return const InfoSelfServiceSettingsLookupSecretUsed();
-      case InfoSelfServiceSettingsLookupSecretList.id: // 1050015
-        return const InfoSelfServiceSettingsLookupSecretList();
-      case InfoSelfServiceSettingsDisableLookup.id: // 1050016
-        return const InfoSelfServiceSettingsDisableLookup();
-      case InfoSelfServiceSettingsTOTPSecretLabel.id: // 1050017
-        return const InfoSelfServiceSettingsTOTPSecretLabel();
-      case InfoSelfServiceSettingsRemoveWebAuthn.id: // 1050018
-        return InfoSelfServiceSettingsRemoveWebAuthn.maybeFromParameters(
+            _defaultFallback,
+      InfoSelfServiceSettingsLookupSecretLabel.id =>
+        const InfoSelfServiceSettingsLookupSecretLabel(),
+      InfoSelfServiceSettingsLookupConfirm.id =>
+        const InfoSelfServiceSettingsLookupConfirm(),
+      InfoSelfServiceSettingsRegisterWebAuthn.id =>
+        const InfoSelfServiceSettingsRegisterWebAuthn(),
+      InfoSelfServiceSettingsRegisterWebAuthnDisplayName.id =>
+        const InfoSelfServiceSettingsRegisterWebAuthnDisplayName(),
+      InfoSelfServiceSettingsLookupSecretUsed.id =>
+        const InfoSelfServiceSettingsLookupSecretUsed(),
+      InfoSelfServiceSettingsLookupSecretList.id =>
+        const InfoSelfServiceSettingsLookupSecretList(),
+      InfoSelfServiceSettingsDisableLookup.id =>
+        const InfoSelfServiceSettingsDisableLookup(),
+      InfoSelfServiceSettingsTOTPSecretLabel.id =>
+        const InfoSelfServiceSettingsTOTPSecretLabel(),
+      InfoSelfServiceSettingsRemoveWebAuthn.id =>
+        InfoSelfServiceSettingsRemoveWebAuthn.maybeFromParameters(
               contextParameters,
             ) ??
-            _defaultFallback;
-      case InfoSelfServiceSettingsRemovePasskey.id: // 1050020
-        return InfoSelfServiceSettingsRemovePasskey.maybeFromParameters(
+            _defaultFallback,
+      InfoSelfServiceSettingsRemovePasskey.id =>
+        InfoSelfServiceSettingsRemovePasskey.maybeFromParameters(
               contextParameters,
             ) ??
-            _defaultFallback;
+            _defaultFallback,
 
       // Recovery (1060000-1060099)
-      case InfoSelfServiceRecovery.id: // 1060000
-        return const InfoSelfServiceRecovery();
-      case InfoSelfServiceRecoverySuccessful.id: // 1060001
-        return const InfoSelfServiceRecoverySuccessful();
-      case InfoSelfServiceRecoveryEmailSent.id: // 1060002
-        return const InfoSelfServiceRecoveryEmailSent();
-      case InfoSelfServiceRecoveryEmailWithCodeSent.id: // 1060003
-        return const InfoSelfServiceRecoveryEmailWithCodeSent();
+      InfoSelfServiceRecovery.id => const InfoSelfServiceRecovery(),
+      InfoSelfServiceRecoverySuccessful.id =>
+        const InfoSelfServiceRecoverySuccessful(),
+      InfoSelfServiceRecoveryEmailSent.id =>
+        const InfoSelfServiceRecoveryEmailSent(),
+      InfoSelfServiceRecoveryEmailWithCodeSent.id =>
+        const InfoSelfServiceRecoveryEmailWithCodeSent(),
 
       // Node Labels (1070000-1070099)
-      case InfoNodeLabel.id: // 1070000
-        return const InfoNodeLabel();
-      case InfoNodeLabelInputPassword.id: // 1070001
-        return const InfoNodeLabelInputPassword();
-      case InfoNodeLabelGenerated.id: // 1070002
-        return InfoNodeLabelGenerated.maybeFromParameters(
-              contextParameters,
-            ) ??
-            _defaultFallback;
-      case InfoNodeLabelSave.id: // 1070003
-        return const InfoNodeLabelSave();
-      case InfoNodeLabelID.id: // 1070004
-        return const InfoNodeLabelID();
-      case InfoNodeLabelSubmit.id: // 1070005
-        return const InfoNodeLabelSubmit();
-      case InfoNodeLabelVerifyOTP.id: // 1070006
-        return const InfoNodeLabelVerifyOTP();
-      case InfoNodeLabelEmail.id: // 1070007
-        return const InfoNodeLabelEmail();
-      case InfoNodeLabelResendOTP.id: // 1070008
-        return const InfoNodeLabelResendOTP();
-      case InfoNodeLabelContinue.id: // 1070009
-        return const InfoNodeLabelContinue();
-      case InfoNodeLabelRecoveryCode.id: // 1070010
-        return const InfoNodeLabelRecoveryCode();
-      case InfoNodeLabelVerificationCode.id: // 1070011
-        return const InfoNodeLabelVerificationCode();
-      case InfoNodeLabelRegistrationCode.id: // 1070012
-        return const InfoNodeLabelRegistrationCode();
-      case InfoNodeLabelLoginCode.id: // 1070013
-        return const InfoNodeLabelLoginCode();
-      case InfoNodeLabelLoginAndLinkCredential.id: // 1070014
-        return const InfoNodeLabelLoginAndLinkCredential();
+      InfoNodeLabel.id => const InfoNodeLabel(),
+      InfoNodeLabelInputPassword.id => const InfoNodeLabelInputPassword(),
+      InfoNodeLabelGenerated.id => InfoNodeLabelGenerated.maybeFromParameters(
+            contextParameters,
+          ) ??
+          _defaultFallback,
+      InfoNodeLabelSave.id => const InfoNodeLabelSave(),
+      InfoNodeLabelID.id => const InfoNodeLabelID(),
+      InfoNodeLabelSubmit.id => const InfoNodeLabelSubmit(),
+      InfoNodeLabelVerifyOTP.id => const InfoNodeLabelVerifyOTP(),
+      InfoNodeLabelEmail.id => const InfoNodeLabelEmail(),
+      InfoNodeLabelResendOTP.id => const InfoNodeLabelResendOTP(),
+      InfoNodeLabelContinue.id => const InfoNodeLabelContinue(),
+      InfoNodeLabelRecoveryCode.id => const InfoNodeLabelRecoveryCode(),
+      InfoNodeLabelVerificationCode.id => const InfoNodeLabelVerificationCode(),
+      InfoNodeLabelRegistrationCode.id => const InfoNodeLabelRegistrationCode(),
+      InfoNodeLabelLoginCode.id => const InfoNodeLabelLoginCode(),
+      InfoNodeLabelLoginAndLinkCredential.id =>
+        const InfoNodeLabelLoginAndLinkCredential(),
 
       // Verification (1080000-1080099)
-      case InfoSelfServiceVerification.id: // 1080000
-        return const InfoSelfServiceVerification();
-      case InfoSelfServiceVerificationEmailSent.id: // 1080001
-        return const InfoSelfServiceVerificationEmailSent();
-      case InfoSelfServiceVerificationSuccessful.id: // 1080002
-        return const InfoSelfServiceVerificationSuccessful();
-      case InfoSelfServiceVerificationEmailWithCodeSent.id: // 1080003
-        return const InfoSelfServiceVerificationEmailWithCodeSent();
+      InfoSelfServiceVerification.id => const InfoSelfServiceVerification(),
+      InfoSelfServiceVerificationEmailSent.id =>
+        const InfoSelfServiceVerificationEmailSent(),
+      InfoSelfServiceVerificationSuccessful.id =>
+        const InfoSelfServiceVerificationSuccessful(),
+      InfoSelfServiceVerificationEmailWithCodeSent.id =>
+        const InfoSelfServiceVerificationEmailWithCodeSent(),
 
       // Validation Error (4000000-4000099)
-      case ErrorValidation.id: // 4000000
-        return const ErrorValidation();
-      case ErrorValidationGeneric.id: // 4000001
-        return ErrorValidationGeneric.maybeFromParameters(
+      ErrorValidation.id => const ErrorValidation(),
+      ErrorValidationGeneric.id => ErrorValidationGeneric.maybeFromParameters(
+            contextParameters,
+          ) ??
+          _defaultFallback,
+      ErrorValidationRequired.id => ErrorValidationRequired.maybeFromParameters(
+            contextParameters,
+          ) ??
+          _defaultFallback,
+      ErrorValidationMinLength.id => const ErrorValidationMinLength(),
+      ErrorValidationInvalidFormat.id =>
+        ErrorValidationInvalidFormat.maybeFromParameters(
               contextParameters,
             ) ??
-            _defaultFallback;
-      case ErrorValidationRequired.id: // 4000002
-        return ErrorValidationRequired.maybeFromParameters(
+            _defaultFallback,
+      ErrorValidationPasswordPolicyViolation.id =>
+        ErrorValidationPasswordPolicyViolation.maybeFromParameters(
               contextParameters,
             ) ??
-            _defaultFallback;
-      case ErrorValidationMinLength.id: // 4000003
-        return const ErrorValidationMinLength();
-      case ErrorValidationInvalidFormat.id: // 4000004
-        return ErrorValidationInvalidFormat.maybeFromParameters(
+            _defaultFallback,
+      ErrorValidationInvalidCredentials.id =>
+        const ErrorValidationInvalidCredentials(),
+      ErrorValidationDuplicateCredentials.id =>
+        const ErrorValidationDuplicateCredentials(),
+      ErrorValidationTOTPVerifierWrong.id =>
+        const ErrorValidationTOTPVerifierWrong(),
+      ErrorValidationIdentifierMissing.id =>
+        const ErrorValidationIdentifierMissing(),
+      ErrorValidationAddressNotVerified.id =>
+        const ErrorValidationAddressNotVerified(),
+      ErrorValidationNoTOTPDevice.id => const ErrorValidationNoTOTPDevice(),
+      ErrorValidationLookupAlreadyUsed.id =>
+        const ErrorValidationLookupAlreadyUsed(),
+      ErrorValidationNoWebAuthnDevice.id =>
+        const ErrorValidationNoWebAuthnDevice(),
+      ErrorValidationNoLookup.id => const ErrorValidationNoLookup(),
+      ErrorValidationSuchNoWebAuthnUser.id =>
+        const ErrorValidationSuchNoWebAuthnUser(),
+      ErrorValidationLookupInvalid.id => const ErrorValidationLookupInvalid(),
+      ErrorValidationMaxLength.id => const ErrorValidationMaxLength(),
+      ErrorValidationMinimum.id => const ErrorValidationMinimum(),
+      ErrorValidationExclusiveMinimum.id =>
+        const ErrorValidationExclusiveMinimum(),
+      ErrorValidationMaximum.id => const ErrorValidationMaximum(),
+      ErrorValidationExclusiveMaximum.id =>
+        const ErrorValidationExclusiveMaximum(),
+      ErrorValidationMultipleOf.id => const ErrorValidationMultipleOf(),
+      ErrorValidationMaxItems.id => const ErrorValidationMaxItems(),
+      ErrorValidationMinItems.id => const ErrorValidationMinItems(),
+      ErrorValidationUniqueItems.id => const ErrorValidationUniqueItems(),
+      ErrorValidationWrongType.id =>
+        ErrorValidationWrongType.maybeFromParameters(
               contextParameters,
             ) ??
-            _defaultFallback;
-      case ErrorValidationPasswordPolicyViolation.id: // 4000005
-        return ErrorValidationPasswordPolicyViolation.maybeFromParameters(
-              contextParameters,
-            ) ??
-            _defaultFallback;
-      case ErrorValidationInvalidCredentials.id: // 4000006
-        return const ErrorValidationInvalidCredentials();
-      case ErrorValidationDuplicateCredentials.id: // 4000007
-        return const ErrorValidationDuplicateCredentials();
-      case ErrorValidationTOTPVerifierWrong.id: // 4000008
-        return const ErrorValidationTOTPVerifierWrong();
-      case ErrorValidationIdentifierMissing.id: // 4000009
-        return const ErrorValidationIdentifierMissing();
-      case ErrorValidationAddressNotVerified.id: // 4000010
-        return const ErrorValidationAddressNotVerified();
-      case ErrorValidationNoTOTPDevice.id: // 4000011
-        return const ErrorValidationNoTOTPDevice();
-      case ErrorValidationLookupAlreadyUsed.id: // 4000012
-        return const ErrorValidationLookupAlreadyUsed();
-      case ErrorValidationNoWebAuthnDevice.id: // 4000013
-        return const ErrorValidationNoWebAuthnDevice();
-      case ErrorValidationNoLookup.id: // 4000014
-        return const ErrorValidationNoLookup();
-      case ErrorValidationSuchNoWebAuthnUser.id: // 4000015
-        return const ErrorValidationSuchNoWebAuthnUser();
-      case ErrorValidationLookupInvalid.id: // 4000016
-        return const ErrorValidationLookupInvalid();
-      case ErrorValidationMaxLength.id: // 4000017
-        return const ErrorValidationMaxLength();
-      case ErrorValidationMinimum.id: // 4000018
-        return const ErrorValidationMinimum();
-      case ErrorValidationExclusiveMinimum.id: // 4000019
-        return const ErrorValidationExclusiveMinimum();
-      case ErrorValidationMaximum.id: // 4000020
-        return const ErrorValidationMaximum();
-      case ErrorValidationExclusiveMaximum.id: // 4000021
-        return const ErrorValidationExclusiveMaximum();
-      case ErrorValidationMultipleOf.id: // 4000022
-        return const ErrorValidationMultipleOf();
-      case ErrorValidationMaxItems.id: // 4000023
-        return const ErrorValidationMaxItems();
-      case ErrorValidationMinItems.id: // 4000024
-        return const ErrorValidationMinItems();
-      case ErrorValidationUniqueItems.id: // 4000025
-        return const ErrorValidationUniqueItems();
-      case ErrorValidationWrongType.id: // 4000026
-        return ErrorValidationWrongType.maybeFromParameters(
-              contextParameters,
-            ) ??
-            _defaultFallback;
-      case ErrorValidationDuplicateCredentialsOnOIDCLink.id: // 4000027
-        return const ErrorValidationDuplicateCredentialsOnOIDCLink();
-      case ErrorValidationCredentialAlreadyUsedByAnotherAccount.id: // 4000028
-        return ErrorValidationCredentialAlreadyUsedByAnotherAccount
+            _defaultFallback,
+      ErrorValidationDuplicateCredentialsOnOIDCLink.id =>
+        const ErrorValidationDuplicateCredentialsOnOIDCLink(),
+      ErrorValidationCredentialAlreadyUsedByAnotherAccount.id =>
+        ErrorValidationCredentialAlreadyUsedByAnotherAccount
                 .maybeFromParameters(
               contextParameters,
             ) ??
-            _defaultFallback;
-      case ErrorValidationMustBeEqualToConstant.id: // 4000029
-        return ErrorValidationMustBeEqualToConstant.maybeFromParameters(
+            _defaultFallback,
+      ErrorValidationMustBeEqualToConstant.id =>
+        ErrorValidationMustBeEqualToConstant.maybeFromParameters(
               contextParameters,
             ) ??
-            _defaultFallback;
-      case ErrorValidationConstFailed.id: // 4000030
-        return const ErrorValidationConstFailed();
-      case ErrorValidationPasswordTooSimilarToIdentifier.id: // 4000031
-        return const ErrorValidationPasswordTooSimilarToIdentifier();
-      case ErrorValidationPasswordTooShort.id: // 4000032
-        return const ErrorValidationPasswordTooShort();
-      case ErrorValidationPasswordTooLong.id: // 4000033
-        return const ErrorValidationPasswordTooLong();
-      case ErrorValidationPasswordFoundInDataBreaches.id: // 4000034
-        return const ErrorValidationPasswordFoundInDataBreaches();
-      case ErrorValidationNoAccountOrNoCodeSignInSetUp.id: // 4000035
-        return const ErrorValidationNoAccountOrNoCodeSignInSetUp();
-      case ErrorValidationTraitsDontMatchPreviouslyAssociated.id: // 4000036
-        return const ErrorValidationTraitsDontMatchPreviouslyAssociated();
+            _defaultFallback,
+      ErrorValidationConstFailed.id => const ErrorValidationConstFailed(),
+      ErrorValidationPasswordTooSimilarToIdentifier.id =>
+        const ErrorValidationPasswordTooSimilarToIdentifier(),
+      ErrorValidationPasswordTooShort.id =>
+        const ErrorValidationPasswordTooShort(),
+      ErrorValidationPasswordTooLong.id =>
+        const ErrorValidationPasswordTooLong(),
+      ErrorValidationPasswordFoundInDataBreaches.id =>
+        const ErrorValidationPasswordFoundInDataBreaches(),
+      ErrorValidationNoAccountOrNoCodeSignInSetUp.id =>
+        const ErrorValidationNoAccountOrNoCodeSignInSetUp(),
+      ErrorValidationTraitsDontMatchPreviouslyAssociated.id =>
+        const ErrorValidationTraitsDontMatchPreviouslyAssociated(),
 
       // Login Validation Error (4010000-4010099)
-      case ErrorValidationLogin.id: // 4010000
-        return const ErrorValidationLogin();
-      case ErrorValidationLoginFlowExpired.id: // 4010001
-        return const ErrorValidationLoginFlowExpired();
-      case ErrorValidationLoginNoStrategyFound.id: // 4010002
-        return const ErrorValidationLoginNoStrategyFound();
-      case ErrorValidationRegistrationNoStrategyFound.id: // 4010003
-        return const ErrorValidationRegistrationNoStrategyFound();
-      case ErrorValidationSettingsNoStrategyFound.id: // 4010004
-        return const ErrorValidationSettingsNoStrategyFound();
-      case ErrorValidationRecoveryNoStrategyFound.id: // 4010005
-        return const ErrorValidationRecoveryNoStrategyFound();
-      case ErrorValidationVerificationNoStrategyFound.id: // 4010006
-        return const ErrorValidationVerificationNoStrategyFound();
-      case ErrorValidationLoginRequestAlreadyCompleted.id: // 4010007
-        return const ErrorValidationLoginRequestAlreadyCompleted();
-      case ErrorValidationLoginCodeInvalidOrAlreadyUsed.id: // 4010008
-        return const ErrorValidationLoginCodeInvalidOrAlreadyUsed();
-      case ErrorValidationLinkedCredentialsDoNotMatch.id: // 4010009
-        return const ErrorValidationLinkedCredentialsDoNotMatch();
+      ErrorValidationLogin.id => const ErrorValidationLogin(),
+      ErrorValidationLoginFlowExpired.id =>
+        const ErrorValidationLoginFlowExpired(),
+      ErrorValidationLoginNoStrategyFound.id =>
+        const ErrorValidationLoginNoStrategyFound(),
+      ErrorValidationRegistrationNoStrategyFound.id =>
+        const ErrorValidationRegistrationNoStrategyFound(),
+      ErrorValidationSettingsNoStrategyFound.id =>
+        const ErrorValidationSettingsNoStrategyFound(),
+      ErrorValidationRecoveryNoStrategyFound.id =>
+        const ErrorValidationRecoveryNoStrategyFound(),
+      ErrorValidationVerificationNoStrategyFound.id =>
+        const ErrorValidationVerificationNoStrategyFound(),
+      ErrorValidationLoginRequestAlreadyCompleted.id =>
+        const ErrorValidationLoginRequestAlreadyCompleted(),
+      ErrorValidationLoginCodeInvalidOrAlreadyUsed.id =>
+        const ErrorValidationLoginCodeInvalidOrAlreadyUsed(),
+      ErrorValidationLinkedCredentialsDoNotMatch.id =>
+        const ErrorValidationLinkedCredentialsDoNotMatch(),
 
       // Registration Validation Error (4040000-4040099)
-      case ErrorValidationRegistration.id: // 4040000
-        return const ErrorValidationRegistration();
-      case ErrorValidationRegistrationFlowExpired.id: // 4040001
-        return const ErrorValidationRegistrationFlowExpired();
-      case ErrorValidationRegistrationRequestAlreadyCompleted.id: // 4040002
-        return const ErrorValidationRegistrationRequestAlreadyCompleted();
-      case ErrorValidationRegistrationCodeInvalidOrAlreadyUsed.id: // 4040003
-        return const ErrorValidationRegistrationCodeInvalidOrAlreadyUsed();
+      ErrorValidationRegistration.id => const ErrorValidationRegistration(),
+      ErrorValidationRegistrationFlowExpired.id =>
+        const ErrorValidationRegistrationFlowExpired(),
+      ErrorValidationRegistrationRequestAlreadyCompleted.id =>
+        const ErrorValidationRegistrationRequestAlreadyCompleted(),
+      ErrorValidationRegistrationCodeInvalidOrAlreadyUsed.id =>
+        const ErrorValidationRegistrationCodeInvalidOrAlreadyUsed(),
 
       // Settings Validation Error (4050000-4050099)
-      case ErrorValidationSettings.id: // 4050000
-        return const ErrorValidationSettings();
-      case ErrorValidationSettingsFlowExpired.id: // 4050001
-        return const ErrorValidationSettingsFlowExpired();
+      ErrorValidationSettings.id => const ErrorValidationSettings(),
+      ErrorValidationSettingsFlowExpired.id =>
+        const ErrorValidationSettingsFlowExpired(),
 
       // Recovery Validation Error (4060000-4060099)
-      case ErrorValidationRecovery.id: // 4060000
-        return const ErrorValidationRecovery();
-      case ErrorValidationRecoveryRetrySuccess.id: // 4060001
-        return const ErrorValidationRecoveryRetrySuccess();
-      case ErrorValidationRecoveryStateFailure.id: // 4060002
-        return const ErrorValidationRecoveryStateFailure();
-      case ErrorValidationRecoveryMissingRecoveryToken.id: // 4060003
-        return const ErrorValidationRecoveryMissingRecoveryToken();
-      case ErrorValidationRecoveryTokenInvalidOrAlreadyUsed.id: // 4060004
-        return const ErrorValidationRecoveryTokenInvalidOrAlreadyUsed();
-      case ErrorValidationRecoveryFlowExpired.id: // 4060005
-        return const ErrorValidationRecoveryFlowExpired();
-      case ErrorValidationRecoveryCodeInvalidOrAlreadyUsed.id: // 4060006
-        return const ErrorValidationRecoveryCodeInvalidOrAlreadyUsed();
+      ErrorValidationRecovery.id => const ErrorValidationRecovery(),
+      ErrorValidationRecoveryRetrySuccess.id =>
+        const ErrorValidationRecoveryRetrySuccess(),
+      ErrorValidationRecoveryStateFailure.id =>
+        const ErrorValidationRecoveryStateFailure(),
+      ErrorValidationRecoveryMissingRecoveryToken.id =>
+        const ErrorValidationRecoveryMissingRecoveryToken(),
+      ErrorValidationRecoveryTokenInvalidOrAlreadyUsed.id =>
+        const ErrorValidationRecoveryTokenInvalidOrAlreadyUsed(),
+      ErrorValidationRecoveryFlowExpired.id =>
+        const ErrorValidationRecoveryFlowExpired(),
+      ErrorValidationRecoveryCodeInvalidOrAlreadyUsed.id =>
+        const ErrorValidationRecoveryCodeInvalidOrAlreadyUsed(),
 
       // Verification Validation Error (4070000-4070099)
-      case ErrorValidationVerification.id: // 4070000
-        return const ErrorValidationVerification();
-      case ErrorValidationVerificationTokenInvalidOrAlreadyUsed.id: // 4070001
-        return const ErrorValidationVerificationTokenInvalidOrAlreadyUsed();
-      case ErrorValidationVerificationRetrySuccess.id: // 4070002
-        return const ErrorValidationVerificationRetrySuccess();
-      case ErrorValidationVerificationStateFailure.id: // 4070003
-        return const ErrorValidationVerificationStateFailure();
-      case ErrorValidationVerificationMissingVerificationToken.id: // 4070004
-        return const ErrorValidationVerificationMissingVerificationToken();
-      case ErrorValidationVerificationFlowExpired.id: // 4070005
-        return const ErrorValidationVerificationFlowExpired();
-      case ErrorValidationVerificationCodeInvalidOrAlreadyUsed.id: // 4070006
-        return const ErrorValidationVerificationCodeInvalidOrAlreadyUsed();
+      ErrorValidationVerification.id => const ErrorValidationVerification(),
+      ErrorValidationVerificationTokenInvalidOrAlreadyUsed.id =>
+        const ErrorValidationVerificationTokenInvalidOrAlreadyUsed(),
+      ErrorValidationVerificationRetrySuccess.id =>
+        const ErrorValidationVerificationRetrySuccess(),
+      ErrorValidationVerificationStateFailure.id =>
+        const ErrorValidationVerificationStateFailure(),
+      ErrorValidationVerificationMissingVerificationToken.id =>
+        const ErrorValidationVerificationMissingVerificationToken(),
+      ErrorValidationVerificationFlowExpired.id =>
+        const ErrorValidationVerificationFlowExpired(),
+      ErrorValidationVerificationCodeInvalidOrAlreadyUsed.id =>
+        const ErrorValidationVerificationCodeInvalidOrAlreadyUsed(),
 
       // System Error (5000000-5000099)
-      case ErrorSystem.id: // 5000000
-        return const ErrorSystem();
-      case ErrorSystemGeneric.id: // 5000001
-        return const ErrorSystemGeneric();
-
-      default:
-        return const ErrorSystemGeneric();
-    }
+      ErrorSystem.id => const ErrorSystem(),
+      ErrorSystemGeneric.id => const ErrorSystemGeneric(),
+      _ => const ErrorSystemGeneric(),
+    };
   }
+
+  static const _defaultFallback = ErrorSystemGeneric();
 }
 
 // === Login related messages ===
@@ -407,7 +349,7 @@ final class InfoSelfServiceLoginWith extends KratosMessage {
   static InfoSelfServiceLoginWith? maybeFromParameters(
     ContextParameters? contextParameters,
   ) {
-    if (contextParameters?['provider'] case final provider?) {
+    if (contextParameters case {'provider': final provider?}) {
       return InfoSelfServiceLoginWith._(
         provider: provider,
       );
