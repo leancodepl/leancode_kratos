@@ -14,10 +14,7 @@ sealed class KratosMessage {
       InfoSelfServiceLoginRoot.id => const InfoSelfServiceLoginRoot(),
       InfoSelfServiceLogin.id => const InfoSelfServiceLogin(),
       InfoSelfServiceLoginWith.id =>
-        InfoSelfServiceLoginWith.maybeFromParameters(
-              contextParameters,
-            ) ??
-            _defaultFallback,
+        InfoSelfServiceLoginWith.fromParameters(contextParameters),
       InfoSelfServiceLoginReAuth.id => const InfoSelfServiceLoginReAuth(),
       InfoSelfServiceLoginMFA.id => const InfoSelfServiceLoginMFA(),
       InfoSelfServiceLoginVerify.id => const InfoSelfServiceLoginVerify(),
@@ -53,7 +50,7 @@ sealed class KratosMessage {
       // Logout
       InfoSelfServiceLogout.id => const InfoSelfServiceLogout(),
 
-      // MFA and Registration (1030000-1040099)
+      // MFA and Registration
       InfoSelfServiceMFA.id => const InfoSelfServiceMFA(),
       InfoSelfServiceRegistrationRoot.id =>
         const InfoSelfServiceRegistrationRoot(),
@@ -72,7 +69,7 @@ sealed class KratosMessage {
       InfoSelfServiceRegistrationRegisterWithCode.id =>
         const InfoSelfServiceRegistrationRegisterWithCode(),
 
-      // Settings (1050000-1050099)
+      // Settings
       InfoSelfServiceSettings.id => const InfoSelfServiceSettings(),
       InfoSelfServiceSettingsUpdateSuccess.id =>
         const InfoSelfServiceSettingsUpdateSuccess(),
@@ -131,7 +128,7 @@ sealed class KratosMessage {
             ) ??
             _defaultFallback,
 
-      // Recovery (1060000-1060099)
+      // Recovery
       InfoSelfServiceRecovery.id => const InfoSelfServiceRecovery(),
       InfoSelfServiceRecoverySuccessful.id =>
         const InfoSelfServiceRecoverySuccessful(),
@@ -140,7 +137,7 @@ sealed class KratosMessage {
       InfoSelfServiceRecoveryEmailWithCodeSent.id =>
         const InfoSelfServiceRecoveryEmailWithCodeSent(),
 
-      // Node Labels (1070000-1070099)
+      // Node Labels
       InfoNodeLabel.id => const InfoNodeLabel(),
       InfoNodeLabelInputPassword.id => const InfoNodeLabelInputPassword(),
       InfoNodeLabelGenerated.id => InfoNodeLabelGenerated.maybeFromParameters(
@@ -161,7 +158,7 @@ sealed class KratosMessage {
       InfoNodeLabelLoginAndLinkCredential.id =>
         const InfoNodeLabelLoginAndLinkCredential(),
 
-      // Verification (1080000-1080099)
+      // Verification
       InfoSelfServiceVerification.id => const InfoSelfServiceVerification(),
       InfoSelfServiceVerificationEmailSent.id =>
         const InfoSelfServiceVerificationEmailSent(),
@@ -170,7 +167,7 @@ sealed class KratosMessage {
       InfoSelfServiceVerificationEmailWithCodeSent.id =>
         const InfoSelfServiceVerificationEmailWithCodeSent(),
 
-      // Validation Error (4000000-4000099)
+      // Validation Error
       ErrorValidation.id => const ErrorValidation(),
       ErrorValidationGeneric.id => ErrorValidationGeneric.maybeFromParameters(
             contextParameters,
@@ -253,7 +250,7 @@ sealed class KratosMessage {
       ErrorValidationTraitsDontMatchPreviouslyAssociated.id =>
         const ErrorValidationTraitsDontMatchPreviouslyAssociated(),
 
-      // Login Validation Error (4010000-4010099)
+      // Login Validation Error
       ErrorValidationLogin.id => const ErrorValidationLogin(),
       ErrorValidationLoginFlowExpired.id =>
         const ErrorValidationLoginFlowExpired(),
@@ -274,7 +271,7 @@ sealed class KratosMessage {
       ErrorValidationLinkedCredentialsDoNotMatch.id =>
         const ErrorValidationLinkedCredentialsDoNotMatch(),
 
-      // Registration Validation Error (4040000-4040099)
+      // Registration Validation Error
       ErrorValidationRegistration.id => const ErrorValidationRegistration(),
       ErrorValidationRegistrationFlowExpired.id =>
         const ErrorValidationRegistrationFlowExpired(),
@@ -283,12 +280,12 @@ sealed class KratosMessage {
       ErrorValidationRegistrationCodeInvalidOrAlreadyUsed.id =>
         const ErrorValidationRegistrationCodeInvalidOrAlreadyUsed(),
 
-      // Settings Validation Error (4050000-4050099)
+      // Settings Validation Error
       ErrorValidationSettings.id => const ErrorValidationSettings(),
       ErrorValidationSettingsFlowExpired.id =>
         const ErrorValidationSettingsFlowExpired(),
 
-      // Recovery Validation Error (4060000-4060099)
+      // Recovery Validation Error
       ErrorValidationRecovery.id => const ErrorValidationRecovery(),
       ErrorValidationRecoveryRetrySuccess.id =>
         const ErrorValidationRecoveryRetrySuccess(),
@@ -303,7 +300,7 @@ sealed class KratosMessage {
       ErrorValidationRecoveryCodeInvalidOrAlreadyUsed.id =>
         const ErrorValidationRecoveryCodeInvalidOrAlreadyUsed(),
 
-      // Verification Validation Error (4070000-4070099)
+      // Verification Validation Error
       ErrorValidationVerification.id => const ErrorValidationVerification(),
       ErrorValidationVerificationTokenInvalidOrAlreadyUsed.id =>
         const ErrorValidationVerificationTokenInvalidOrAlreadyUsed(),
@@ -318,7 +315,7 @@ sealed class KratosMessage {
       ErrorValidationVerificationCodeInvalidOrAlreadyUsed.id =>
         const ErrorValidationVerificationCodeInvalidOrAlreadyUsed(),
 
-      // System Error (5000000-5000099)
+      // System Error
       ErrorSystem.id => const ErrorSystem(),
       ErrorSystemGeneric.id => const ErrorSystemGeneric(),
       _ => const ErrorSystemGeneric(),
@@ -346,15 +343,12 @@ final class InfoSelfServiceLoginWith extends KratosMessage {
     required this.provider,
   });
 
-  static InfoSelfServiceLoginWith? maybeFromParameters(
+  factory InfoSelfServiceLoginWith.fromParameters(
     ContextParameters? contextParameters,
   ) {
-    if (contextParameters case {'provider': final provider?}) {
-      return InfoSelfServiceLoginWith._(
-        provider: provider,
-      );
-    }
-    return null;
+    return InfoSelfServiceLoginWith._(
+      provider: contextParameters!['provider']!,
+    );
   }
 
   final String provider;
