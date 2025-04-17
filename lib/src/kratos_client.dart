@@ -337,7 +337,7 @@ class KratosClient {
                 attributeName,
                 KratosMessage.forId(
                   id,
-                  contextParameters: context?.parametersMap,
+                  context: context,
                 ),
               ),
             _ => null
@@ -1132,7 +1132,7 @@ class KratosClient {
     final messages = dto.ui.nodes.expand((node) => node.messages).map(
           (msg) => KratosMessage.forId(
             msg.id,
-            contextParameters: msg.context?.parametersMap,
+            context: msg.context,
           ),
         );
 
