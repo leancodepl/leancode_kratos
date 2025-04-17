@@ -1145,7 +1145,7 @@ mixin _$MessageDto {
   int get id => throw _privateConstructorUsedError;
   String get text => throw _privateConstructorUsedError;
   String get type => throw _privateConstructorUsedError;
-  MessageContextDto? get context => throw _privateConstructorUsedError;
+  Map<String, dynamic>? get context => throw _privateConstructorUsedError;
 
   /// Serializes this MessageDto to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -1163,9 +1163,7 @@ abstract class $MessageDtoCopyWith<$Res> {
           MessageDto value, $Res Function(MessageDto) then) =
       _$MessageDtoCopyWithImpl<$Res, MessageDto>;
   @useResult
-  $Res call({int id, String text, String type, MessageContextDto? context});
-
-  $MessageContextDtoCopyWith<$Res>? get context;
+  $Res call({int id, String text, String type, Map<String, dynamic>? context});
 }
 
 /// @nodoc
@@ -1204,22 +1202,8 @@ class _$MessageDtoCopyWithImpl<$Res, $Val extends MessageDto>
       context: freezed == context
           ? _value.context
           : context // ignore: cast_nullable_to_non_nullable
-              as MessageContextDto?,
+              as Map<String, dynamic>?,
     ) as $Val);
-  }
-
-  /// Create a copy of MessageDto
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $MessageContextDtoCopyWith<$Res>? get context {
-    if (_value.context == null) {
-      return null;
-    }
-
-    return $MessageContextDtoCopyWith<$Res>(_value.context!, (value) {
-      return _then(_value.copyWith(context: value) as $Val);
-    });
   }
 }
 
@@ -1231,10 +1215,7 @@ abstract class _$$MessageDtoImplCopyWith<$Res>
       __$$MessageDtoImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int id, String text, String type, MessageContextDto? context});
-
-  @override
-  $MessageContextDtoCopyWith<$Res>? get context;
+  $Res call({int id, String text, String type, Map<String, dynamic>? context});
 }
 
 /// @nodoc
@@ -1269,9 +1250,9 @@ class __$$MessageDtoImplCopyWithImpl<$Res>
           : type // ignore: cast_nullable_to_non_nullable
               as String,
       context: freezed == context
-          ? _value.context
+          ? _value._context
           : context // ignore: cast_nullable_to_non_nullable
-              as MessageContextDto?,
+              as Map<String, dynamic>?,
     ));
   }
 }
@@ -1280,8 +1261,12 @@ class __$$MessageDtoImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$MessageDtoImpl extends _MessageDto {
   const _$MessageDtoImpl(
-      {required this.id, required this.text, required this.type, this.context})
-      : super._();
+      {required this.id,
+      required this.text,
+      required this.type,
+      final Map<String, dynamic>? context})
+      : _context = context,
+        super._();
 
   factory _$MessageDtoImpl.fromJson(Map<String, dynamic> json) =>
       _$$MessageDtoImplFromJson(json);
@@ -1292,8 +1277,15 @@ class _$MessageDtoImpl extends _MessageDto {
   final String text;
   @override
   final String type;
+  final Map<String, dynamic>? _context;
   @override
-  final MessageContextDto? context;
+  Map<String, dynamic>? get context {
+    final value = _context;
+    if (value == null) return null;
+    if (_context is EqualUnmodifiableMapView) return _context;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(value);
+  }
 
   @override
   String toString() {
@@ -1308,12 +1300,13 @@ class _$MessageDtoImpl extends _MessageDto {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.text, text) || other.text == text) &&
             (identical(other.type, type) || other.type == type) &&
-            (identical(other.context, context) || other.context == context));
+            const DeepCollectionEquality().equals(other._context, _context));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, text, type, context);
+  int get hashCode => Object.hash(runtimeType, id, text, type,
+      const DeepCollectionEquality().hash(_context));
 
   /// Create a copy of MessageDto
   /// with the given fields replaced by the non-null parameter values.
@@ -1336,7 +1329,7 @@ abstract class _MessageDto extends MessageDto {
       {required final int id,
       required final String text,
       required final String type,
-      final MessageContextDto? context}) = _$MessageDtoImpl;
+      final Map<String, dynamic>? context}) = _$MessageDtoImpl;
   const _MessageDto._() : super._();
 
   factory _MessageDto.fromJson(Map<String, dynamic> json) =
@@ -1349,174 +1342,13 @@ abstract class _MessageDto extends MessageDto {
   @override
   String get type;
   @override
-  MessageContextDto? get context;
+  Map<String, dynamic>? get context;
 
   /// Create a copy of MessageDto
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$MessageDtoImplCopyWith<_$MessageDtoImpl> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-MessageContextDto _$MessageContextDtoFromJson(Map<String, dynamic> json) {
-  return _MessageContextDto.fromJson(json);
-}
-
-/// @nodoc
-mixin _$MessageContextDto {
-  Map<String, String>? get parametersMap => throw _privateConstructorUsedError;
-
-  /// Serializes this MessageContextDto to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of MessageContextDto
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $MessageContextDtoCopyWith<MessageContextDto> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $MessageContextDtoCopyWith<$Res> {
-  factory $MessageContextDtoCopyWith(
-          MessageContextDto value, $Res Function(MessageContextDto) then) =
-      _$MessageContextDtoCopyWithImpl<$Res, MessageContextDto>;
-  @useResult
-  $Res call({Map<String, String>? parametersMap});
-}
-
-/// @nodoc
-class _$MessageContextDtoCopyWithImpl<$Res, $Val extends MessageContextDto>
-    implements $MessageContextDtoCopyWith<$Res> {
-  _$MessageContextDtoCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  /// Create a copy of MessageContextDto
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? parametersMap = freezed,
-  }) {
-    return _then(_value.copyWith(
-      parametersMap: freezed == parametersMap
-          ? _value.parametersMap
-          : parametersMap // ignore: cast_nullable_to_non_nullable
-              as Map<String, String>?,
-    ) as $Val);
-  }
-}
-
-/// @nodoc
-abstract class _$$MessageContextDtoImplCopyWith<$Res>
-    implements $MessageContextDtoCopyWith<$Res> {
-  factory _$$MessageContextDtoImplCopyWith(_$MessageContextDtoImpl value,
-          $Res Function(_$MessageContextDtoImpl) then) =
-      __$$MessageContextDtoImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({Map<String, String>? parametersMap});
-}
-
-/// @nodoc
-class __$$MessageContextDtoImplCopyWithImpl<$Res>
-    extends _$MessageContextDtoCopyWithImpl<$Res, _$MessageContextDtoImpl>
-    implements _$$MessageContextDtoImplCopyWith<$Res> {
-  __$$MessageContextDtoImplCopyWithImpl(_$MessageContextDtoImpl _value,
-      $Res Function(_$MessageContextDtoImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of MessageContextDto
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? parametersMap = freezed,
-  }) {
-    return _then(_$MessageContextDtoImpl(
-      parametersMap: freezed == parametersMap
-          ? _value._parametersMap
-          : parametersMap // ignore: cast_nullable_to_non_nullable
-              as Map<String, String>?,
-    ));
-  }
-}
-
-/// @nodoc
-@JsonSerializable()
-class _$MessageContextDtoImpl implements _MessageContextDto {
-  const _$MessageContextDtoImpl({final Map<String, String>? parametersMap})
-      : _parametersMap = parametersMap;
-
-  factory _$MessageContextDtoImpl.fromJson(Map<String, dynamic> json) =>
-      _$$MessageContextDtoImplFromJson(json);
-
-  final Map<String, String>? _parametersMap;
-  @override
-  Map<String, String>? get parametersMap {
-    final value = _parametersMap;
-    if (value == null) return null;
-    if (_parametersMap is EqualUnmodifiableMapView) return _parametersMap;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(value);
-  }
-
-  @override
-  String toString() {
-    return 'MessageContextDto(parametersMap: $parametersMap)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$MessageContextDtoImpl &&
-            const DeepCollectionEquality()
-                .equals(other._parametersMap, _parametersMap));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(
-      runtimeType, const DeepCollectionEquality().hash(_parametersMap));
-
-  /// Create a copy of MessageContextDto
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$MessageContextDtoImplCopyWith<_$MessageContextDtoImpl> get copyWith =>
-      __$$MessageContextDtoImplCopyWithImpl<_$MessageContextDtoImpl>(
-          this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$MessageContextDtoImplToJson(
-      this,
-    );
-  }
-}
-
-abstract class _MessageContextDto implements MessageContextDto {
-  const factory _MessageContextDto({final Map<String, String>? parametersMap}) =
-      _$MessageContextDtoImpl;
-
-  factory _MessageContextDto.fromJson(Map<String, dynamic> json) =
-      _$MessageContextDtoImpl.fromJson;
-
-  @override
-  Map<String, String>? get parametersMap;
-
-  /// Create a copy of MessageContextDto
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$MessageContextDtoImplCopyWith<_$MessageContextDtoImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 

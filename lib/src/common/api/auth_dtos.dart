@@ -138,7 +138,7 @@ class MessageDto with _$MessageDto {
     required int id,
     required String text,
     required String type,
-    MessageContextDto? context,
+    Map<String, dynamic>? context,
   }) = _MessageDto;
 
   factory MessageDto.fromJson(Map<String, dynamic> json) =>
@@ -146,62 +146,9 @@ class MessageDto with _$MessageDto {
 
   const MessageDto._();
 
-  KratosMessage toKratosMessage() => KratosMessage.forId(
-        id,
-        contextParameters: context?.parametersMap,
-      );
+  KratosMessage toKratosMessage() => KratosMessage.forId(id, contextParameters: context);
 }
 
-@JsonSerializable(converters: [MessageContextConverter()])
-@freezed
-class MessageContextDto with _$MessageContextDto {
-  const factory MessageContextDto({
-    Map<String, String>? parametersMap,
-  }) = _MessageContextDto;
-}
-
-class MessageContextConverter
-    implements JsonConverter<Map<String, String>?, Map<String, dynamic>?> {
-  const MessageContextConverter();
-
-  @override
-  Map<String, String>? fromJson(Map<String, dynamic>? json) {
-    if (json == null) {
-      return null;
-    }
-
-    final result = <String, String>{};
-
-    json.forEach((key, value) {
-      if (value is String) {
-        result[key] = value;
-      } else if (value is List<String>) {
-        result[key] = value.join(', ');
-      }
-    });
-
-    return result;
-  }
-
-  @override
-  Map<String, dynamic>? toJson(Map<String, String>? data) {
-    if (data == null) {
-      return null;
-    }
-
-    final result = <String, dynamic>{};
-
-    data.forEach((key, value) {
-      if (value.contains(', ')) {
-        result[key] = value.split(', ');
-      } else {
-        result[key] = value;
-      }
-    });
-
-    return result;
-  }
-}
 
 @freezed
 class MetaDto with _$MetaDto {
