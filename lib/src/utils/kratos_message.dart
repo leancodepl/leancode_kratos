@@ -289,13 +289,9 @@ final class InfoSelfServiceLoginWith extends KratosMessage {
     required this.provider,
   });
 
-  factory InfoSelfServiceLoginWith.fromContext(
+  InfoSelfServiceLoginWith.fromContext(
     ContextParameters contextParameters,
-  ) {
-    return InfoSelfServiceLoginWith(
-      provider: contextParameters['provider']!,
-    );
-  }
+  ) : provider = contextParameters['provider']!;
 
   final String provider;
 
@@ -386,14 +382,10 @@ final class InfoSelfServiceSigningInWillLinkYourAccount extends KratosMessage {
     required this.provider,
   });
 
-  factory InfoSelfServiceSigningInWillLinkYourAccount.fromContext(
+  InfoSelfServiceSigningInWillLinkYourAccount.fromContext(
     ContextParameters contextParameters,
-  ) {
-    return InfoSelfServiceSigningInWillLinkYourAccount(
-      duplicateIdentifier: contextParameters['duplicateIdentifier']!,
-      provider: contextParameters['provider']!,
-    );
-  }
+  )   : duplicateIdentifier = contextParameters['duplicateIdentifier']!,
+        provider = contextParameters['provider']!;
 
   final String duplicateIdentifier;
   final String provider;
@@ -412,13 +404,10 @@ final class InfoSelfserviceSignInAndLinkCredential extends KratosMessage {
     required this.provider,
   });
 
-  factory InfoSelfserviceSignInAndLinkCredential.fromContext(
+  InfoSelfserviceSignInAndLinkCredential.fromContext(
     ContextParameters contextParameters,
-  ) {
-    return InfoSelfserviceSignInAndLinkCredential(
-      provider: contextParameters['provider']!,
-    );
-  }
+  ) : provider = contextParameters['provider']!;
+
   final String provider;
 
   static const id = 1010018;
@@ -429,13 +418,9 @@ final class InfoSendCodeTo extends KratosMessage {
     required this.address,
   });
 
-  factory InfoSendCodeTo.fromContext(
+  InfoSendCodeTo.fromContext(
     ContextParameters contextParameters,
-  ) {
-    return InfoSendCodeTo(
-      address: contextParameters['address']!,
-    );
-  }
+  ) : address = contextParameters['address']!;
 
   final String address;
 
@@ -473,13 +458,9 @@ final class InfoSelfServiceRegistrationWith extends KratosMessage {
     required this.provider,
   });
 
-  factory InfoSelfServiceRegistrationWith.fromContext(
+  InfoSelfServiceRegistrationWith.fromContext(
     ContextParameters contextParameters,
-  ) {
-    return InfoSelfServiceRegistrationWith(
-      provider: contextParameters['provider']!,
-    );
-  }
+  ) : provider = contextParameters['provider']!;
 
   final String provider;
 
@@ -528,13 +509,9 @@ final class InfoSelfServiceSettingsUpdateLinkOidc extends KratosMessage {
     required this.provider,
   });
 
-  factory InfoSelfServiceSettingsUpdateLinkOidc.fromContext(
+  InfoSelfServiceSettingsUpdateLinkOidc.fromContext(
     ContextParameters contextParameters,
-  ) {
-    return InfoSelfServiceSettingsUpdateLinkOidc(
-      provider: contextParameters['provider']!,
-    );
-  }
+  ) : provider = contextParameters['provider']!;
 
   final String provider;
 
@@ -546,13 +523,9 @@ final class InfoSelfServiceSettingsUpdateUnlinkOidc extends KratosMessage {
     required this.provider,
   });
 
-  factory InfoSelfServiceSettingsUpdateUnlinkOidc.fromContext(
+  InfoSelfServiceSettingsUpdateUnlinkOidc.fromContext(
     ContextParameters contextParameters,
-  ) {
-    return InfoSelfServiceSettingsUpdateUnlinkOidc(
-      provider: contextParameters['provider']!,
-    );
-  }
+  ) : provider = contextParameters['provider']!;
 
   final String provider;
 
@@ -576,13 +549,9 @@ final class InfoSelfServiceSettingsTOTPSecret extends KratosMessage {
     required this.secret,
   });
 
-  factory InfoSelfServiceSettingsTOTPSecret.fromContext(
+  InfoSelfServiceSettingsTOTPSecret.fromContext(
     ContextParameters contextParameters,
-  ) {
-    return InfoSelfServiceSettingsTOTPSecret(
-      secret: contextParameters['secret']!,
-    );
-  }
+  ) : secret = contextParameters['secret']!;
 
   final String secret;
 
@@ -606,13 +575,9 @@ final class InfoSelfServiceSettingsLookupSecret extends KratosMessage {
     required this.secret,
   });
 
-  factory InfoSelfServiceSettingsLookupSecret.fromContext(
+  InfoSelfServiceSettingsLookupSecret.fromContext(
     ContextParameters contextParameters,
-  ) {
-    return InfoSelfServiceSettingsLookupSecret(
-      secret: contextParameters['secret']!,
-    );
-  }
+  ) : secret = contextParameters['secret']!;
 
   final String secret;
 
@@ -673,13 +638,9 @@ final class InfoSelfServiceSettingsRemoveWebAuthn extends KratosMessage {
     required this.displayName,
   });
 
-  factory InfoSelfServiceSettingsRemoveWebAuthn.fromContext(
+  InfoSelfServiceSettingsRemoveWebAuthn.fromContext(
     ContextParameters contextParameters,
-  ) {
-    return InfoSelfServiceSettingsRemoveWebAuthn(
-      displayName: contextParameters['display_name']!,
-    );
-  }
+  ) : displayName = contextParameters['display_name']!;
 
   final String displayName;
 
@@ -691,13 +652,9 @@ final class InfoSelfServiceSettingsRemovePasskey extends KratosMessage {
     required this.displayName,
   });
 
-  factory InfoSelfServiceSettingsRemovePasskey.fromContext(
+  InfoSelfServiceSettingsRemovePasskey.fromContext(
     ContextParameters contextParameters,
-  ) {
-    return InfoSelfServiceSettingsRemovePasskey(
-      displayName: contextParameters['display_name']!,
-    );
-  }
+  ) : displayName = contextParameters['display_name']!;
 
   final String displayName;
 
@@ -747,13 +704,9 @@ final class InfoNodeLabelGenerated extends KratosMessage {
     required this.title,
   });
 
-  factory InfoNodeLabelGenerated.fromContext(
+  InfoNodeLabelGenerated.fromContext(
     ContextParameters contextParameters,
-  ) {
-    return InfoNodeLabelGenerated(
-      title: contextParameters['title']!,
-    );
-  }
+  ) : title = contextParameters['title']!;
 
   final String title;
 
@@ -869,13 +822,9 @@ final class ErrorValidationGeneric extends KratosMessage {
     required this.reason,
   });
 
-  factory ErrorValidationGeneric.fromContext(
+  ErrorValidationGeneric.fromContext(
     ContextParameters contextParameters,
-  ) {
-    return ErrorValidationGeneric(
-      reason: contextParameters['reason']!,
-    );
-  }
+  ) : reason = contextParameters['reason']!;
 
   final String reason;
 
@@ -887,13 +836,9 @@ final class ErrorValidationRequired extends KratosMessage {
     required this.property,
   });
 
-  factory ErrorValidationRequired.fromContext(
+  ErrorValidationRequired.fromContext(
     ContextParameters contextParameters,
-  ) {
-    return ErrorValidationRequired(
-      property: contextParameters['property']!,
-    );
-  }
+  ) : property = contextParameters['property']!;
 
   final String property;
 
@@ -911,13 +856,9 @@ final class ErrorValidationInvalidFormat extends KratosMessage {
     required this.pattern,
   });
 
-  factory ErrorValidationInvalidFormat.fromContext(
+  ErrorValidationInvalidFormat.fromContext(
     ContextParameters contextParameters,
-  ) {
-    return ErrorValidationInvalidFormat(
-      pattern: contextParameters['pattern']!,
-    );
-  }
+  ) : pattern = contextParameters['pattern']!;
 
   final String pattern;
 
@@ -929,13 +870,9 @@ final class ErrorValidationPasswordPolicyViolation extends KratosMessage {
     required this.reason,
   });
 
-  factory ErrorValidationPasswordPolicyViolation.fromContext(
+  ErrorValidationPasswordPolicyViolation.fromContext(
     ContextParameters contextParameters,
-  ) {
-    return ErrorValidationPasswordPolicyViolation(
-      reason: contextParameters['reason']!,
-    );
-  }
+  ) : reason = contextParameters['reason']!;
 
   final String reason;
 
@@ -1068,19 +1005,13 @@ final class ErrorValidationWrongType extends KratosMessage {
     required this.allowedTypesList,
   });
 
-  factory ErrorValidationWrongType.fromContext(
+  ErrorValidationWrongType.fromContext(
     ContextParameters contextParameters,
-  ) {
-    return ErrorValidationWrongType(
-      actualType: contextParameters['actual_type']!,
-      allowedTypesList: commaSepratedStringFromList(
-        contextParameters['allowed_types_list'],
-      ),
-    );
-  }
+  )   : actualType = contextParameters['actual_type']!,
+        allowedTypesList = contextParameters['allowed_types_list']!;
 
   final String actualType;
-  final String allowedTypesList;
+  final List<String> allowedTypesList;
 
   static const parameterNames = ['actual_type'];
 
@@ -1101,20 +1032,15 @@ final class ErrorValidationCredentialAlreadyUsedByAnotherAccount
     required this.availableCredentialTypesList,
   });
 
-  factory ErrorValidationCredentialAlreadyUsedByAnotherAccount.fromContext(
+  ErrorValidationCredentialAlreadyUsedByAnotherAccount.fromContext(
     ContextParameters contextParameters,
-  ) {
-    return ErrorValidationCredentialAlreadyUsedByAnotherAccount(
-      credentialIdentifierHint:
-          contextParameters['credential_identifier_hint']!,
-      availableCredentialTypesList: commaSepratedStringFromList(
-        contextParameters['available_credential_types_list'],
-      ),
-    );
-  }
+  )   : credentialIdentifierHint =
+            contextParameters['credential_identifier_hint']!,
+        availableCredentialTypesList =
+            contextParameters['available_credential_types_list']!;
 
   final String credentialIdentifierHint;
-  final String availableCredentialTypesList;
+  final List<String> availableCredentialTypesList;
 
   static const id = 4000028;
 }
@@ -1384,16 +1310,4 @@ final class ErrorSystemGeneric extends KratosMessage {
   const ErrorSystemGeneric();
 
   static const id = 5000001;
-}
-
-String commaSepratedStringFromList(dynamic value) {
-  if (value == null) {
-    return '';
-  }
-
-  if (value is List<String>) {
-    return value.isEmpty ? '' : value.join(', ');
-  }
-
-  return '';
 }
