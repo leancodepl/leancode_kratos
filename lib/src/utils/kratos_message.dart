@@ -1073,7 +1073,7 @@ final class ErrorValidationWrongType extends KratosMessage {
   ) {
     return ErrorValidationWrongType(
       actualType: contextParameters['actual_type']!,
-      allowedTypesList: commaSepratedStringFromJsonValue(
+      allowedTypesList: commaSepratedStringFromList(
         contextParameters['allowed_types_list'],
       ),
     );
@@ -1107,7 +1107,7 @@ final class ErrorValidationCredentialAlreadyUsedByAnotherAccount
     return ErrorValidationCredentialAlreadyUsedByAnotherAccount(
       credentialIdentifierHint:
           contextParameters['credential_identifier_hint']!,
-      availableCredentialTypesList: commaSepratedStringFromJsonValue(
+      availableCredentialTypesList: commaSepratedStringFromList(
         contextParameters['available_credential_types_list'],
       ),
     );
@@ -1386,7 +1386,7 @@ final class ErrorSystemGeneric extends KratosMessage {
   static const id = 5000001;
 }
 
-String commaSepratedStringFromJsonValue(dynamic value) {
+String commaSepratedStringFromList(dynamic value) {
   if (value == null) {
     return '';
   }
