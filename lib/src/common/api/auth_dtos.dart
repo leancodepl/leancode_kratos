@@ -138,7 +138,7 @@ class MessageDto with _$MessageDto {
     required int id,
     required String text,
     required String type,
-    Map<String, dynamic>? context,
+    Map<String, dynamic> context,
   }) = _MessageDto;
 
   factory MessageDto.fromJson(Map<String, dynamic> json) =>
@@ -146,7 +146,7 @@ class MessageDto with _$MessageDto {
 
   const MessageDto._();
 
-  KratosMessage toKratosMessage() => KratosMessage.forId(id, context: context);
+  KratosMessage toKratosMessage() => KratosMessage.forId(id, context);
 }
 
 @freezed
