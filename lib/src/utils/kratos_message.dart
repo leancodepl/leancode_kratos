@@ -6,15 +6,15 @@ sealed class KratosMessage {
   const KratosMessage();
 
   factory KratosMessage.forId(
-    int id, {
-    Map<String, dynamic>? context,
-  }) {
+    int id,
+    ContextParameters? context,
+  ) {
     return switch (id) {
       // Login
       InfoSelfServiceLoginRoot.id => const InfoSelfServiceLoginRoot(),
       InfoSelfServiceLogin.id => const InfoSelfServiceLogin(),
       InfoSelfServiceLoginWith.id =>
-        InfoSelfServiceLoginWith.fromContext(context),
+        InfoSelfServiceLoginWith.fromContext(context!),
       InfoSelfServiceLoginReAuth.id => const InfoSelfServiceLoginReAuth(),
       InfoSelfServiceLoginMFA.id => const InfoSelfServiceLoginMFA(),
       InfoSelfServiceLoginVerify.id => const InfoSelfServiceLoginVerify(),
@@ -32,11 +32,11 @@ sealed class KratosMessage {
         const InfoSelfServiceEmailHasBeenSent(),
       InfoSelfServiceSignInWithCode.id => const InfoSelfServiceSignInWithCode(),
       InfoSelfServiceSigningInWillLinkYourAccount.id =>
-        InfoSelfServiceSigningInWillLinkYourAccount.fromContext(context),
+        InfoSelfServiceSigningInWillLinkYourAccount.fromContext(context!),
       InfoSelfServiceSignInAndLink.id => const InfoSelfServiceSignInAndLink(),
       InfoSelfserviceSignInAndLinkCredential.id =>
-        InfoSelfserviceSignInAndLinkCredential.fromContext(context),
-      InfoSendCodeTo.id => InfoSendCodeTo.fromContext(context),
+        InfoSelfserviceSignInAndLinkCredential.fromContext(context!),
+      InfoSendCodeTo.id => InfoSendCodeTo.fromContext(context!),
 
       // Logout
       InfoSelfServiceLogout.id => const InfoSelfServiceLogout(),
@@ -47,7 +47,7 @@ sealed class KratosMessage {
         const InfoSelfServiceRegistrationRoot(),
       InfoSelfServiceRegistration.id => const InfoSelfServiceRegistration(),
       InfoSelfServiceRegistrationWith.id =>
-        InfoSelfServiceRegistrationWith.fromContext(context),
+        InfoSelfServiceRegistrationWith.fromContext(context!),
       InfoSelfServiceRegistrationContinue.id =>
         const InfoSelfServiceRegistrationContinue(),
       InfoSelfServiceRegistrationRegisterWebAuthn.id =>
@@ -62,21 +62,21 @@ sealed class KratosMessage {
       InfoSelfServiceSettingsUpdateSuccess.id =>
         const InfoSelfServiceSettingsUpdateSuccess(),
       InfoSelfServiceSettingsUpdateLinkOidc.id =>
-        InfoSelfServiceSettingsUpdateLinkOidc.fromContext(context),
+        InfoSelfServiceSettingsUpdateLinkOidc.fromContext(context!),
       InfoSelfServiceSettingsUpdateUnlinkOidc.id =>
-        InfoSelfServiceSettingsUpdateUnlinkOidc.fromContext(context),
+        InfoSelfServiceSettingsUpdateUnlinkOidc.fromContext(context!),
       InfoSelfServiceSettingsUpdateUnlinkTOTP.id =>
         const InfoSelfServiceSettingsUpdateUnlinkTOTP(),
       InfoSelfServiceSettingsTOTPQRCode.id =>
         const InfoSelfServiceSettingsTOTPQRCode(),
       InfoSelfServiceSettingsTOTPSecret.id =>
-        InfoSelfServiceSettingsTOTPSecret.fromContext(context),
+        InfoSelfServiceSettingsTOTPSecret.fromContext(context!),
       InfoSelfServiceSettingsRevealLookup.id =>
         const InfoSelfServiceSettingsRevealLookup(),
       InfoSelfServiceSettingsRegenerateLookup.id =>
         const InfoSelfServiceSettingsRegenerateLookup(),
       InfoSelfServiceSettingsLookupSecret.id =>
-        InfoSelfServiceSettingsLookupSecret.fromContext(context),
+        InfoSelfServiceSettingsLookupSecret.fromContext(context!),
       InfoSelfServiceSettingsLookupSecretLabel.id =>
         const InfoSelfServiceSettingsLookupSecretLabel(),
       InfoSelfServiceSettingsLookupConfirm.id =>
@@ -94,9 +94,9 @@ sealed class KratosMessage {
       InfoSelfServiceSettingsTOTPSecretLabel.id =>
         const InfoSelfServiceSettingsTOTPSecretLabel(),
       InfoSelfServiceSettingsRemoveWebAuthn.id =>
-        InfoSelfServiceSettingsRemoveWebAuthn.fromContext(context),
+        InfoSelfServiceSettingsRemoveWebAuthn.fromContext(context!),
       InfoSelfServiceSettingsRemovePasskey.id =>
-        InfoSelfServiceSettingsRemovePasskey.fromContext(context),
+        InfoSelfServiceSettingsRemovePasskey.fromContext(context!),
 
       // Recovery
       InfoSelfServiceRecovery.id => const InfoSelfServiceRecovery(),
@@ -110,7 +110,7 @@ sealed class KratosMessage {
       // Node Labels
       InfoNodeLabel.id => const InfoNodeLabel(),
       InfoNodeLabelInputPassword.id => const InfoNodeLabelInputPassword(),
-      InfoNodeLabelGenerated.id => InfoNodeLabelGenerated.fromContext(context),
+      InfoNodeLabelGenerated.id => InfoNodeLabelGenerated.fromContext(context!),
       InfoNodeLabelSave.id => const InfoNodeLabelSave(),
       InfoNodeLabelID.id => const InfoNodeLabelID(),
       InfoNodeLabelSubmit.id => const InfoNodeLabelSubmit(),
@@ -136,14 +136,14 @@ sealed class KratosMessage {
 
       // Validation Error
       ErrorValidation.id => const ErrorValidation(),
-      ErrorValidationGeneric.id => ErrorValidationGeneric.fromContext(context),
+      ErrorValidationGeneric.id => ErrorValidationGeneric.fromContext(context!),
       ErrorValidationRequired.id =>
-        ErrorValidationRequired.fromContext(context),
+        ErrorValidationRequired.fromContext(context!),
       ErrorValidationMinLength.id => const ErrorValidationMinLength(),
       ErrorValidationInvalidFormat.id =>
-        ErrorValidationInvalidFormat.fromContext(context),
+        ErrorValidationInvalidFormat.fromContext(context!),
       ErrorValidationPasswordPolicyViolation.id =>
-        ErrorValidationPasswordPolicyViolation.fromContext(context),
+        ErrorValidationPasswordPolicyViolation.fromContext(context!),
       ErrorValidationInvalidCredentials.id =>
         const ErrorValidationInvalidCredentials(),
       ErrorValidationDuplicateCredentials.id =>
@@ -175,15 +175,15 @@ sealed class KratosMessage {
       ErrorValidationMinItems.id => const ErrorValidationMinItems(),
       ErrorValidationUniqueItems.id => const ErrorValidationUniqueItems(),
       ErrorValidationWrongType.id =>
-        ErrorValidationWrongType.fromContext(context),
+        ErrorValidationWrongType.fromContext(context!),
       ErrorValidationDuplicateCredentialsOnOIDCLink.id =>
         const ErrorValidationDuplicateCredentialsOnOIDCLink(),
       ErrorValidationCredentialAlreadyUsedByAnotherAccount.id =>
         ErrorValidationCredentialAlreadyUsedByAnotherAccount.fromContext(
-          context,
+          context!,
         ),
       ErrorValidationMustBeEqualToConstant.id =>
-        ErrorValidationMustBeEqualToConstant.fromContext(context),
+        ErrorValidationMustBeEqualToConstant.fromContext(context!),
       ErrorValidationConstFailed.id => const ErrorValidationConstFailed(),
       ErrorValidationPasswordTooSimilarToIdentifier.id =>
         const ErrorValidationPasswordTooSimilarToIdentifier(),
@@ -290,10 +290,10 @@ final class InfoSelfServiceLoginWith extends KratosMessage {
   });
 
   factory InfoSelfServiceLoginWith.fromContext(
-    ContextParameters? contextParameters,
+    ContextParameters contextParameters,
   ) {
     return InfoSelfServiceLoginWith(
-      provider: contextParameters!['provider']!,
+      provider: contextParameters['provider']!,
     );
   }
 
@@ -387,10 +387,10 @@ final class InfoSelfServiceSigningInWillLinkYourAccount extends KratosMessage {
   });
 
   factory InfoSelfServiceSigningInWillLinkYourAccount.fromContext(
-    ContextParameters? contextParameters,
+    ContextParameters contextParameters,
   ) {
     return InfoSelfServiceSigningInWillLinkYourAccount(
-      duplicateIdentifier: contextParameters!['duplicateIdentifier']!,
+      duplicateIdentifier: contextParameters['duplicateIdentifier']!,
       provider: contextParameters['provider']!,
     );
   }
@@ -413,10 +413,10 @@ final class InfoSelfserviceSignInAndLinkCredential extends KratosMessage {
   });
 
   factory InfoSelfserviceSignInAndLinkCredential.fromContext(
-    ContextParameters? contextParameters,
+    ContextParameters contextParameters,
   ) {
     return InfoSelfserviceSignInAndLinkCredential(
-      provider: contextParameters!['provider']!,
+      provider: contextParameters['provider']!,
     );
   }
   final String provider;
@@ -430,10 +430,10 @@ final class InfoSendCodeTo extends KratosMessage {
   });
 
   factory InfoSendCodeTo.fromContext(
-    ContextParameters? contextParameters,
+    ContextParameters contextParameters,
   ) {
     return InfoSendCodeTo(
-      address: contextParameters!['address']!,
+      address: contextParameters['address']!,
     );
   }
 
@@ -474,10 +474,10 @@ final class InfoSelfServiceRegistrationWith extends KratosMessage {
   });
 
   factory InfoSelfServiceRegistrationWith.fromContext(
-    ContextParameters? contextParameters,
+    ContextParameters contextParameters,
   ) {
     return InfoSelfServiceRegistrationWith(
-      provider: contextParameters!['provider']!,
+      provider: contextParameters['provider']!,
     );
   }
 
@@ -529,10 +529,10 @@ final class InfoSelfServiceSettingsUpdateLinkOidc extends KratosMessage {
   });
 
   factory InfoSelfServiceSettingsUpdateLinkOidc.fromContext(
-    ContextParameters? contextParameters,
+    ContextParameters contextParameters,
   ) {
     return InfoSelfServiceSettingsUpdateLinkOidc(
-      provider: contextParameters!['provider']!,
+      provider: contextParameters['provider']!,
     );
   }
 
@@ -547,10 +547,10 @@ final class InfoSelfServiceSettingsUpdateUnlinkOidc extends KratosMessage {
   });
 
   factory InfoSelfServiceSettingsUpdateUnlinkOidc.fromContext(
-    ContextParameters? contextParameters,
+    ContextParameters contextParameters,
   ) {
     return InfoSelfServiceSettingsUpdateUnlinkOidc(
-      provider: contextParameters!['provider']!,
+      provider: contextParameters['provider']!,
     );
   }
 
@@ -577,10 +577,10 @@ final class InfoSelfServiceSettingsTOTPSecret extends KratosMessage {
   });
 
   factory InfoSelfServiceSettingsTOTPSecret.fromContext(
-    ContextParameters? contextParameters,
+    ContextParameters contextParameters,
   ) {
     return InfoSelfServiceSettingsTOTPSecret(
-      secret: contextParameters!['secret']!,
+      secret: contextParameters['secret']!,
     );
   }
 
@@ -607,10 +607,10 @@ final class InfoSelfServiceSettingsLookupSecret extends KratosMessage {
   });
 
   factory InfoSelfServiceSettingsLookupSecret.fromContext(
-    ContextParameters? contextParameters,
+    ContextParameters contextParameters,
   ) {
     return InfoSelfServiceSettingsLookupSecret(
-      secret: contextParameters!['secret']!,
+      secret: contextParameters['secret']!,
     );
   }
 
@@ -674,10 +674,10 @@ final class InfoSelfServiceSettingsRemoveWebAuthn extends KratosMessage {
   });
 
   factory InfoSelfServiceSettingsRemoveWebAuthn.fromContext(
-    ContextParameters? contextParameters,
+    ContextParameters contextParameters,
   ) {
     return InfoSelfServiceSettingsRemoveWebAuthn(
-      displayName: contextParameters!['display_name']!,
+      displayName: contextParameters['display_name']!,
     );
   }
 
@@ -692,10 +692,10 @@ final class InfoSelfServiceSettingsRemovePasskey extends KratosMessage {
   });
 
   factory InfoSelfServiceSettingsRemovePasskey.fromContext(
-    ContextParameters? contextParameters,
+    ContextParameters contextParameters,
   ) {
     return InfoSelfServiceSettingsRemovePasskey(
-      displayName: contextParameters!['display_name']!,
+      displayName: contextParameters['display_name']!,
     );
   }
 
@@ -748,10 +748,10 @@ final class InfoNodeLabelGenerated extends KratosMessage {
   });
 
   factory InfoNodeLabelGenerated.fromContext(
-    ContextParameters? contextParameters,
+    ContextParameters contextParameters,
   ) {
     return InfoNodeLabelGenerated(
-      title: contextParameters!['title']!,
+      title: contextParameters['title']!,
     );
   }
 
@@ -870,10 +870,10 @@ final class ErrorValidationGeneric extends KratosMessage {
   });
 
   factory ErrorValidationGeneric.fromContext(
-    ContextParameters? contextParameters,
+    ContextParameters contextParameters,
   ) {
     return ErrorValidationGeneric(
-      reason: contextParameters!['reason']!,
+      reason: contextParameters['reason']!,
     );
   }
 
@@ -888,10 +888,10 @@ final class ErrorValidationRequired extends KratosMessage {
   });
 
   factory ErrorValidationRequired.fromContext(
-    ContextParameters? contextParameters,
+    ContextParameters contextParameters,
   ) {
     return ErrorValidationRequired(
-      property: contextParameters!['property']!,
+      property: contextParameters['property']!,
     );
   }
 
@@ -912,10 +912,10 @@ final class ErrorValidationInvalidFormat extends KratosMessage {
   });
 
   factory ErrorValidationInvalidFormat.fromContext(
-    ContextParameters? contextParameters,
+    ContextParameters contextParameters,
   ) {
     return ErrorValidationInvalidFormat(
-      pattern: contextParameters!['pattern']!,
+      pattern: contextParameters['pattern']!,
     );
   }
 
@@ -930,10 +930,10 @@ final class ErrorValidationPasswordPolicyViolation extends KratosMessage {
   });
 
   factory ErrorValidationPasswordPolicyViolation.fromContext(
-    ContextParameters? contextParameters,
+    ContextParameters contextParameters,
   ) {
     return ErrorValidationPasswordPolicyViolation(
-      reason: contextParameters!['reason']!,
+      reason: contextParameters['reason']!,
     );
   }
 
@@ -1065,20 +1065,26 @@ final class ErrorValidationUniqueItems extends KratosMessage {
 final class ErrorValidationWrongType extends KratosMessage {
   const ErrorValidationWrongType({
     required this.actualType,
+    required this.allowedTypesList,
   });
 
   factory ErrorValidationWrongType.fromContext(
-    ContextParameters? contextParameters,
+    ContextParameters contextParameters,
   ) {
     return ErrorValidationWrongType(
-      actualType: contextParameters!['actual_type']!,
+      actualType: contextParameters['actual_type']!,
+      allowedTypesList: commaSepratedStringFromJsonValue(
+        contextParameters['allowed_types_list'],
+      ),
     );
   }
 
   final String actualType;
+  final String allowedTypesList;
+
+  static const parameterNames = ['actual_type'];
 
   static const id = 4000026;
-  static const parameterNames = ['actual_type'];
 }
 
 final class ErrorValidationDuplicateCredentialsOnOIDCLink
@@ -1096,13 +1102,14 @@ final class ErrorValidationCredentialAlreadyUsedByAnotherAccount
   });
 
   factory ErrorValidationCredentialAlreadyUsedByAnotherAccount.fromContext(
-    ContextParameters? contextParameters,
+    ContextParameters contextParameters,
   ) {
     return ErrorValidationCredentialAlreadyUsedByAnotherAccount(
       credentialIdentifierHint:
-          contextParameters!['credential_identifier_hint']!,
-      availableCredentialTypesList:
-          contextParameters['available_credential_types_list']!,
+          contextParameters['credential_identifier_hint']!,
+      availableCredentialTypesList: commaSepratedStringFromJsonValue(
+        contextParameters['available_credential_types_list'],
+      ),
     );
   }
 
@@ -1118,10 +1125,10 @@ final class ErrorValidationMustBeEqualToConstant extends KratosMessage {
   });
 
   factory ErrorValidationMustBeEqualToConstant.fromContext(
-    ContextParameters? contextParameters,
+    ContextParameters contextParameters,
   ) {
     return ErrorValidationMustBeEqualToConstant(
-      expected: contextParameters!['expected']!,
+      expected: contextParameters['expected']!,
     );
   }
 
@@ -1377,4 +1384,16 @@ final class ErrorSystemGeneric extends KratosMessage {
   const ErrorSystemGeneric();
 
   static const id = 5000001;
+}
+
+String commaSepratedStringFromJsonValue(dynamic value) {
+  if (value == null) {
+    return '';
+  }
+
+  if (value is List<String>) {
+    return value.isEmpty ? '' : value.join(', ');
+  }
+
+  return '';
 }
