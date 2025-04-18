@@ -1050,13 +1050,10 @@ final class ErrorValidationMustBeEqualToConstant extends KratosMessage {
     required this.expected,
   });
 
-  factory ErrorValidationMustBeEqualToConstant.fromContext(
+  ErrorValidationMustBeEqualToConstant.fromContext(
     ContextParameters contextParameters,
-  ) {
-    return ErrorValidationMustBeEqualToConstant(
-      expected: contextParameters['expected']!,
-    );
-  }
+  ) : expected = contextParameters['expected']!;
+
 
   final String expected;
 
