@@ -99,9 +99,7 @@ _$MessageDtoImpl _$$MessageDtoImplFromJson(Map<String, dynamic> json) =>
       id: (json['id'] as num).toInt(),
       text: json['text'] as String,
       type: json['type'] as String,
-      context: json['context'] == null
-          ? null
-          : MessageContextDto.fromJson(json['context'] as Map<String, dynamic>),
+      context: json['context'] as Map<String, dynamic>?,
     );
 
 Map<String, dynamic> _$$MessageDtoImplToJson(_$MessageDtoImpl instance) =>
@@ -109,19 +107,7 @@ Map<String, dynamic> _$$MessageDtoImplToJson(_$MessageDtoImpl instance) =>
       'id': instance.id,
       'text': instance.text,
       'type': instance.type,
-      'context': instance.context?.toJson(),
-    };
-
-_$MessageContextDtoImpl _$$MessageContextDtoImplFromJson(
-        Map<String, dynamic> json) =>
-    _$MessageContextDtoImpl(
-      reason: json['reason'] as String?,
-    );
-
-Map<String, dynamic> _$$MessageContextDtoImplToJson(
-        _$MessageContextDtoImpl instance) =>
-    <String, dynamic>{
-      'reason': instance.reason,
+      'context': instance.context,
     };
 
 _$MetaDtoImpl _$$MetaDtoImplFromJson(Map<String, dynamic> json) =>
