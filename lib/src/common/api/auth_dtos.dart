@@ -138,7 +138,7 @@ class MessageDto with _$MessageDto {
     required int id,
     required String text,
     required String type,
-    Map<String, dynamic> context,
+    ContextParameters? context,
   }) = _MessageDto;
 
   factory MessageDto.fromJson(Map<String, dynamic> json) =>
