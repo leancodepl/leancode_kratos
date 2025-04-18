@@ -1054,7 +1054,6 @@ final class ErrorValidationMustBeEqualToConstant extends KratosMessage {
     ContextParameters contextParameters,
   ) : expected = contextParameters['expected']!;
 
-
   final String expected;
 
   static const id = 4000029;
