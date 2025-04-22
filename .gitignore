@@ -4,7 +4,6 @@
 ### Dart ###
 # See https://www.dartlang.org/guides/libraries/private-files
 
-.fvm/flutter_sdk
 # Files and directories created by pub
 .dart_tool/
 .packages
@@ -38,7 +37,6 @@ doc/api/
 ### Flutter ###
 # Flutter/Dart/Pub related
 **/doc/api/
-.fvm/flutter_sdk
 .pub-cache/
 .pub/
 coverage/
@@ -114,3 +112,8 @@ lib/generated_plugin_registrant.dart
 .ionide
 
 # End of https://www.toptal.com/developers/gitignore/api/flutter,dart,visualstudiocode
+
+# FVM Version Cache
+.fvm/
+
+.idea
