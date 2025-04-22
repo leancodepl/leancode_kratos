@@ -228,7 +228,7 @@ sealed class KratosMessage {
       // Registration Validation Error
       ErrorValidationRegistration.id => const ErrorValidationRegistration(),
       ErrorValidationRegistrationFlowExpired.id =>
-        const ErrorValidationRegistrationFlowExpired(),
+        ErrorValidationRegistrationFlowExpired.fromContext(context!),
       ErrorValidationRegistrationRequestAlreadyCompleted.id =>
         const ErrorValidationRegistrationRequestAlreadyCompleted(),
       ErrorValidationRegistrationCodeInvalidOrAlreadyUsed.id =>
@@ -1326,7 +1326,15 @@ final class ErrorValidationRegistration extends KratosMessage {
 }
 
 final class ErrorValidationRegistrationFlowExpired extends KratosMessage {
-  const ErrorValidationRegistrationFlowExpired();
+  const ErrorValidationRegistrationFlowExpired({
+    required this.expiredAtUnix,
+  });
+
+  ErrorValidationRegistrationFlowExpired.fromContext(
+    ContextParameters contextParameters,
+  ) : expiredAtUnix = contextParameters['expired_at_unix']!;
+
+  final int expiredAtUnix;
 
   static const id = 4040001;
 }
