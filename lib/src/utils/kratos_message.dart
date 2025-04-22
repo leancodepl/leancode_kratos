@@ -163,17 +163,17 @@ sealed class KratosMessage {
       ErrorValidationSuchNoWebAuthnUser.id =>
         const ErrorValidationSuchNoWebAuthnUser(),
       ErrorValidationLookupInvalid.id => const ErrorValidationLookupInvalid(),
-      ErrorValidationMaxLength.id => const ErrorValidationMaxLength(),
-      ErrorValidationMinimum.id => const ErrorValidationMinimum(),
+      ErrorValidationMaxLength.id => ErrorValidationMaxLength.fromContext(context!),
+      ErrorValidationMinimum.id => ErrorValidationMinimum.fromContext(context!),
       ErrorValidationExclusiveMinimum.id =>
-        const ErrorValidationExclusiveMinimum(),
-      ErrorValidationMaximum.id => const ErrorValidationMaximum(),
+        ErrorValidationExclusiveMinimum.fromContext(context!),
+      ErrorValidationMaximum.id => ErrorValidationMaximum.fromContext(context!),
       ErrorValidationExclusiveMaximum.id =>
-        const ErrorValidationExclusiveMaximum(),
-      ErrorValidationMultipleOf.id => const ErrorValidationMultipleOf(),
-      ErrorValidationMaxItems.id => const ErrorValidationMaxItems(),
-      ErrorValidationMinItems.id => const ErrorValidationMinItems(),
-      ErrorValidationUniqueItems.id => const ErrorValidationUniqueItems(),
+        ErrorValidationExclusiveMaximum.fromContext(context!),
+      ErrorValidationMultipleOf.id => ErrorValidationMultipleOf.fromContext(context!),
+      ErrorValidationMaxItems.id => ErrorValidationMaxItems.fromContext(context!),
+      ErrorValidationMinItems.id => ErrorValidationMinItems.fromContext(context!),
+      ErrorValidationUniqueItems.id => ErrorValidationUniqueItems.fromContext(context!),
       ErrorValidationWrongType.id =>
         ErrorValidationWrongType.fromContext(context!),
       ErrorValidationDuplicateCredentialsOnOIDCLink.id =>
@@ -954,55 +954,154 @@ final class ErrorValidationLookupInvalid extends KratosMessage {
 }
 
 final class ErrorValidationMaxLength extends KratosMessage {
-  const ErrorValidationMaxLength();
+  const ErrorValidationMaxLength({
+    required this.actualLength,
+    required this.maxLength,
+  });
+
+  ErrorValidationMaxLength.fromContext(
+    ContextParameters contextParameters,
+  )   : actualLength = contextParameters['actual_length']!,
+        maxLength = contextParameters['max_length']!;
+
+  final int actualLength;
+  final int maxLength;
 
   static const id = 4000017;
 }
 
 final class ErrorValidationMinimum extends KratosMessage {
-  const ErrorValidationMinimum();
+  const ErrorValidationMinimum({
+    required this.actual,
+    required this.minimum,
+  });
+
+  ErrorValidationMinimum.fromContext(
+    ContextParameters contextParameters,
+  )   : actual = contextParameters['actual']!,
+        minimum = contextParameters['minimum']!;
+
+  final int actual;
+  final int minimum;
 
   static const id = 4000018;
 }
 
 final class ErrorValidationExclusiveMinimum extends KratosMessage {
-  const ErrorValidationExclusiveMinimum();
+  const ErrorValidationExclusiveMinimum({
+    required this.actual,
+    required this.minimum,
+  });
+
+  ErrorValidationExclusiveMinimum.fromContext(
+    ContextParameters contextParameters,
+  )   : actual = contextParameters['actual']!,
+        minimum = contextParameters['minimum']!;
+
+  final int actual;
+  final int minimum;
 
   static const id = 4000019;
 }
 
 final class ErrorValidationMaximum extends KratosMessage {
-  const ErrorValidationMaximum();
+  const ErrorValidationMaximum({
+    required this.actual,
+    required this.maximum,
+  });
+
+  ErrorValidationMaximum.fromContext(
+    ContextParameters contextParameters,
+  )   : actual = contextParameters['actual']!,
+        maximum = contextParameters['maximum']!;
+
+  final int actual;
+  final int maximum;
 
   static const id = 4000020;
 }
 
 final class ErrorValidationExclusiveMaximum extends KratosMessage {
-  const ErrorValidationExclusiveMaximum();
+  const ErrorValidationExclusiveMaximum({
+    required this.actual,
+    required this.maximum,
+  });
+
+  ErrorValidationExclusiveMaximum.fromContext(
+    ContextParameters contextParameters,
+  )   : actual = contextParameters['actual']!,
+        maximum = contextParameters['maximum']!;
+
+  final int actual;
+  final int maximum;
 
   static const id = 4000021;
 }
 
 final class ErrorValidationMultipleOf extends KratosMessage {
-  const ErrorValidationMultipleOf();
+  const ErrorValidationMultipleOf({
+    required this.actual,
+    required this.base,
+  });
+
+  ErrorValidationMultipleOf.fromContext(
+    ContextParameters contextParameters,
+  )   : actual = contextParameters['actual']!,
+        base = contextParameters['base']!;
+
+  final int actual;
+  final int base;
 
   static const id = 4000022;
 }
 
 final class ErrorValidationMaxItems extends KratosMessage {
-  const ErrorValidationMaxItems();
+  const ErrorValidationMaxItems({
+    required this.actualItems,
+    required this.maxItems,
+  });
+
+  ErrorValidationMaxItems.fromContext(
+    ContextParameters contextParameters,
+  )   : actualItems = contextParameters['actual_items']!,
+        maxItems = contextParameters['max_items']!;
+
+  final int actualItems;
+  final int maxItems;
 
   static const id = 4000023;
 }
 
 final class ErrorValidationMinItems extends KratosMessage {
-  const ErrorValidationMinItems();
+  const ErrorValidationMinItems({
+    required this.actualItems,
+    required this.minItems,
+  });
+
+  ErrorValidationMinItems.fromContext(
+    ContextParameters contextParameters,
+  )   : actualItems = contextParameters['actual_items']!,
+        minItems = contextParameters['min_items']!;
+
+  final int actualItems;
+  final int minItems;
 
   static const id = 4000024;
 }
 
 final class ErrorValidationUniqueItems extends KratosMessage {
-  const ErrorValidationUniqueItems();
+  const ErrorValidationUniqueItems({
+    required this.indexA,
+    required this.indexB,
+  });
+
+  ErrorValidationUniqueItems.fromContext(
+    ContextParameters contextParameters,
+  )   : indexA = contextParameters['index_a']!,
+        indexB = contextParameters['index_b']!;
+
+  final int indexA;
+  final int indexB;
 
   static const id = 4000025;
 }
