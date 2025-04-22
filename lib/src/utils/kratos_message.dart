@@ -139,7 +139,8 @@ sealed class KratosMessage {
       ErrorValidationGeneric.id => ErrorValidationGeneric.fromContext(context!),
       ErrorValidationRequired.id =>
         ErrorValidationRequired.fromContext(context!),
-      ErrorValidationMinLength.id => const ErrorValidationMinLength(),
+      ErrorValidationMinLength.id =>
+        ErrorValidationMinLength.fromContext(context!),
       ErrorValidationInvalidFormat.id =>
         ErrorValidationInvalidFormat.fromContext(context!),
       ErrorValidationPasswordPolicyViolation.id =>
@@ -163,17 +164,22 @@ sealed class KratosMessage {
       ErrorValidationSuchNoWebAuthnUser.id =>
         const ErrorValidationSuchNoWebAuthnUser(),
       ErrorValidationLookupInvalid.id => const ErrorValidationLookupInvalid(),
-      ErrorValidationMaxLength.id => ErrorValidationMaxLength.fromContext(context!),
+      ErrorValidationMaxLength.id =>
+        ErrorValidationMaxLength.fromContext(context!),
       ErrorValidationMinimum.id => ErrorValidationMinimum.fromContext(context!),
       ErrorValidationExclusiveMinimum.id =>
         ErrorValidationExclusiveMinimum.fromContext(context!),
       ErrorValidationMaximum.id => ErrorValidationMaximum.fromContext(context!),
       ErrorValidationExclusiveMaximum.id =>
         ErrorValidationExclusiveMaximum.fromContext(context!),
-      ErrorValidationMultipleOf.id => ErrorValidationMultipleOf.fromContext(context!),
-      ErrorValidationMaxItems.id => ErrorValidationMaxItems.fromContext(context!),
-      ErrorValidationMinItems.id => ErrorValidationMinItems.fromContext(context!),
-      ErrorValidationUniqueItems.id => ErrorValidationUniqueItems.fromContext(context!),
+      ErrorValidationMultipleOf.id =>
+        ErrorValidationMultipleOf.fromContext(context!),
+      ErrorValidationMaxItems.id =>
+        ErrorValidationMaxItems.fromContext(context!),
+      ErrorValidationMinItems.id =>
+        ErrorValidationMinItems.fromContext(context!),
+      ErrorValidationUniqueItems.id =>
+        ErrorValidationUniqueItems.fromContext(context!),
       ErrorValidationWrongType.id =>
         ErrorValidationWrongType.fromContext(context!),
       ErrorValidationDuplicateCredentialsOnOIDCLink.id =>
@@ -244,7 +250,7 @@ sealed class KratosMessage {
       ErrorValidationRecoveryTokenInvalidOrAlreadyUsed.id =>
         const ErrorValidationRecoveryTokenInvalidOrAlreadyUsed(),
       ErrorValidationRecoveryFlowExpired.id =>
-        const ErrorValidationRecoveryFlowExpired(),
+        ErrorValidationRecoveryFlowExpired.fromContext(context!),
       ErrorValidationRecoveryCodeInvalidOrAlreadyUsed.id =>
         const ErrorValidationRecoveryCodeInvalidOrAlreadyUsed(),
 
@@ -854,7 +860,18 @@ final class ErrorValidationRequired extends KratosMessage {
 }
 
 final class ErrorValidationMinLength extends KratosMessage {
-  const ErrorValidationMinLength();
+  const ErrorValidationMinLength({
+    required this.actual,
+    required this.minimum,
+  });
+
+  ErrorValidationMinLength.fromContext(
+    ContextParameters contextParameters,
+  )   : actual = contextParameters['actual_length']!,
+        minimum = contextParameters['min_length']!;
+
+  final int actual;
+  final int minimum;
 
   static const id = 4000003;
 }
@@ -1382,7 +1399,15 @@ final class ErrorValidationRecoveryTokenInvalidOrAlreadyUsed
 }
 
 final class ErrorValidationRecoveryFlowExpired extends KratosMessage {
-  const ErrorValidationRecoveryFlowExpired();
+  const ErrorValidationRecoveryFlowExpired({
+    required this.timeAgo,
+  });
+
+  ErrorValidationRecoveryFlowExpired.fromContext(
+    ContextParameters contextParameters,
+  ) : timeAgo = contextParameters['time_ago']!;
+
+  final String timeAgo;
 
   static const id = 4060005;
 }
