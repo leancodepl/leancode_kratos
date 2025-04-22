@@ -86,7 +86,7 @@ sealed class KratosMessage {
       InfoSelfServiceSettingsRegisterWebAuthnDisplayName.id =>
         const InfoSelfServiceSettingsRegisterWebAuthnDisplayName(),
       InfoSelfServiceSettingsLookupSecretUsed.id =>
-        const InfoSelfServiceSettingsLookupSecretUsed(),
+        InfoSelfServiceSettingsLookupSecretUsed.fromContext(context!),
       InfoSelfServiceSettingsLookupSecretList.id =>
         InfoSelfServiceSettingsLookupSecretList.fromContext(context!),
       InfoSelfServiceSettingsDisableLookup.id =>
@@ -616,7 +616,15 @@ final class InfoSelfServiceSettingsRegisterWebAuthnDisplayName
 }
 
 final class InfoSelfServiceSettingsLookupSecretUsed extends KratosMessage {
-  const InfoSelfServiceSettingsLookupSecretUsed();
+  const InfoSelfServiceSettingsLookupSecretUsed({
+    required this.usedAtUnix,
+  });
+
+  InfoSelfServiceSettingsLookupSecretUsed.fromContext(
+    ContextParameters contextParameters,
+  ) : usedAtUnix = contextParameters['used_at_unix']!;
+
+  final int usedAtUnix;
 
   static const id = 1050014;
 }
@@ -1408,14 +1416,14 @@ final class ErrorValidationRecoveryTokenInvalidOrAlreadyUsed
 
 final class ErrorValidationRecoveryFlowExpired extends KratosMessage {
   const ErrorValidationRecoveryFlowExpired({
-    required this.timeAgo,
+    required this.expiredAtUnix,
   });
 
   ErrorValidationRecoveryFlowExpired.fromContext(
     ContextParameters contextParameters,
-  ) : timeAgo = contextParameters['time_ago']!;
+  ) : expiredAtUnix = contextParameters['expired_at_unix']!;
 
-  final String timeAgo;
+  final int expiredAtUnix;
 
   static const id = 4060005;
 }
