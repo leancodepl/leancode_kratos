@@ -188,9 +188,9 @@ sealed class KratosMessage {
       ErrorValidationPasswordTooSimilarToIdentifier.id =>
         const ErrorValidationPasswordTooSimilarToIdentifier(),
       ErrorValidationPasswordTooShort.id =>
-        const ErrorValidationPasswordTooShort(),
+        ErrorValidationPasswordTooShort.fromContext(context!),
       ErrorValidationPasswordTooLong.id =>
-        const ErrorValidationPasswordTooLong(),
+        ErrorValidationPasswordTooLong.fromContext(context!),
       ErrorValidationPasswordFoundInDataBreaches.id =>
         const ErrorValidationPasswordFoundInDataBreaches(),
       ErrorValidationNoAccountOrNoCodeSignInSetUp.id =>
@@ -201,7 +201,7 @@ sealed class KratosMessage {
       // Login Validation Error
       ErrorValidationLogin.id => const ErrorValidationLogin(),
       ErrorValidationLoginFlowExpired.id =>
-        const ErrorValidationLoginFlowExpired(),
+        ErrorValidationLoginFlowExpired.fromContext(context!),
       ErrorValidationLoginNoStrategyFound.id =>
         const ErrorValidationLoginNoStrategyFound(),
       ErrorValidationRegistrationNoStrategyFound.id =>
@@ -231,7 +231,7 @@ sealed class KratosMessage {
       // Settings Validation Error
       ErrorValidationSettings.id => const ErrorValidationSettings(),
       ErrorValidationSettingsFlowExpired.id =>
-        const ErrorValidationSettingsFlowExpired(),
+        ErrorValidationSettingsFlowExpired.fromContext(context!),
 
       // Recovery Validation Error
       ErrorValidationRecovery.id => const ErrorValidationRecovery(),
@@ -259,7 +259,7 @@ sealed class KratosMessage {
       ErrorValidationVerificationMissingVerificationToken.id =>
         const ErrorValidationVerificationMissingVerificationToken(),
       ErrorValidationVerificationFlowExpired.id =>
-        const ErrorValidationVerificationFlowExpired(),
+        ErrorValidationVerificationFlowExpired.fromContext(context!),
       ErrorValidationVerificationCodeInvalidOrAlreadyUsed.id =>
         const ErrorValidationVerificationCodeInvalidOrAlreadyUsed(),
 
@@ -1081,13 +1081,35 @@ final class ErrorValidationPasswordTooSimilarToIdentifier
 }
 
 final class ErrorValidationPasswordTooShort extends KratosMessage {
-  const ErrorValidationPasswordTooShort();
+  const ErrorValidationPasswordTooShort({
+    required this.actualLength,
+    required this.minLength,
+  });
+
+  ErrorValidationPasswordTooShort.fromContext(
+    ContextParameters contextParameters,
+  )   : actualLength = contextParameters['actual_length']!,
+        minLength = contextParameters['min_length']!;
+
+  final int actualLength;
+  final int minLength;
 
   static const id = 4000032;
 }
 
 final class ErrorValidationPasswordTooLong extends KratosMessage {
-  const ErrorValidationPasswordTooLong();
+  const ErrorValidationPasswordTooLong({
+    required this.actualLength,
+    required this.maxLength,
+  });
+
+  ErrorValidationPasswordTooLong.fromContext(
+    ContextParameters contextParameters,
+  )   : actualLength = contextParameters['actual_length']!,
+        maxLength = contextParameters['max_length']!;
+
+  final int actualLength;
+  final int maxLength;
 
   static const id = 4000033;
 }
@@ -1119,7 +1141,15 @@ final class ErrorValidationLogin extends KratosMessage {
 }
 
 final class ErrorValidationLoginFlowExpired extends KratosMessage {
-  const ErrorValidationLoginFlowExpired();
+  const ErrorValidationLoginFlowExpired({
+    required this.expiredAtUnix,
+  });
+
+  ErrorValidationLoginFlowExpired.fromContext(
+    ContextParameters contextParameters,
+  ) : expiredAtUnix = contextParameters['expired_at_unix']!;
+
+  final int expiredAtUnix;
 
   static const id = 4010001;
 }
@@ -1207,7 +1237,15 @@ final class ErrorValidationSettings extends KratosMessage {
 }
 
 final class ErrorValidationSettingsFlowExpired extends KratosMessage {
-  const ErrorValidationSettingsFlowExpired();
+  const ErrorValidationSettingsFlowExpired({
+    required this.expiredAtUnix,
+  });
+
+  ErrorValidationSettingsFlowExpired.fromContext(
+    ContextParameters contextParameters,
+  ) : expiredAtUnix = contextParameters['expired_at_unix']!;
+
+  final int expiredAtUnix;
 
   static const id = 4050001;
 }
@@ -1291,7 +1329,15 @@ final class ErrorValidationVerificationMissingVerificationToken
 }
 
 final class ErrorValidationVerificationFlowExpired extends KratosMessage {
-  const ErrorValidationVerificationFlowExpired();
+  const ErrorValidationVerificationFlowExpired({
+    required this.expiredAtUnix,
+  });
+
+  ErrorValidationVerificationFlowExpired.fromContext(
+    ContextParameters contextParameters,
+  ) : expiredAtUnix = contextParameters['expired_at_unix']!;
+
+  final int expiredAtUnix;
 
   static const id = 4070005;
 }
