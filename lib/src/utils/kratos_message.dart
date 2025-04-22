@@ -88,7 +88,7 @@ sealed class KratosMessage {
       InfoSelfServiceSettingsLookupSecretUsed.id =>
         const InfoSelfServiceSettingsLookupSecretUsed(),
       InfoSelfServiceSettingsLookupSecretList.id =>
-        const InfoSelfServiceSettingsLookupSecretList(),
+        InfoSelfServiceSettingsLookupSecretList.fromContext(context!),
       InfoSelfServiceSettingsDisableLookup.id =>
         const InfoSelfServiceSettingsDisableLookup(),
       InfoSelfServiceSettingsTOTPSecretLabel.id =>
@@ -378,16 +378,16 @@ final class InfoSelfServiceSignInWithCode extends KratosMessage {
 
 final class InfoSelfServiceSigningInWillLinkYourAccount extends KratosMessage {
   const InfoSelfServiceSigningInWillLinkYourAccount({
-    required this.duplicateIdentifier,
+    required this.identifier,
     required this.provider,
   });
 
   InfoSelfServiceSigningInWillLinkYourAccount.fromContext(
     ContextParameters contextParameters,
-  )   : duplicateIdentifier = contextParameters['duplicateIdentifier']!,
+  )   : identifier = contextParameters['duplicateIdentifier']!,
         provider = contextParameters['provider']!;
 
-  final String duplicateIdentifier;
+  final String identifier;
   final String provider;
 
   static const id = 1010016;
@@ -616,7 +616,15 @@ final class InfoSelfServiceSettingsLookupSecretUsed extends KratosMessage {
 }
 
 final class InfoSelfServiceSettingsLookupSecretList extends KratosMessage {
-  const InfoSelfServiceSettingsLookupSecretList();
+  const InfoSelfServiceSettingsLookupSecretList({
+    required this.secrets,
+  });
+
+  InfoSelfServiceSettingsLookupSecretList.fromContext(
+    ContextParameters contextParameters,
+  ) : secrets = contextParameters['secrets']!;
+
+  final List<String> secrets;
 
   static const id = 1050015;
 }
