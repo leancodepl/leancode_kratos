@@ -663,7 +663,7 @@ class KratosClient {
     }
 
     final logoutFlowDto = LogoutFlowDto.fromJson(
-      jsonDecode(initLogoutResult.body),
+      jsonDecode(initLogoutResult.body) as Map<String, dynamic>,
     );
 
     final logoutResult = await _client.get(
@@ -886,7 +886,9 @@ class KratosClient {
       final response = await http.Response.fromStream(streamedResponse);
 
       return switch (response.statusCode) {
-        200 => RecoveryFlowDto.fromJson(json.decode(response.body)),
+        200 => RecoveryFlowDto.fromJson(
+            json.decode(response.body) as Map<String, dynamic>,
+          ),
         _ => null,
       };
     } catch (e, st) {
