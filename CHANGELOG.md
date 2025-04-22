@@ -1,3 +1,7 @@
+## 0.2.1
+
+* Upgrade packages (allow analyzer `7.x`)
+
 ## 0.2.0
 
 * **feat**: Add `getSession` method
