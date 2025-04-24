@@ -297,7 +297,7 @@ final class InfoSelfServiceLoginWith extends KratosMessage {
 
   InfoSelfServiceLoginWith.fromContext(
     ContextParameters contextParameters,
-  ) : provider = contextParameters['provider']!;
+  ) : provider = contextParameters['provider']! as String;
 
   final String provider;
 
@@ -390,8 +390,8 @@ final class InfoSelfServiceSigningInWillLinkYourAccount extends KratosMessage {
 
   InfoSelfServiceSigningInWillLinkYourAccount.fromContext(
     ContextParameters contextParameters,
-  )   : identifier = contextParameters['duplicateIdentifier']!,
-        provider = contextParameters['provider']!;
+  )   : identifier = contextParameters['duplicateIdentifier']! as String,
+        provider = contextParameters['provider']! as String;
 
   final String identifier;
   final String provider;
@@ -412,7 +412,7 @@ final class InfoSelfserviceSignInAndLinkCredential extends KratosMessage {
 
   InfoSelfserviceSignInAndLinkCredential.fromContext(
     ContextParameters contextParameters,
-  ) : provider = contextParameters['provider']!;
+  ) : provider = contextParameters['provider']! as String;
 
   final String provider;
 
@@ -426,7 +426,7 @@ final class InfoSendCodeTo extends KratosMessage {
 
   InfoSendCodeTo.fromContext(
     ContextParameters contextParameters,
-  ) : address = contextParameters['address']!;
+  ) : address = contextParameters['address']! as String;
 
   final String address;
 
@@ -466,7 +466,7 @@ final class InfoSelfServiceRegistrationWith extends KratosMessage {
 
   InfoSelfServiceRegistrationWith.fromContext(
     ContextParameters contextParameters,
-  ) : provider = contextParameters['provider']!;
+  ) : provider = contextParameters['provider']! as String;
 
   final String provider;
 
@@ -517,7 +517,7 @@ final class InfoSelfServiceSettingsUpdateLinkOidc extends KratosMessage {
 
   InfoSelfServiceSettingsUpdateLinkOidc.fromContext(
     ContextParameters contextParameters,
-  ) : provider = contextParameters['provider']!;
+  ) : provider = contextParameters['provider']! as String;
 
   final String provider;
 
@@ -531,7 +531,7 @@ final class InfoSelfServiceSettingsUpdateUnlinkOidc extends KratosMessage {
 
   InfoSelfServiceSettingsUpdateUnlinkOidc.fromContext(
     ContextParameters contextParameters,
-  ) : provider = contextParameters['provider']!;
+  ) : provider = contextParameters['provider']! as String;
 
   final String provider;
 
@@ -557,7 +557,7 @@ final class InfoSelfServiceSettingsTOTPSecret extends KratosMessage {
 
   InfoSelfServiceSettingsTOTPSecret.fromContext(
     ContextParameters contextParameters,
-  ) : secret = contextParameters['secret']!;
+  ) : secret = contextParameters['secret']! as String;
 
   final String secret;
 
@@ -583,7 +583,7 @@ final class InfoSelfServiceSettingsLookupSecret extends KratosMessage {
 
   InfoSelfServiceSettingsLookupSecret.fromContext(
     ContextParameters contextParameters,
-  ) : secret = contextParameters['secret']!;
+  ) : secret = contextParameters['secret']! as String;
 
   final String secret;
 
@@ -622,7 +622,7 @@ final class InfoSelfServiceSettingsLookupSecretUsed extends KratosMessage {
 
   InfoSelfServiceSettingsLookupSecretUsed.fromContext(
     ContextParameters contextParameters,
-  ) : usedAtUnix = contextParameters['used_at_unix']!;
+  ) : usedAtUnix = contextParameters['used_at_unix']! as int;
 
   final int usedAtUnix;
 
@@ -636,7 +636,7 @@ final class InfoSelfServiceSettingsLookupSecretList extends KratosMessage {
 
   InfoSelfServiceSettingsLookupSecretList.fromContext(
     ContextParameters contextParameters,
-  ) : secrets = contextParameters['secrets']!;
+  ) : secrets = contextParameters['secrets']! as List<String>;
 
   final List<String> secrets;
 
@@ -662,7 +662,7 @@ final class InfoSelfServiceSettingsRemoveWebAuthn extends KratosMessage {
 
   InfoSelfServiceSettingsRemoveWebAuthn.fromContext(
     ContextParameters contextParameters,
-  ) : displayName = contextParameters['display_name']!;
+  ) : displayName = contextParameters['display_name']! as String;
 
   final String displayName;
 
@@ -676,7 +676,7 @@ final class InfoSelfServiceSettingsRemovePasskey extends KratosMessage {
 
   InfoSelfServiceSettingsRemovePasskey.fromContext(
     ContextParameters contextParameters,
-  ) : displayName = contextParameters['display_name']!;
+  ) : displayName = contextParameters['display_name']! as String;
 
   final String displayName;
 
@@ -728,7 +728,7 @@ final class InfoNodeLabelGenerated extends KratosMessage {
 
   InfoNodeLabelGenerated.fromContext(
     ContextParameters contextParameters,
-  ) : title = contextParameters['title']!;
+  ) : title = contextParameters['title']! as String;
 
   final String title;
 
@@ -846,7 +846,7 @@ final class ErrorValidationGeneric extends KratosMessage {
 
   ErrorValidationGeneric.fromContext(
     ContextParameters contextParameters,
-  ) : reason = contextParameters['reason']!;
+  ) : reason = contextParameters['reason']! as String;
 
   final String reason;
 
@@ -860,7 +860,7 @@ final class ErrorValidationRequired extends KratosMessage {
 
   ErrorValidationRequired.fromContext(
     ContextParameters contextParameters,
-  ) : property = contextParameters['property']!;
+  ) : property = contextParameters['property']! as String;
 
   final String property;
 
@@ -875,8 +875,8 @@ final class ErrorValidationMinLength extends KratosMessage {
 
   ErrorValidationMinLength.fromContext(
     ContextParameters contextParameters,
-  )   : actual = contextParameters['actual_length']!,
-        minimum = contextParameters['min_length']!;
+  )   : actual = contextParameters['actual_length']! as int,
+        minimum = contextParameters['min_length']! as int;
 
   final int actual;
   final int minimum;
@@ -891,7 +891,7 @@ final class ErrorValidationInvalidFormat extends KratosMessage {
 
   ErrorValidationInvalidFormat.fromContext(
     ContextParameters contextParameters,
-  ) : pattern = contextParameters['pattern']!;
+  ) : pattern = contextParameters['pattern']! as String;
 
   final String pattern;
 
@@ -905,7 +905,7 @@ final class ErrorValidationPasswordPolicyViolation extends KratosMessage {
 
   ErrorValidationPasswordPolicyViolation.fromContext(
     ContextParameters contextParameters,
-  ) : reason = contextParameters['reason']!;
+  ) : reason = contextParameters['reason']! as String;
 
   final String reason;
 
@@ -986,8 +986,8 @@ final class ErrorValidationMaxLength extends KratosMessage {
 
   ErrorValidationMaxLength.fromContext(
     ContextParameters contextParameters,
-  )   : actualLength = contextParameters['actual_length']!,
-        maxLength = contextParameters['max_length']!;
+  )   : actualLength = contextParameters['actual_length']! as int,
+        maxLength = contextParameters['max_length']! as int;
 
   final int actualLength;
   final int maxLength;
@@ -1003,8 +1003,8 @@ final class ErrorValidationMinimum extends KratosMessage {
 
   ErrorValidationMinimum.fromContext(
     ContextParameters contextParameters,
-  )   : actual = contextParameters['actual']!,
-        minimum = contextParameters['minimum']!;
+  )   : actual = contextParameters['actual']! as int,
+        minimum = contextParameters['minimum']! as int;
 
   final int actual;
   final int minimum;
@@ -1020,8 +1020,8 @@ final class ErrorValidationExclusiveMinimum extends KratosMessage {
 
   ErrorValidationExclusiveMinimum.fromContext(
     ContextParameters contextParameters,
-  )   : actual = contextParameters['actual']!,
-        minimum = contextParameters['minimum']!;
+  )   : actual = contextParameters['actual']! as int,
+        minimum = contextParameters['minimum']! as int;
 
   final int actual;
   final int minimum;
@@ -1037,8 +1037,8 @@ final class ErrorValidationMaximum extends KratosMessage {
 
   ErrorValidationMaximum.fromContext(
     ContextParameters contextParameters,
-  )   : actual = contextParameters['actual']!,
-        maximum = contextParameters['maximum']!;
+  )   : actual = contextParameters['actual']! as int,
+        maximum = contextParameters['maximum']! as int;
 
   final int actual;
   final int maximum;
@@ -1054,8 +1054,8 @@ final class ErrorValidationExclusiveMaximum extends KratosMessage {
 
   ErrorValidationExclusiveMaximum.fromContext(
     ContextParameters contextParameters,
-  )   : actual = contextParameters['actual']!,
-        maximum = contextParameters['maximum']!;
+  )   : actual = contextParameters['actual']! as int,
+        maximum = contextParameters['maximum']! as int;
 
   final int actual;
   final int maximum;
@@ -1071,8 +1071,8 @@ final class ErrorValidationMultipleOf extends KratosMessage {
 
   ErrorValidationMultipleOf.fromContext(
     ContextParameters contextParameters,
-  )   : actual = contextParameters['actual']!,
-        base = contextParameters['base']!;
+  )   : actual = contextParameters['actual']! as int,
+        base = contextParameters['base']! as int;
 
   final int actual;
   final int base;
@@ -1088,8 +1088,8 @@ final class ErrorValidationMaxItems extends KratosMessage {
 
   ErrorValidationMaxItems.fromContext(
     ContextParameters contextParameters,
-  )   : actualItems = contextParameters['actual_items']!,
-        maxItems = contextParameters['max_items']!;
+  )   : actualItems = contextParameters['actual_items']! as int,
+        maxItems = contextParameters['max_items']! as int;
 
   final int actualItems;
   final int maxItems;
@@ -1105,8 +1105,8 @@ final class ErrorValidationMinItems extends KratosMessage {
 
   ErrorValidationMinItems.fromContext(
     ContextParameters contextParameters,
-  )   : actualItems = contextParameters['actual_items']!,
-        minItems = contextParameters['min_items']!;
+  )   : actualItems = contextParameters['actual_items']! as int,
+        minItems = contextParameters['min_items']! as int;
 
   final int actualItems;
   final int minItems;
@@ -1122,8 +1122,8 @@ final class ErrorValidationUniqueItems extends KratosMessage {
 
   ErrorValidationUniqueItems.fromContext(
     ContextParameters contextParameters,
-  )   : indexA = contextParameters['index_a']!,
-        indexB = contextParameters['index_b']!;
+  )   : indexA = contextParameters['index_a']! as int,
+        indexB = contextParameters['index_b']! as int;
 
   final int indexA;
   final int indexB;
@@ -1139,8 +1139,9 @@ final class ErrorValidationWrongType extends KratosMessage {
 
   ErrorValidationWrongType.fromContext(
     ContextParameters contextParameters,
-  )   : actualType = contextParameters['actual_type']!,
-        allowedTypesList = contextParameters['allowed_types_list']!;
+  )   : actualType = contextParameters['actual_type']! as String,
+        allowedTypesList =
+            contextParameters['allowed_types_list']! as List<String>;
 
   final String actualType;
   final List<String> allowedTypesList;
@@ -1167,9 +1168,10 @@ final class ErrorValidationCredentialAlreadyUsedByAnotherAccount
   ErrorValidationCredentialAlreadyUsedByAnotherAccount.fromContext(
     ContextParameters contextParameters,
   )   : credentialIdentifierHint =
-            contextParameters['credential_identifier_hint']!,
+            contextParameters['credential_identifier_hint']! as String,
         availableCredentialTypesList =
-            contextParameters['available_credential_types_list']!;
+            contextParameters['available_credential_types_list']!
+                as List<String>;
 
   final String credentialIdentifierHint;
   final List<String> availableCredentialTypesList;
@@ -1184,7 +1186,7 @@ final class ErrorValidationMustBeEqualToConstant extends KratosMessage {
 
   ErrorValidationMustBeEqualToConstant.fromContext(
     ContextParameters contextParameters,
-  ) : expected = contextParameters['expected']!;
+  ) : expected = contextParameters['expected']! as String;
 
   final String expected;
 
@@ -1212,8 +1214,8 @@ final class ErrorValidationPasswordTooShort extends KratosMessage {
 
   ErrorValidationPasswordTooShort.fromContext(
     ContextParameters contextParameters,
-  )   : actualLength = contextParameters['actual_length']!,
-        minLength = contextParameters['min_length']!;
+  )   : actualLength = contextParameters['actual_length']! as int,
+        minLength = contextParameters['min_length']! as int;
 
   final int actualLength;
   final int minLength;
@@ -1229,8 +1231,8 @@ final class ErrorValidationPasswordTooLong extends KratosMessage {
 
   ErrorValidationPasswordTooLong.fromContext(
     ContextParameters contextParameters,
-  )   : actualLength = contextParameters['actual_length']!,
-        maxLength = contextParameters['max_length']!;
+  )   : actualLength = contextParameters['actual_length']! as int,
+        maxLength = contextParameters['max_length']! as int;
 
   final int actualLength;
   final int maxLength;
@@ -1271,7 +1273,7 @@ final class ErrorValidationLoginFlowExpired extends KratosMessage {
 
   ErrorValidationLoginFlowExpired.fromContext(
     ContextParameters contextParameters,
-  ) : expiredAtUnix = contextParameters['expired_at_unix']!;
+  ) : expiredAtUnix = contextParameters['expired_at_unix']! as int;
 
   final int expiredAtUnix;
 
@@ -1340,7 +1342,7 @@ final class ErrorValidationRegistrationFlowExpired extends KratosMessage {
 
   ErrorValidationRegistrationFlowExpired.fromContext(
     ContextParameters contextParameters,
-  ) : expiredAtUnix = contextParameters['expired_at_unix']!;
+  ) : expiredAtUnix = contextParameters['expired_at_unix']! as int;
 
   final int expiredAtUnix;
 
@@ -1375,7 +1377,7 @@ final class ErrorValidationSettingsFlowExpired extends KratosMessage {
 
   ErrorValidationSettingsFlowExpired.fromContext(
     ContextParameters contextParameters,
-  ) : expiredAtUnix = contextParameters['expired_at_unix']!;
+  ) : expiredAtUnix = contextParameters['expired_at_unix']! as int;
 
   final int expiredAtUnix;
 
@@ -1421,7 +1423,7 @@ final class ErrorValidationRecoveryFlowExpired extends KratosMessage {
 
   ErrorValidationRecoveryFlowExpired.fromContext(
     ContextParameters contextParameters,
-  ) : expiredAtUnix = contextParameters['expired_at_unix']!;
+  ) : expiredAtUnix = contextParameters['expired_at_unix']! as int;
 
   final int expiredAtUnix;
 
@@ -1475,7 +1477,7 @@ final class ErrorValidationVerificationFlowExpired extends KratosMessage {
 
   ErrorValidationVerificationFlowExpired.fromContext(
     ContextParameters contextParameters,
-  ) : expiredAtUnix = contextParameters['expired_at_unix']!;
+  ) : expiredAtUnix = contextParameters['expired_at_unix']! as int;
 
   final int expiredAtUnix;
 
