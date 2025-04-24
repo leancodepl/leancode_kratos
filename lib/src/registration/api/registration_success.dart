@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:leancode_kratos_client/src/common/api/auth_dtos.dart';
+import 'package:leancode_kratos_client/src/json_typedef.dart';
 import 'package:leancode_kratos_client/src/login/api/login_success.dart';
 
 part 'registration_success.g.dart';
@@ -26,12 +27,12 @@ class RegistrationSuccessResponse with EquatableMixin {
     this.sessionTokenExchangeCode,
   });
 
-  factory RegistrationSuccessResponse.fromJson(Map<String, dynamic> json) =>
+  factory RegistrationSuccessResponse.fromJson(Json json) =>
       _$RegistrationSuccessResponseFromJson(json);
 
   factory RegistrationSuccessResponse.fromString(String string) {
     return RegistrationSuccessResponse.fromJson(
-      json.decode(string) as Map<String, dynamic>,
+      json.decode(string) as Json,
     );
   }
 
@@ -49,7 +50,7 @@ class RegistrationSuccessResponse with EquatableMixin {
   final UiDto? ui;
   final String? sessionTokenExchangeCode;
 
-  Map<String, dynamic> toJson() => _$RegistrationSuccessResponseToJson(this);
+  Json toJson() => _$RegistrationSuccessResponseToJson(this);
 
   AuthFlowDto? get flow {
     if (this
@@ -99,7 +100,7 @@ class RegistrationBrowserLocationChangeRequiredResponse with EquatableMixin {
   });
 
   factory RegistrationBrowserLocationChangeRequiredResponse.fromJson(
-    Map<String, dynamic> json,
+    Json json,
   ) =>
       _$RegistrationBrowserLocationChangeRequiredResponseFromJson(json);
 
@@ -107,13 +108,13 @@ class RegistrationBrowserLocationChangeRequiredResponse with EquatableMixin {
     String string,
   ) {
     return RegistrationBrowserLocationChangeRequiredResponse.fromJson(
-      json.decode(string) as Map<String, dynamic>,
+      json.decode(string) as Json,
     );
   }
 
   final String? redirectBrowserTo;
 
-  Map<String, dynamic> toJson() =>
+  Json toJson() =>
       _$RegistrationBrowserLocationChangeRequiredResponseToJson(this);
 
   @override
@@ -127,13 +128,12 @@ class ContinueWith with EquatableMixin {
     this.flow,
   });
 
-  factory ContinueWith.fromJson(Map<String, dynamic> json) =>
-      _$ContinueWithFromJson(json);
+  factory ContinueWith.fromJson(Json json) => _$ContinueWithFromJson(json);
 
   final String? action;
   final Flow? flow;
 
-  Map<String, dynamic> toJson() => _$ContinueWithToJson(this);
+  Json toJson() => _$ContinueWithToJson(this);
 
   @override
   List<Object?> get props => [action, flow];
@@ -146,12 +146,12 @@ class Flow with EquatableMixin {
     this.verifiableAddress,
   });
 
-  factory Flow.fromJson(Map<String, dynamic> json) => _$FlowFromJson(json);
+  factory Flow.fromJson(Json json) => _$FlowFromJson(json);
 
   final String? id;
   final String? verifiableAddress;
 
-  Map<String, dynamic> toJson() => _$FlowToJson(this);
+  Json toJson() => _$FlowToJson(this);
 
   @override
   List<Object?> get props => [id, verifiableAddress];
@@ -173,22 +173,21 @@ class Identity with EquatableMixin {
     this.updatedAt,
   });
 
-  factory Identity.fromJson(Map<String, dynamic> json) =>
-      _$IdentityFromJson(json);
+  factory Identity.fromJson(Json json) => _$IdentityFromJson(json);
 
   final String? id;
   final String? schemaId;
   final String? schemaUrl;
   final String? state;
   final DateTime? stateChangedAt;
-  final Map<String, dynamic>? traits;
+  final Json? traits;
   final List<VerifiableAddress>? verifiableAddresses;
   final List<RecoveryAddress>? recoveryAddresses;
   final dynamic metadataPublic;
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
-  Map<String, dynamic> toJson() => _$IdentityToJson(this);
+  Json toJson() => _$IdentityToJson(this);
 
   @override
   List<Object?> get props => [
@@ -216,7 +215,7 @@ class RecoveryAddress with EquatableMixin {
     this.updatedAt,
   });
 
-  factory RecoveryAddress.fromJson(Map<String, dynamic> json) =>
+  factory RecoveryAddress.fromJson(Json json) =>
       _$RecoveryAddressFromJson(json);
 
   final String? id;
@@ -225,7 +224,7 @@ class RecoveryAddress with EquatableMixin {
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
-  Map<String, dynamic> toJson() => _$RecoveryAddressToJson(this);
+  Json toJson() => _$RecoveryAddressToJson(this);
 
   @override
   List<Object?> get props => [id, value, via, createdAt, updatedAt];
@@ -243,7 +242,7 @@ class VerifiableAddress with EquatableMixin {
     this.updatedAt,
   });
 
-  factory VerifiableAddress.fromJson(Map<String, dynamic> json) =>
+  factory VerifiableAddress.fromJson(Json json) =>
       _$VerifiableAddressFromJson(json);
 
   final String? id;
@@ -254,7 +253,7 @@ class VerifiableAddress with EquatableMixin {
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
-  Map<String, dynamic> toJson() => _$VerifiableAddressToJson(this);
+  Json toJson() => _$VerifiableAddressToJson(this);
 
   @override
   List<Object?> get props => [

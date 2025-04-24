@@ -27,7 +27,7 @@ class AuthFlowDto with EquatableMixin {
   });
 
   factory AuthFlowDto.fromString(String string) =>
-      AuthFlowDto.fromJson(json.decode(string) as Map<String, dynamic>);
+      AuthFlowDto.fromJson(json.decode(string) as Json);
 
   factory AuthFlowDto.fromJson(Json json) => _$AuthFlowDtoFromJson(json);
 
@@ -41,7 +41,7 @@ class AuthFlowDto with EquatableMixin {
   final UiDto ui;
   final String? sessionTokenExchangeCode;
 
-  Map<String, dynamic> toJson() => _$AuthFlowDtoToJson(this);
+  Json toJson() => _$AuthFlowDtoToJson(this);
 
   String? get csrfToken => ui.nodes
       .firstWhereOrNull((node) => node.attributes.name == 'csrf_token')
@@ -105,7 +105,7 @@ class UiDto with EquatableMixin {
   final List<NodeDto> nodes;
   final List<MessageDto>? messages;
 
-  Map<String, dynamic> toJson() => _$UiDtoToJson(this);
+  Json toJson() => _$UiDtoToJson(this);
 
   List<KratosMessage> getGeneralMessages() {
     return (messages ?? [])
@@ -139,7 +139,7 @@ class NodeDto with EquatableMixin {
   final List<MessageDto> messages;
   final MetaDto meta;
 
-  Map<String, dynamic> toJson() => _$NodeDtoToJson(this);
+  Json toJson() => _$NodeDtoToJson(this);
 
   List<(String, KratosMessage)> getKratosMessages() {
     final name = attributes.name;
@@ -179,7 +179,7 @@ class AttributesDto with EquatableMixin {
   final String? nodeType;
   final String? autocomplete;
 
-  Map<String, dynamic> toJson() => _$AttributesDtoToJson(this);
+  Json toJson() => _$AttributesDtoToJson(this);
 
   @override
   List<Object?> get props =>
@@ -202,7 +202,7 @@ class MessageDto with EquatableMixin {
   final String type;
   final MessageContextDto? context;
 
-  Map<String, dynamic> toJson() => _$MessageDtoToJson(this);
+  Json toJson() => _$MessageDtoToJson(this);
 
   KratosMessage toKratosMessage() => KratosMessage.forId(id);
 
@@ -221,7 +221,7 @@ class MessageContextDto with EquatableMixin {
 
   final String? reason;
 
-  Map<String, dynamic> toJson() => _$MessageContextDtoToJson(this);
+  Json toJson() => _$MessageContextDtoToJson(this);
 
   @override
   List<Object?> get props => [reason];
@@ -237,7 +237,7 @@ class MetaDto with EquatableMixin {
 
   final LabelDto? label;
 
-  Map<String, dynamic> toJson() => _$MetaDtoToJson(this);
+  Json toJson() => _$MetaDtoToJson(this);
 
   @override
   List<Object?> get props => [label];
@@ -257,9 +257,9 @@ class LabelDto with EquatableMixin {
   final int id;
   final String text;
   final String type;
-  final Map<String, dynamic>? context;
+  final Json? context;
 
-  Map<String, dynamic> toJson() => _$LabelDtoToJson(this);
+  Json toJson() => _$LabelDtoToJson(this);
 
   @override
   List<Object?> get props => [id, text, type, context];

@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:leancode_kratos_client/src/json_typedef.dart';
 
 part 'logout_flow_dto.g.dart';
 
@@ -10,13 +11,13 @@ class LogoutFlowDto with EquatableMixin {
     required this.logoutToken,
   });
 
-  factory LogoutFlowDto.fromJson(Map<String, dynamic> json) =>
+  factory LogoutFlowDto.fromJson(Json json) =>
       _$LogoutFlowDtoFromJson(json);
 
   final String logoutUrl;
   final String logoutToken;
 
-  Map<String, dynamic> toJson() => _$LogoutFlowDtoToJson(this);
+  Json toJson() => _$LogoutFlowDtoToJson(this);
 
   @override
   List<Object?> get props => [logoutUrl, logoutToken];

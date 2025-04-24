@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:leancode_kratos_client/src/common/api/auth_dtos.dart';
+import 'package:leancode_kratos_client/src/json_typedef.dart';
 
 part 'passkey.g.dart';
 
@@ -12,8 +13,7 @@ class Passkey with EquatableMixin {
     required this.displayName,
   });
 
-  factory Passkey.fromJson(Map<String, dynamic> json) =>
-      _$PasskeyFromJson(json);
+  factory Passkey.fromJson(Json json) => _$PasskeyFromJson(json);
 
   factory Passkey.fromUiNode(NodeDto node) {
     return Passkey(
@@ -28,7 +28,7 @@ class Passkey with EquatableMixin {
   final DateTime addedAt;
   final String displayName;
 
-  Map<String, dynamic> toJson() => _$PasskeyToJson(this);
+  Json toJson() => _$PasskeyToJson(this);
 
   @override
   List<Object?> get props => [id, addedAt, displayName];

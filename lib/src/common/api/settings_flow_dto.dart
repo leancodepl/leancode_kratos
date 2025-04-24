@@ -4,6 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:leancode_kratos_client/src/common/api/auth_dtos.dart';
+import 'package:leancode_kratos_client/src/json_typedef.dart';
 import 'package:leancode_kratos_client/src/utils/passkey_parsing.dart';
 
 part 'settings_flow_dto.g.dart';
@@ -22,9 +23,9 @@ class SettingsFlowDto with EquatableMixin {
   });
 
   factory SettingsFlowDto.fromString(String string) =>
-      SettingsFlowDto.fromJson(json.decode(string) as Map<String, dynamic>);
+      SettingsFlowDto.fromJson(json.decode(string) as Json);
 
-  factory SettingsFlowDto.fromJson(Map<String, dynamic> json) =>
+  factory SettingsFlowDto.fromJson(Json json) =>
       _$SettingsFlowDtoFromJson(json);
 
   final String id;
@@ -36,14 +37,14 @@ class SettingsFlowDto with EquatableMixin {
   final UiDto ui;
   final String? sessionTokenExchangeCode;
 
-  Map<String, dynamic> toJson() => _$SettingsFlowDtoToJson(this);
+  Json toJson() => _$SettingsFlowDtoToJson(this);
 
   String? get csrfToken => ui.nodes
       .firstWhereOrNull((node) => node.attributes.name == 'csrf_token')
       ?.attributes
       .value as String?;
 
-  Map<String, dynamic>? get passkeyCreationOptions {
+  Json? get passkeyCreationOptions {
     final passkeyCreation = ui.nodes
         .firstWhereOrNull(
           (node) => node.attributes.name == 'passkey_create_data',

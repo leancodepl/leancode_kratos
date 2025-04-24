@@ -3,11 +3,12 @@ import 'dart:convert';
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:leancode_kratos_client/src/common/api/auth_dtos.dart';
+import 'package:leancode_kratos_client/src/json_typedef.dart';
 
 part 'login_error.g.dart';
 
 LoginErrorResponse loginErrorResponseFromJson(String str) =>
-    LoginErrorResponse.fromJson(json.decode(str) as Map<String, dynamic>);
+    LoginErrorResponse.fromJson(json.decode(str) as Json);
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class LoginErrorResponse with EquatableMixin {
@@ -25,7 +26,7 @@ class LoginErrorResponse with EquatableMixin {
     required this.requestedAal,
   });
 
-  factory LoginErrorResponse.fromJson(Map<String, dynamic> json) =>
+  factory LoginErrorResponse.fromJson(Json json) =>
       _$LoginErrorResponseFromJson(json);
 
   final String id;
@@ -40,7 +41,7 @@ class LoginErrorResponse with EquatableMixin {
   final bool refresh;
   final String requestedAal;
 
-  Map<String, dynamic> toJson() => _$LoginErrorResponseToJson(this);
+  Json toJson() => _$LoginErrorResponseToJson(this);
 
   @override
   List<Object?> get props => [
