@@ -1,15 +1,23 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:equatable/equatable.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-part 'logout_flow_dto.freezed.dart';
 part 'logout_flow_dto.g.dart';
 
-@freezed
-class LogoutFlowDto with _$LogoutFlowDto {
-  const factory LogoutFlowDto({
-    required String logoutUrl,
-    required String logoutToken,
-  }) = _LogoutFlowDto;
+@JsonSerializable(fieldRename: FieldRename.snake)
+class LogoutFlowDto with EquatableMixin {
+  const LogoutFlowDto({
+    required this.logoutUrl,
+    required this.logoutToken,
+  });
 
   factory LogoutFlowDto.fromJson(Map<String, dynamic> json) =>
       _$LogoutFlowDtoFromJson(json);
+
+  final String logoutUrl;
+  final String logoutToken;
+
+  Map<String, dynamic> toJson() => _$LogoutFlowDtoToJson(this);
+
+  @override
+  List<Object?> get props => [logoutUrl, logoutToken];
 }

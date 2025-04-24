@@ -1,30 +1,30 @@
 import 'dart:convert';
 
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:equatable/equatable.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'package:leancode_kratos_client/src/common/api/auth_dtos.dart';
 import 'package:leancode_kratos_client/src/login/api/login_success.dart';
 
-part 'registration_success.freezed.dart';
 part 'registration_success.g.dart';
 
-@freezed
-class RegistrationSuccessResponse with _$RegistrationSuccessResponse {
-  const factory RegistrationSuccessResponse({
-    List<ContinueWith>? continueWith,
-    Identity? identity,
-    Session? session,
-    String? sessionToken,
+@JsonSerializable(fieldRename: FieldRename.snake)
+class RegistrationSuccessResponse with EquatableMixin {
+  const RegistrationSuccessResponse({
+    this.continueWith,
+    this.identity,
+    this.session,
+    this.sessionToken,
     // Undocumented response for linking accounts
-    String? id,
-    String? oauth2LoginChallenge,
-    String? type,
-    DateTime? expiresAt,
-    DateTime? issuedAt,
-    String? requestUrl,
-    String? returnTo,
-    UiDto? ui,
-    String? sessionTokenExchangeCode,
-  }) = _RegistrationSuccessResponse;
+    this.id,
+    this.oauth2LoginChallenge,
+    this.type,
+    this.expiresAt,
+    this.issuedAt,
+    this.requestUrl,
+    this.returnTo,
+    this.ui,
+    this.sessionTokenExchangeCode,
+  });
 
   factory RegistrationSuccessResponse.fromJson(Map<String, dynamic> json) =>
       _$RegistrationSuccessResponseFromJson(json);
@@ -35,7 +35,21 @@ class RegistrationSuccessResponse with _$RegistrationSuccessResponse {
     );
   }
 
-  const RegistrationSuccessResponse._();
+  final List<ContinueWith>? continueWith;
+  final Identity? identity;
+  final Session? session;
+  final String? sessionToken;
+  final String? id;
+  final String? oauth2LoginChallenge;
+  final String? type;
+  final DateTime? expiresAt;
+  final DateTime? issuedAt;
+  final String? requestUrl;
+  final String? returnTo;
+  final UiDto? ui;
+  final String? sessionTokenExchangeCode;
+
+  Map<String, dynamic> toJson() => _$RegistrationSuccessResponseToJson(this);
 
   AuthFlowDto? get flow {
     if (this
@@ -59,14 +73,30 @@ class RegistrationSuccessResponse with _$RegistrationSuccessResponse {
       return null;
     }
   }
+
+  @override
+  List<Object?> get props => [
+        continueWith,
+        identity,
+        session,
+        sessionToken,
+        id,
+        oauth2LoginChallenge,
+        type,
+        expiresAt,
+        issuedAt,
+        requestUrl,
+        returnTo,
+        ui,
+        sessionTokenExchangeCode,
+      ];
 }
 
-@freezed
-class RegistrationBrowserLocationChangeRequiredResponse
-    with _$RegistrationBrowserLocationChangeRequiredResponse {
-  const factory RegistrationBrowserLocationChangeRequiredResponse({
-    String? redirectBrowserTo,
-  }) = _RegistrationBrowserLocationChangeRequiredResponse;
+@JsonSerializable(fieldRename: FieldRename.snake)
+class RegistrationBrowserLocationChangeRequiredResponse with EquatableMixin {
+  const RegistrationBrowserLocationChangeRequiredResponse({
+    this.redirectBrowserTo,
+  });
 
   factory RegistrationBrowserLocationChangeRequiredResponse.fromJson(
     Map<String, dynamic> json,
@@ -80,75 +110,160 @@ class RegistrationBrowserLocationChangeRequiredResponse
       json.decode(string) as Map<String, dynamic>,
     );
   }
+
+  final String? redirectBrowserTo;
+
+  Map<String, dynamic> toJson() =>
+      _$RegistrationBrowserLocationChangeRequiredResponseToJson(this);
+
+  @override
+  List<Object?> get props => [redirectBrowserTo];
 }
 
-@freezed
-class ContinueWith with _$ContinueWith {
-  const factory ContinueWith({
-    String? action,
-    Flow? flow,
-  }) = _ContinueWith;
+@JsonSerializable(fieldRename: FieldRename.snake)
+class ContinueWith with EquatableMixin {
+  const ContinueWith({
+    this.action,
+    this.flow,
+  });
 
   factory ContinueWith.fromJson(Map<String, dynamic> json) =>
       _$ContinueWithFromJson(json);
+
+  final String? action;
+  final Flow? flow;
+
+  Map<String, dynamic> toJson() => _$ContinueWithToJson(this);
+
+  @override
+  List<Object?> get props => [action, flow];
 }
 
-@freezed
-class Flow with _$Flow {
-  const factory Flow({
-    String? id,
-    String? verifiableAddress,
-  }) = _Flow;
+@JsonSerializable(fieldRename: FieldRename.snake)
+class Flow with EquatableMixin {
+  const Flow({
+    this.id,
+    this.verifiableAddress,
+  });
 
   factory Flow.fromJson(Map<String, dynamic> json) => _$FlowFromJson(json);
+
+  final String? id;
+  final String? verifiableAddress;
+
+  Map<String, dynamic> toJson() => _$FlowToJson(this);
+
+  @override
+  List<Object?> get props => [id, verifiableAddress];
 }
 
-@freezed
-class Identity with _$Identity {
-  const factory Identity({
-    String? id,
-    String? schemaId,
-    String? schemaUrl,
-    String? state,
-    DateTime? stateChangedAt,
-    Map<String, dynamic>? traits,
-    List<VerifiableAddress>? verifiableAddresses,
-    List<RecoveryAddress>? recoveryAddresses,
-    dynamic metadataPublic,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-  }) = _Identity;
+@JsonSerializable(fieldRename: FieldRename.snake)
+class Identity with EquatableMixin {
+  const Identity({
+    this.id,
+    this.schemaId,
+    this.schemaUrl,
+    this.state,
+    this.stateChangedAt,
+    this.traits,
+    this.verifiableAddresses,
+    this.recoveryAddresses,
+    this.metadataPublic,
+    this.createdAt,
+    this.updatedAt,
+  });
 
   factory Identity.fromJson(Map<String, dynamic> json) =>
       _$IdentityFromJson(json);
+
+  final String? id;
+  final String? schemaId;
+  final String? schemaUrl;
+  final String? state;
+  final DateTime? stateChangedAt;
+  final Map<String, dynamic>? traits;
+  final List<VerifiableAddress>? verifiableAddresses;
+  final List<RecoveryAddress>? recoveryAddresses;
+  final dynamic metadataPublic;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+
+  Map<String, dynamic> toJson() => _$IdentityToJson(this);
+
+  @override
+  List<Object?> get props => [
+        id,
+        schemaId,
+        schemaUrl,
+        state,
+        stateChangedAt,
+        traits,
+        verifiableAddresses,
+        recoveryAddresses,
+        metadataPublic,
+        createdAt,
+        updatedAt,
+      ];
 }
 
-@freezed
-class RecoveryAddress with _$RecoveryAddress {
-  const factory RecoveryAddress({
-    String? id,
-    String? value,
-    String? via,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-  }) = _RecoveryAddress;
+@JsonSerializable(fieldRename: FieldRename.snake)
+class RecoveryAddress with EquatableMixin {
+  const RecoveryAddress({
+    this.id,
+    this.value,
+    this.via,
+    this.createdAt,
+    this.updatedAt,
+  });
 
   factory RecoveryAddress.fromJson(Map<String, dynamic> json) =>
       _$RecoveryAddressFromJson(json);
+
+  final String? id;
+  final String? value;
+  final String? via;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+
+  Map<String, dynamic> toJson() => _$RecoveryAddressToJson(this);
+
+  @override
+  List<Object?> get props => [id, value, via, createdAt, updatedAt];
 }
 
-@freezed
-class VerifiableAddress with _$VerifiableAddress {
-  const factory VerifiableAddress({
-    String? id,
-    String? value,
-    bool? verified,
-    String? via,
-    String? status,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-  }) = _VerifiableAddress;
+@JsonSerializable(fieldRename: FieldRename.snake)
+class VerifiableAddress with EquatableMixin {
+  const VerifiableAddress({
+    this.id,
+    this.value,
+    this.verified,
+    this.via,
+    this.status,
+    this.createdAt,
+    this.updatedAt,
+  });
 
   factory VerifiableAddress.fromJson(Map<String, dynamic> json) =>
       _$VerifiableAddressFromJson(json);
+
+  final String? id;
+  final String? value;
+  final bool? verified;
+  final String? via;
+  final String? status;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+
+  Map<String, dynamic> toJson() => _$VerifiableAddressToJson(this);
+
+  @override
+  List<Object?> get props => [
+        id,
+        value,
+        verified,
+        via,
+        status,
+        createdAt,
+        updatedAt,
+      ];
 }

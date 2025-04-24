@@ -6,9 +6,8 @@ part of 'recovery_flow_dto.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$RecoveryFlowDtoImpl _$$RecoveryFlowDtoImplFromJson(
-        Map<String, dynamic> json) =>
-    _$RecoveryFlowDtoImpl(
+RecoveryFlowDto _$RecoveryFlowDtoFromJson(Map<String, dynamic> json) =>
+    RecoveryFlowDto(
       id: json['id'] as String,
       type: json['type'] as String,
       expiresAt: DateTime.parse(json['expires_at'] as String),
@@ -17,8 +16,7 @@ _$RecoveryFlowDtoImpl _$$RecoveryFlowDtoImplFromJson(
       ui: UiDto.fromJson(json['ui'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$$RecoveryFlowDtoImplToJson(
-        _$RecoveryFlowDtoImpl instance) =>
+Map<String, dynamic> _$RecoveryFlowDtoToJson(RecoveryFlowDto instance) =>
     <String, dynamic>{
       'id': instance.id,
       'type': instance.type,
