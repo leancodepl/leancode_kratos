@@ -99,9 +99,7 @@ RegistrationResult mapRegistrationErrorResponse(AuthFlowDto response) {
   final nodes = response.ui.nodes;
 
   if (nodes.any(
-    (node) =>
-        node.meta.label?.id ==
-        KratosMessage.infoSelfServiceRegistrationContinue.id,
+    (node) => node.meta.label?.id == InfoSelfServiceRegistrationContinue.id,
   )) {
     final values = nodes
         .map(

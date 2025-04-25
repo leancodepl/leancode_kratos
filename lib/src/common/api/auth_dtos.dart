@@ -203,31 +203,14 @@ class MessageDto with EquatableMixin {
   final int id;
   final String text;
   final String type;
-  final MessageContextDto? context;
+  final ContextParameters? context;
 
   Map<String, dynamic> toJson() => _$MessageDtoToJson(this);
 
-  KratosMessage toKratosMessage() => KratosMessage.forId(id);
+  KratosMessage toKratosMessage() => KratosMessage.forId(id, context);
 
   @override
   List<Object?> get props => [id, text, type, context];
-}
-
-@JsonSerializable()
-class MessageContextDto with EquatableMixin {
-  const MessageContextDto({
-    this.reason,
-  });
-
-  factory MessageContextDto.fromJson(Map<String, dynamic> json) =>
-      _$MessageContextDtoFromJson(json);
-
-  final String? reason;
-
-  Map<String, dynamic> toJson() => _$MessageContextDtoToJson(this);
-
-  @override
-  List<Object?> get props => [reason];
 }
 
 @JsonSerializable()

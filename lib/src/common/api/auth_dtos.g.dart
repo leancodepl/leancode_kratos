@@ -238,9 +238,7 @@ MessageDto _$MessageDtoFromJson(Map<String, dynamic> json) => MessageDto(
       id: (json['id'] as num).toInt(),
       text: json['text'] as String,
       type: json['type'] as String,
-      context: json['context'] == null
-          ? null
-          : MessageContextDto.fromJson(json['context'] as Map<String, dynamic>),
+      context: json['context'] as Map<String, dynamic>?,
     );
 
 Map<String, dynamic> _$MessageDtoToJson(MessageDto instance) =>
@@ -248,17 +246,7 @@ Map<String, dynamic> _$MessageDtoToJson(MessageDto instance) =>
       'id': instance.id,
       'text': instance.text,
       'type': instance.type,
-      'context': instance.context?.toJson(),
-    };
-
-MessageContextDto _$MessageContextDtoFromJson(Map<String, dynamic> json) =>
-    MessageContextDto(
-      reason: json['reason'] as String?,
-    );
-
-Map<String, dynamic> _$MessageContextDtoToJson(MessageContextDto instance) =>
-    <String, dynamic>{
-      'reason': instance.reason,
+      'context': instance.context,
     };
 
 MetaDto _$MetaDtoFromJson(Map<String, dynamic> json) => MetaDto(
