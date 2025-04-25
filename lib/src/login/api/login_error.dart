@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
-import 'package:json_annotation/json_annotation.dart';
 import 'package:leancode_kratos_client/src/common/api/auth_dtos.dart';
 import 'package:leancode_kratos_client/src/json_typedef.dart';
 
@@ -10,7 +9,6 @@ part 'login_error.g.dart';
 LoginErrorResponse loginErrorResponseFromJson(String str) =>
     LoginErrorResponse.fromJson(json.decode(str) as Json);
 
-@JsonSerializable(fieldRename: FieldRename.snake)
 class LoginErrorResponse with EquatableMixin {
   const LoginErrorResponse({
     required this.id,

@@ -1,14 +1,12 @@
 import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
-import 'package:json_annotation/json_annotation.dart';
 import 'package:leancode_kratos_client/src/common/api/auth_dtos.dart';
 import 'package:leancode_kratos_client/src/json_typedef.dart';
 import 'package:leancode_kratos_client/src/login/api/login_success.dart';
 
 part 'registration_success.g.dart';
 
-@JsonSerializable(fieldRename: FieldRename.snake)
 class RegistrationSuccessResponse with EquatableMixin {
   const RegistrationSuccessResponse({
     this.continueWith,
@@ -93,7 +91,6 @@ class RegistrationSuccessResponse with EquatableMixin {
       ];
 }
 
-@JsonSerializable(fieldRename: FieldRename.snake)
 class RegistrationBrowserLocationChangeRequiredResponse with EquatableMixin {
   const RegistrationBrowserLocationChangeRequiredResponse({
     this.redirectBrowserTo,
@@ -121,7 +118,6 @@ class RegistrationBrowserLocationChangeRequiredResponse with EquatableMixin {
   List<Object?> get props => [redirectBrowserTo];
 }
 
-@JsonSerializable(fieldRename: FieldRename.snake)
 class ContinueWith with EquatableMixin {
   const ContinueWith({
     this.action,
@@ -139,7 +135,6 @@ class ContinueWith with EquatableMixin {
   List<Object?> get props => [action, flow];
 }
 
-@JsonSerializable(fieldRename: FieldRename.snake)
 class Flow with EquatableMixin {
   const Flow({
     this.id,
@@ -157,7 +152,6 @@ class Flow with EquatableMixin {
   List<Object?> get props => [id, verifiableAddress];
 }
 
-@JsonSerializable(fieldRename: FieldRename.snake)
 class Identity with EquatableMixin {
   const Identity({
     this.id,
@@ -205,7 +199,6 @@ class Identity with EquatableMixin {
       ];
 }
 
-@JsonSerializable(fieldRename: FieldRename.snake)
 class RecoveryAddress with EquatableMixin {
   const RecoveryAddress({
     this.id,
@@ -230,7 +223,6 @@ class RecoveryAddress with EquatableMixin {
   List<Object?> get props => [id, value, via, createdAt, updatedAt];
 }
 
-@JsonSerializable(fieldRename: FieldRename.snake)
 class VerifiableAddress with EquatableMixin {
   const VerifiableAddress({
     this.id,

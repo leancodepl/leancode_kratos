@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:equatable/equatable.dart';
-import 'package:json_annotation/json_annotation.dart';
 import 'package:leancode_kratos_client/src/common/domain/auth_flow_info.dart';
 import 'package:leancode_kratos_client/src/json_typedef.dart';
 import 'package:leancode_kratos_client/src/utils/kratos_message.dart';
@@ -11,7 +10,6 @@ import 'package:leancode_kratos_client/src/utils/passkey_parsing.dart';
 
 part 'auth_dtos.g.dart';
 
-@JsonSerializable(fieldRename: FieldRename.snake)
 @CopyWith()
 class AuthFlowDto with EquatableMixin {
   const AuthFlowDto({
@@ -89,7 +87,6 @@ class AuthFlowDto with EquatableMixin {
       ];
 }
 
-@JsonSerializable(fieldRename: FieldRename.snake)
 class UiDto with EquatableMixin {
   const UiDto({
     required this.action,
@@ -121,7 +118,6 @@ class UiDto with EquatableMixin {
   List<Object?> get props => [action, method, nodes, messages];
 }
 
-@JsonSerializable(fieldRename: FieldRename.snake)
 class NodeDto with EquatableMixin {
   const NodeDto({
     required this.type,
@@ -157,7 +153,6 @@ class NodeDto with EquatableMixin {
   List<Object?> get props => [type, group, attributes, messages, meta];
 }
 
-@JsonSerializable(fieldRename: FieldRename.snake)
 class AttributesDto with EquatableMixin {
   const AttributesDto({
     this.name,
@@ -186,7 +181,6 @@ class AttributesDto with EquatableMixin {
       [name, type, value, required, disabled, nodeType, autocomplete];
 }
 
-@JsonSerializable(fieldRename: FieldRename.snake)
 class MessageDto with EquatableMixin {
   const MessageDto({
     required this.id,
@@ -210,7 +204,6 @@ class MessageDto with EquatableMixin {
   List<Object?> get props => [id, text, type, context];
 }
 
-@JsonSerializable(fieldRename: FieldRename.snake)
 class MessageContextDto with EquatableMixin {
   const MessageContextDto({
     this.reason,
@@ -227,7 +220,6 @@ class MessageContextDto with EquatableMixin {
   List<Object?> get props => [reason];
 }
 
-@JsonSerializable(fieldRename: FieldRename.snake)
 class MetaDto with EquatableMixin {
   const MetaDto({
     this.label,
@@ -243,7 +235,6 @@ class MetaDto with EquatableMixin {
   List<Object?> get props => [label];
 }
 
-@JsonSerializable(fieldRename: FieldRename.snake)
 class LabelDto with EquatableMixin {
   const LabelDto({
     required this.id,

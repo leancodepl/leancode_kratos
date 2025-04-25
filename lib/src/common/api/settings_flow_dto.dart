@@ -2,14 +2,12 @@ import 'dart:convert';
 
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
-import 'package:json_annotation/json_annotation.dart';
 import 'package:leancode_kratos_client/src/common/api/auth_dtos.dart';
 import 'package:leancode_kratos_client/src/json_typedef.dart';
 import 'package:leancode_kratos_client/src/utils/passkey_parsing.dart';
 
 part 'settings_flow_dto.g.dart';
 
-@JsonSerializable(fieldRename: FieldRename.snake)
 class SettingsFlowDto with EquatableMixin {
   const SettingsFlowDto({
     required this.id,
