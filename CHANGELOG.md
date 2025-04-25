@@ -1,3 +1,8 @@
+## 0.2.2
+
+* **feat**: Add translation parameters to `KratosMessage`
+* **chore**: Remove `freezed` from dependencies
+
 ## 0.2.1
 
 * Upgrade packages (allow analyzer `7.x`)
