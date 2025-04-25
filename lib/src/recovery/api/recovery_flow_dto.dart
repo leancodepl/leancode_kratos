@@ -1,7 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:leancode_kratos_client/src/common/api/auth_dtos.dart';
-import 'package:leancode_kratos_client/src/json_typedef.dart';
 
 part 'recovery_flow_dto.g.dart';
 
@@ -15,7 +14,7 @@ class RecoveryFlowDto with EquatableMixin {
     required this.ui,
   });
 
-  factory RecoveryFlowDto.fromJson(Json json) =>
+  factory RecoveryFlowDto.fromJson(Map<String, dynamic> json) =>
       _$RecoveryFlowDtoFromJson(json);
 
   final String id;
@@ -25,7 +24,7 @@ class RecoveryFlowDto with EquatableMixin {
   final String requestUrl;
   final UiDto ui;
 
-  Json toJson() => _$RecoveryFlowDtoToJson(this);
+  Map<String, dynamic> toJson() => _$RecoveryFlowDtoToJson(this);
 
   String? get csrfToken => ui.nodes
       .firstWhereOrNull((node) => node.attributes.name == 'csrf_token')

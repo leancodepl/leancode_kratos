@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
-import 'package:leancode_kratos_client/src/json_typedef.dart';
 import 'package:leancode_kratos_client/src/login/api/login_success.dart';
 
 part 'token_exchange_success.g.dart';
@@ -12,18 +11,18 @@ class TokenExchangeSuccess with EquatableMixin {
     required this.session,
   });
 
-  factory TokenExchangeSuccess.fromJson(Json json) =>
+  factory TokenExchangeSuccess.fromJson(Map<String, dynamic> json) =>
       _$TokenExchangeSuccessFromJson(json);
 
   factory TokenExchangeSuccess.fromString(String string) =>
       TokenExchangeSuccess.fromJson(
-        json.decode(string) as Json,
+        json.decode(string) as Map<String, dynamic>,
       );
 
   final String? sessionToken;
   final Session session;
 
-  Json toJson() => _$TokenExchangeSuccessToJson(this);
+  Map<String, dynamic> toJson() => _$TokenExchangeSuccessToJson(this);
 
   @override
   List<Object?> get props => [sessionToken, session];

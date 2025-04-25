@@ -4,7 +4,6 @@ import 'package:collection/collection.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:equatable/equatable.dart';
 import 'package:leancode_kratos_client/src/common/domain/auth_flow_info.dart';
-import 'package:leancode_kratos_client/src/json_typedef.dart';
 import 'package:leancode_kratos_client/src/utils/kratos_message.dart';
 import 'package:leancode_kratos_client/src/utils/passkey_parsing.dart';
 
@@ -25,9 +24,10 @@ class AuthFlowDto with EquatableMixin {
   });
 
   factory AuthFlowDto.fromString(String string) =>
-      AuthFlowDto.fromJson(json.decode(string) as Json);
+      AuthFlowDto.fromJson(json.decode(string) as Map<String, dynamic>);
 
-  factory AuthFlowDto.fromJson(Json json) => _$AuthFlowDtoFromJson(json);
+  factory AuthFlowDto.fromJson(Map<String, dynamic> json) =>
+      _$AuthFlowDtoFromJson(json);
 
   final String id;
   final String? oauth2LoginChallenge;
@@ -39,7 +39,7 @@ class AuthFlowDto with EquatableMixin {
   final UiDto ui;
   final String? sessionTokenExchangeCode;
 
-  Json toJson() => _$AuthFlowDtoToJson(this);
+  Map<String, dynamic> toJson() => _$AuthFlowDtoToJson(this);
 
   String? get csrfToken => ui.nodes
       .firstWhereOrNull((node) => node.attributes.name == 'csrf_token')
@@ -95,14 +95,14 @@ class UiDto with EquatableMixin {
     this.messages,
   });
 
-  factory UiDto.fromJson(Json json) => _$UiDtoFromJson(json);
+  factory UiDto.fromJson(Map<String, dynamic> json) => _$UiDtoFromJson(json);
 
   final String action;
   final String method;
   final List<NodeDto> nodes;
   final List<MessageDto>? messages;
 
-  Json toJson() => _$UiDtoToJson(this);
+  Map<String, dynamic> toJson() => _$UiDtoToJson(this);
 
   List<KratosMessage> getGeneralMessages() {
     return (messages ?? [])
@@ -127,7 +127,7 @@ class NodeDto with EquatableMixin {
     required this.meta,
   });
 
-  factory NodeDto.fromJson(Json json) => _$NodeDtoFromJson(json);
+  factory NodeDto.fromJson(Map<String, dynamic> json) => _$NodeDtoFromJson(json);
 
   final String type;
   final String group;
@@ -135,7 +135,7 @@ class NodeDto with EquatableMixin {
   final List<MessageDto> messages;
   final MetaDto meta;
 
-  Json toJson() => _$NodeDtoToJson(this);
+  Map<String, dynamic> toJson() => _$NodeDtoToJson(this);
 
   List<(String, KratosMessage)> getKratosMessages() {
     final name = attributes.name;
@@ -164,7 +164,7 @@ class AttributesDto with EquatableMixin {
     this.autocomplete,
   });
 
-  factory AttributesDto.fromJson(Json json) => _$AttributesDtoFromJson(json);
+  factory AttributesDto.fromJson(Map<String, dynamic> json) => _$AttributesDtoFromJson(json);
 
   final String? name;
   final String? type;
@@ -174,7 +174,7 @@ class AttributesDto with EquatableMixin {
   final String? nodeType;
   final String? autocomplete;
 
-  Json toJson() => _$AttributesDtoToJson(this);
+  Map<String, dynamic> toJson() => _$AttributesDtoToJson(this);
 
   @override
   List<Object?> get props =>
@@ -189,14 +189,14 @@ class MessageDto with EquatableMixin {
     this.context,
   });
 
-  factory MessageDto.fromJson(Json json) => _$MessageDtoFromJson(json);
+  factory MessageDto.fromJson(Map<String, dynamic> json) => _$MessageDtoFromJson(json);
 
   final int id;
   final String text;
   final String type;
   final MessageContextDto? context;
 
-  Json toJson() => _$MessageDtoToJson(this);
+  Map<String, dynamic> toJson() => _$MessageDtoToJson(this);
 
   KratosMessage toKratosMessage() => KratosMessage.forId(id);
 
@@ -209,12 +209,12 @@ class MessageContextDto with EquatableMixin {
     this.reason,
   });
 
-  factory MessageContextDto.fromJson(Json json) =>
+  factory MessageContextDto.fromJson(Map<String, dynamic> json) =>
       _$MessageContextDtoFromJson(json);
 
   final String? reason;
 
-  Json toJson() => _$MessageContextDtoToJson(this);
+  Map<String, dynamic> toJson() => _$MessageContextDtoToJson(this);
 
   @override
   List<Object?> get props => [reason];
@@ -225,11 +225,11 @@ class MetaDto with EquatableMixin {
     this.label,
   });
 
-  factory MetaDto.fromJson(Json json) => _$MetaDtoFromJson(json);
+  factory MetaDto.fromJson(Map<String, dynamic> json) => _$MetaDtoFromJson(json);
 
   final LabelDto? label;
 
-  Json toJson() => _$MetaDtoToJson(this);
+  Map<String, dynamic> toJson() => _$MetaDtoToJson(this);
 
   @override
   List<Object?> get props => [label];
@@ -243,14 +243,14 @@ class LabelDto with EquatableMixin {
     this.context,
   });
 
-  factory LabelDto.fromJson(Json json) => _$LabelDtoFromJson(json);
+  factory LabelDto.fromJson(Map<String, dynamic> json) => _$LabelDtoFromJson(json);
 
   final int id;
   final String text;
   final String type;
-  final Json? context;
+  final Map<String, dynamic>? context;
 
-  Json toJson() => _$LabelDtoToJson(this);
+  Map<String, dynamic> toJson() => _$LabelDtoToJson(this);
 
   @override
   List<Object?> get props => [id, text, type, context];

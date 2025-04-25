@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
 import 'package:leancode_kratos_client/src/common/api/auth_dtos.dart';
-import 'package:leancode_kratos_client/src/json_typedef.dart';
 
 part 'verification_flow_dto.g.dart';
 
@@ -20,9 +19,9 @@ class VerificationFlowDto with EquatableMixin {
   });
 
   factory VerificationFlowDto.fromString(String string) =>
-      VerificationFlowDto.fromJson(json.decode(string) as Json);
+      VerificationFlowDto.fromJson(json.decode(string) as Map<String, dynamic>);
 
-  factory VerificationFlowDto.fromJson(Json json) =>
+  factory VerificationFlowDto.fromJson(Map<String, dynamic> json) =>
       _$VerificationFlowDtoFromJson(json);
 
   final String? active;
@@ -35,7 +34,7 @@ class VerificationFlowDto with EquatableMixin {
   final String type;
   final UiDto ui;
 
-  Json toJson() => _$VerificationFlowDtoToJson(this);
+  Map<String, dynamic> toJson() => _$VerificationFlowDtoToJson(this);
 
   @override
   List<Object?> get props => [
