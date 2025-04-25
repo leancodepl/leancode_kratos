@@ -1,8 +1,10 @@
 import 'package:equatable/equatable.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'package:leancode_kratos_client/src/common/api/auth_dtos.dart';
 
 part 'passkey.g.dart';
 
+@JsonSerializable()
 class Passkey with EquatableMixin {
   const Passkey({
     required this.id,

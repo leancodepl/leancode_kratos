@@ -1,9 +1,11 @@
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'package:leancode_kratos_client/src/common/api/auth_dtos.dart';
 
 part 'recovery_flow_dto.g.dart';
 
+@JsonSerializable()
 class RecoveryFlowDto with EquatableMixin {
   const RecoveryFlowDto({
     required this.id,

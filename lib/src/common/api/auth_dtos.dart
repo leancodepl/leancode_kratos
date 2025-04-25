@@ -3,12 +3,14 @@ import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:equatable/equatable.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'package:leancode_kratos_client/src/common/domain/auth_flow_info.dart';
 import 'package:leancode_kratos_client/src/utils/kratos_message.dart';
 import 'package:leancode_kratos_client/src/utils/passkey_parsing.dart';
 
 part 'auth_dtos.g.dart';
 
+@JsonSerializable()
 @CopyWith()
 class AuthFlowDto with EquatableMixin {
   const AuthFlowDto({
@@ -87,6 +89,7 @@ class AuthFlowDto with EquatableMixin {
       ];
 }
 
+@JsonSerializable()
 class UiDto with EquatableMixin {
   const UiDto({
     required this.action,
@@ -118,6 +121,7 @@ class UiDto with EquatableMixin {
   List<Object?> get props => [action, method, nodes, messages];
 }
 
+@JsonSerializable()
 class NodeDto with EquatableMixin {
   const NodeDto({
     required this.type,
@@ -127,7 +131,8 @@ class NodeDto with EquatableMixin {
     required this.meta,
   });
 
-  factory NodeDto.fromJson(Map<String, dynamic> json) => _$NodeDtoFromJson(json);
+  factory NodeDto.fromJson(Map<String, dynamic> json) =>
+      _$NodeDtoFromJson(json);
 
   final String type;
   final String group;
@@ -153,6 +158,7 @@ class NodeDto with EquatableMixin {
   List<Object?> get props => [type, group, attributes, messages, meta];
 }
 
+@JsonSerializable()
 class AttributesDto with EquatableMixin {
   const AttributesDto({
     this.name,
@@ -164,7 +170,8 @@ class AttributesDto with EquatableMixin {
     this.autocomplete,
   });
 
-  factory AttributesDto.fromJson(Map<String, dynamic> json) => _$AttributesDtoFromJson(json);
+  factory AttributesDto.fromJson(Map<String, dynamic> json) =>
+      _$AttributesDtoFromJson(json);
 
   final String? name;
   final String? type;
@@ -181,6 +188,7 @@ class AttributesDto with EquatableMixin {
       [name, type, value, required, disabled, nodeType, autocomplete];
 }
 
+@JsonSerializable()
 class MessageDto with EquatableMixin {
   const MessageDto({
     required this.id,
@@ -189,7 +197,8 @@ class MessageDto with EquatableMixin {
     this.context,
   });
 
-  factory MessageDto.fromJson(Map<String, dynamic> json) => _$MessageDtoFromJson(json);
+  factory MessageDto.fromJson(Map<String, dynamic> json) =>
+      _$MessageDtoFromJson(json);
 
   final int id;
   final String text;
@@ -204,6 +213,7 @@ class MessageDto with EquatableMixin {
   List<Object?> get props => [id, text, type, context];
 }
 
+@JsonSerializable()
 class MessageContextDto with EquatableMixin {
   const MessageContextDto({
     this.reason,
@@ -220,12 +230,14 @@ class MessageContextDto with EquatableMixin {
   List<Object?> get props => [reason];
 }
 
+@JsonSerializable()
 class MetaDto with EquatableMixin {
   const MetaDto({
     this.label,
   });
 
-  factory MetaDto.fromJson(Map<String, dynamic> json) => _$MetaDtoFromJson(json);
+  factory MetaDto.fromJson(Map<String, dynamic> json) =>
+      _$MetaDtoFromJson(json);
 
   final LabelDto? label;
 
@@ -235,6 +247,7 @@ class MetaDto with EquatableMixin {
   List<Object?> get props => [label];
 }
 
+@JsonSerializable()
 class LabelDto with EquatableMixin {
   const LabelDto({
     required this.id,
@@ -243,7 +256,8 @@ class LabelDto with EquatableMixin {
     this.context,
   });
 
-  factory LabelDto.fromJson(Map<String, dynamic> json) => _$LabelDtoFromJson(json);
+  factory LabelDto.fromJson(Map<String, dynamic> json) =>
+      _$LabelDtoFromJson(json);
 
   final int id;
   final String text;

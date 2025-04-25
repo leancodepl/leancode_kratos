@@ -1,12 +1,14 @@
 import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 part 'login_success.g.dart';
 
 SuccessLoginResponse loginSuccessResponseFromJson(String str) =>
     SuccessLoginResponse.fromJson(json.decode(str) as Map<String, dynamic>);
 
+@JsonSerializable()
 class SuccessLoginResponse with EquatableMixin {
   /// - [sessionToken] may be null on Web.
   const SuccessLoginResponse({
@@ -26,6 +28,7 @@ class SuccessLoginResponse with EquatableMixin {
   List<Object?> get props => [sessionToken, session];
 }
 
+@JsonSerializable()
 class Session with EquatableMixin {
   const Session({
     required this.id,
@@ -39,7 +42,8 @@ class Session with EquatableMixin {
     required this.devices,
   });
 
-  factory Session.fromJson(Map<String, dynamic> json) => _$SessionFromJson(json);
+  factory Session.fromJson(Map<String, dynamic> json) =>
+      _$SessionFromJson(json);
 
   final String id;
   final bool active;
@@ -67,6 +71,7 @@ class Session with EquatableMixin {
       ];
 }
 
+@JsonSerializable()
 class AuthenticationMethod with EquatableMixin {
   const AuthenticationMethod({
     required this.method,
@@ -87,6 +92,7 @@ class AuthenticationMethod with EquatableMixin {
   List<Object?> get props => [method, aal, completedAt];
 }
 
+@JsonSerializable()
 class Device with EquatableMixin {
   const Device({
     required this.id,
@@ -108,6 +114,7 @@ class Device with EquatableMixin {
   List<Object?> get props => [id, ipAddress, userAgent, location];
 }
 
+@JsonSerializable()
 class Identity with EquatableMixin {
   const Identity({
     required this.id,
@@ -123,7 +130,8 @@ class Identity with EquatableMixin {
     required this.updatedAt,
   });
 
-  factory Identity.fromJson(Map<String, dynamic> json) => _$IdentityFromJson(json);
+  factory Identity.fromJson(Map<String, dynamic> json) =>
+      _$IdentityFromJson(json);
 
   final String id;
   final String schemaId;
@@ -155,6 +163,7 @@ class Identity with EquatableMixin {
       ];
 }
 
+@JsonSerializable()
 class RecoveryAddress with EquatableMixin {
   const RecoveryAddress({
     required this.id,
@@ -179,6 +188,7 @@ class RecoveryAddress with EquatableMixin {
   List<Object?> get props => [id, value, via, createdAt, updatedAt];
 }
 
+@JsonSerializable()
 class VerifiableAddress with EquatableMixin {
   const VerifiableAddress({
     this.id,

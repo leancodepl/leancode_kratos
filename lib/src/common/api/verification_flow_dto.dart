@@ -1,10 +1,12 @@
 import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'package:leancode_kratos_client/src/common/api/auth_dtos.dart';
 
 part 'verification_flow_dto.g.dart';
 
+@JsonSerializable()
 class VerificationFlowDto with EquatableMixin {
   const VerificationFlowDto({
     this.active,
