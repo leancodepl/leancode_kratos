@@ -6,9 +6,8 @@ part of 'settings_flow_dto.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$SettingsFlowDtoImpl _$$SettingsFlowDtoImplFromJson(
-        Map<String, dynamic> json) =>
-    _$SettingsFlowDtoImpl(
+SettingsFlowDto _$SettingsFlowDtoFromJson(Map<String, dynamic> json) =>
+    SettingsFlowDto(
       id: json['id'] as String,
       type: json['type'] as String,
       expiresAt: DateTime.parse(json['expires_at'] as String),
@@ -19,8 +18,7 @@ _$SettingsFlowDtoImpl _$$SettingsFlowDtoImplFromJson(
       sessionTokenExchangeCode: json['session_token_exchange_code'] as String?,
     );
 
-Map<String, dynamic> _$$SettingsFlowDtoImplToJson(
-        _$SettingsFlowDtoImpl instance) =>
+Map<String, dynamic> _$SettingsFlowDtoToJson(SettingsFlowDto instance) =>
     <String, dynamic>{
       'id': instance.id,
       'type': instance.type,

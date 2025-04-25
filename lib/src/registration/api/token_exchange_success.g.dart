@@ -6,15 +6,15 @@ part of 'token_exchange_success.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$TokenExchangeSuccessImpl _$$TokenExchangeSuccessImplFromJson(
+TokenExchangeSuccess _$TokenExchangeSuccessFromJson(
         Map<String, dynamic> json) =>
-    _$TokenExchangeSuccessImpl(
+    TokenExchangeSuccess(
       sessionToken: json['session_token'] as String?,
       session: Session.fromJson(json['session'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$$TokenExchangeSuccessImplToJson(
-        _$TokenExchangeSuccessImpl instance) =>
+Map<String, dynamic> _$TokenExchangeSuccessToJson(
+        TokenExchangeSuccess instance) =>
     <String, dynamic>{
       'session_token': instance.sessionToken,
       'session': instance.session.toJson(),

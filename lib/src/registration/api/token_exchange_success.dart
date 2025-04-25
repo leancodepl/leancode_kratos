@@ -1,17 +1,17 @@
 import 'dart:convert';
 
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:equatable/equatable.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'package:leancode_kratos_client/src/login/api/login_success.dart';
 
-part 'token_exchange_success.freezed.dart';
 part 'token_exchange_success.g.dart';
 
-@freezed
-class TokenExchangeSuccess with _$TokenExchangeSuccess {
-  const factory TokenExchangeSuccess({
-    String? sessionToken,
-    required Session session,
-  }) = _TokenExchangeSuccess;
+@JsonSerializable()
+class TokenExchangeSuccess with EquatableMixin {
+  const TokenExchangeSuccess({
+    this.sessionToken,
+    required this.session,
+  });
 
   factory TokenExchangeSuccess.fromJson(Map<String, dynamic> json) =>
       _$TokenExchangeSuccessFromJson(json);
@@ -20,4 +20,12 @@ class TokenExchangeSuccess with _$TokenExchangeSuccess {
       TokenExchangeSuccess.fromJson(
         json.decode(string) as Map<String, dynamic>,
       );
+
+  final String? sessionToken;
+  final Session session;
+
+  Map<String, dynamic> toJson() => _$TokenExchangeSuccessToJson(this);
+
+  @override
+  List<Object?> get props => [sessionToken, session];
 }
