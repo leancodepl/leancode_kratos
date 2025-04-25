@@ -6,22 +6,21 @@ part of 'login_success.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$SuccessLoginResponseImpl _$$SuccessLoginResponseImplFromJson(
+SuccessLoginResponse _$SuccessLoginResponseFromJson(
         Map<String, dynamic> json) =>
-    _$SuccessLoginResponseImpl(
+    SuccessLoginResponse(
       sessionToken: json['session_token'] as String?,
       session: Session.fromJson(json['session'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$$SuccessLoginResponseImplToJson(
-        _$SuccessLoginResponseImpl instance) =>
+Map<String, dynamic> _$SuccessLoginResponseToJson(
+        SuccessLoginResponse instance) =>
     <String, dynamic>{
       'session_token': instance.sessionToken,
       'session': instance.session.toJson(),
     };
 
-_$SessionImpl _$$SessionImplFromJson(Map<String, dynamic> json) =>
-    _$SessionImpl(
+Session _$SessionFromJson(Map<String, dynamic> json) => Session(
       id: json['id'] as String,
       active: json['active'] as bool,
       expiresAt: DateTime.parse(json['expires_at'] as String),
@@ -38,8 +37,7 @@ _$SessionImpl _$$SessionImplFromJson(Map<String, dynamic> json) =>
           .toList(),
     );
 
-Map<String, dynamic> _$$SessionImplToJson(_$SessionImpl instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$SessionToJson(Session instance) => <String, dynamic>{
       'id': instance.id,
       'active': instance.active,
       'expires_at': instance.expiresAt.toIso8601String(),
@@ -52,39 +50,37 @@ Map<String, dynamic> _$$SessionImplToJson(_$SessionImpl instance) =>
       'devices': instance.devices.map((e) => e.toJson()).toList(),
     };
 
-_$AuthenticationMethodImpl _$$AuthenticationMethodImplFromJson(
+AuthenticationMethod _$AuthenticationMethodFromJson(
         Map<String, dynamic> json) =>
-    _$AuthenticationMethodImpl(
+    AuthenticationMethod(
       method: json['method'] as String,
       aal: json['aal'] as String,
       completedAt: DateTime.parse(json['completed_at'] as String),
     );
 
-Map<String, dynamic> _$$AuthenticationMethodImplToJson(
-        _$AuthenticationMethodImpl instance) =>
+Map<String, dynamic> _$AuthenticationMethodToJson(
+        AuthenticationMethod instance) =>
     <String, dynamic>{
       'method': instance.method,
       'aal': instance.aal,
       'completed_at': instance.completedAt.toIso8601String(),
     };
 
-_$DeviceImpl _$$DeviceImplFromJson(Map<String, dynamic> json) => _$DeviceImpl(
+Device _$DeviceFromJson(Map<String, dynamic> json) => Device(
       id: json['id'] as String,
       ipAddress: json['ip_address'] as String,
       userAgent: json['user_agent'] as String,
       location: json['location'] as String,
     );
 
-Map<String, dynamic> _$$DeviceImplToJson(_$DeviceImpl instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$DeviceToJson(Device instance) => <String, dynamic>{
       'id': instance.id,
       'ip_address': instance.ipAddress,
       'user_agent': instance.userAgent,
       'location': instance.location,
     };
 
-_$IdentityImpl _$$IdentityImplFromJson(Map<String, dynamic> json) =>
-    _$IdentityImpl(
+Identity _$IdentityFromJson(Map<String, dynamic> json) => Identity(
       id: json['id'] as String,
       schemaId: json['schema_id'] as String,
       schemaUrl: json['schema_url'] as String,
@@ -104,8 +100,7 @@ _$IdentityImpl _$$IdentityImplFromJson(Map<String, dynamic> json) =>
       updatedAt: DateTime.parse(json['updated_at'] as String),
     );
 
-Map<String, dynamic> _$$IdentityImplToJson(_$IdentityImpl instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$IdentityToJson(Identity instance) => <String, dynamic>{
       'id': instance.id,
       'schema_id': instance.schemaId,
       'schema_url': instance.schemaUrl,
@@ -121,9 +116,8 @@ Map<String, dynamic> _$$IdentityImplToJson(_$IdentityImpl instance) =>
       'updated_at': instance.updatedAt.toIso8601String(),
     };
 
-_$RecoveryAddressImpl _$$RecoveryAddressImplFromJson(
-        Map<String, dynamic> json) =>
-    _$RecoveryAddressImpl(
+RecoveryAddress _$RecoveryAddressFromJson(Map<String, dynamic> json) =>
+    RecoveryAddress(
       id: json['id'] as String,
       value: json['value'] as String,
       via: json['via'] as String,
@@ -131,8 +125,7 @@ _$RecoveryAddressImpl _$$RecoveryAddressImplFromJson(
       updatedAt: DateTime.parse(json['updated_at'] as String),
     );
 
-Map<String, dynamic> _$$RecoveryAddressImplToJson(
-        _$RecoveryAddressImpl instance) =>
+Map<String, dynamic> _$RecoveryAddressToJson(RecoveryAddress instance) =>
     <String, dynamic>{
       'id': instance.id,
       'value': instance.value,
@@ -141,9 +134,8 @@ Map<String, dynamic> _$$RecoveryAddressImplToJson(
       'updated_at': instance.updatedAt.toIso8601String(),
     };
 
-_$VerifiableAddressImpl _$$VerifiableAddressImplFromJson(
-        Map<String, dynamic> json) =>
-    _$VerifiableAddressImpl(
+VerifiableAddress _$VerifiableAddressFromJson(Map<String, dynamic> json) =>
+    VerifiableAddress(
       id: json['id'] as String?,
       value: json['value'] as String,
       verified: json['verified'] as bool,
@@ -160,8 +152,7 @@ _$VerifiableAddressImpl _$$VerifiableAddressImplFromJson(
           : DateTime.parse(json['updated_at'] as String),
     );
 
-Map<String, dynamic> _$$VerifiableAddressImplToJson(
-        _$VerifiableAddressImpl instance) =>
+Map<String, dynamic> _$VerifiableAddressToJson(VerifiableAddress instance) =>
     <String, dynamic>{
       'id': instance.id,
       'value': instance.value,
