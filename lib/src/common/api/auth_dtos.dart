@@ -207,13 +207,11 @@ class MessageDto with EquatableMixin {
 
   Map<String, dynamic> toJson() => _$MessageDtoToJson(this);
 
-KratosMessage toKratosMessage() => KratosMessage.forId(id, context);
+  KratosMessage toKratosMessage() => KratosMessage.forId(id, context);
 
   @override
   List<Object?> get props => [id, text, type, context];
 }
-
-
 
 @JsonSerializable()
 class MetaDto with EquatableMixin {
