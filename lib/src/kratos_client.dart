@@ -32,7 +32,7 @@ class KratosClient {
     http.Client? httpClient,
   })  : _baseUri = baseUri,
         _credentialsStorage =
-            credentialsStorage ?? const FlutterSecureCredentialsStorage(),
+            credentialsStorage ?? FlutterSecureCredentialsStorage(),
         _client = httpClient ?? createHttpClient();
 
   final Uri _baseUri;

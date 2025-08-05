@@ -15,17 +15,19 @@ abstract interface class CredentialsStorage {
 }
 
 class FlutterSecureCredentialsStorage implements CredentialsStorage {
-  const FlutterSecureCredentialsStorage();
+  FlutterSecureCredentialsStorage();
 
   static const _key = 'kratos_login_token';
   static const _expirationKey = 'kratos_token_expiration';
 
+  String? _loginToken;
+  DateTime? _kratosExpirationToken;
+
   FlutterSecureStorage get _storage => const FlutterSecureStorage();
 
   @override
-  Future<String?> read() {
-    return _storage.read(key: _key);
-  }
+  Future<String?> read() async =>
+      _loginToken ??= await _storage.read(key: _key);
 
   @override
   Future<void> save({
@@ -34,18 +36,21 @@ class FlutterSecureCredentialsStorage implements CredentialsStorage {
   }) async {
     await _storage.write(key: _key, value: credentials);
     await _storage.write(key: _expirationKey, value: expirationDate);
+    _loginToken = credentials;
+    _kratosExpirationToken = DateTime.parse(expirationDate);
   }
 
   @override
-  Future<void> clear() {
-    return _storage.delete(key: _key);
+  Future<void> clear() async {
+    await _storage.delete(key: _key);
+    _loginToken = null;
   }
 
   @override
   Future<DateTime?> readExpirationDate() async {
     final expirationDate = await _storage.read(key: _expirationKey);
     if (expirationDate != null) {
-      return DateTime.parse(expirationDate);
+      return _kratosExpirationToken ??= DateTime.parse(expirationDate);
     }
     return null;
   }
