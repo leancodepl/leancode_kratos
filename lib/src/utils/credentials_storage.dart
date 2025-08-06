@@ -20,38 +20,65 @@ class FlutterSecureCredentialsStorage implements CredentialsStorage {
   static const _key = 'kratos_login_token';
   static const _expirationKey = 'kratos_token_expiration';
 
-  String? _loginToken;
-  DateTime? _kratosExpirationToken;
+  final _loginToken = _FlutterSecureCredentialsStorageCacheItem(
+    key: _key,
+  );
 
-  FlutterSecureStorage get _storage => const FlutterSecureStorage();
+  final _expirationDate = _FlutterSecureCredentialsStorageCacheItem(
+    key: _expirationKey,
+  );
 
   @override
-  Future<String?> read() async =>
-      _loginToken ??= await _storage.read(key: _key);
+  Future<String?> read() => _loginToken.read();
 
   @override
   Future<void> save({
     required String? credentials,
     required String expirationDate,
   }) async {
-    await _storage.write(key: _key, value: credentials);
-    await _storage.write(key: _expirationKey, value: expirationDate);
-    _loginToken = credentials;
-    _kratosExpirationToken = DateTime.parse(expirationDate);
+    await _loginToken.save(value: credentials);
+    await _expirationDate.save(value: expirationDate);
   }
 
   @override
   Future<void> clear() async {
-    await _storage.delete(key: _key);
-    _loginToken = null;
+    await _loginToken.clear();
+    await _expirationDate.clear();
   }
 
   @override
   Future<DateTime?> readExpirationDate() async {
-    final expirationDate = await _storage.read(key: _expirationKey);
+    final expirationDate = await _expirationDate.read();
     if (expirationDate != null) {
-      return _kratosExpirationToken ??= DateTime.parse(expirationDate);
+      return DateTime.parse(expirationDate);
     }
     return null;
+  }
+}
+
+class _FlutterSecureCredentialsStorageCacheItem {
+  _FlutterSecureCredentialsStorageCacheItem({
+    required this.key,
+  });
+
+  final String key;
+  String? value;
+
+  FlutterSecureStorage get _storage => const FlutterSecureStorage();
+
+  Future<String?> read() async {
+    return value ??= await _storage.read(key: key);
+  }
+
+  Future<void> save({
+    required String? value,
+  }) async {
+    await _storage.write(key: key, value: value);
+    this.value = value;
+  }
+
+  Future<void> clear() async {
+    await _storage.delete(key: key);
+    value = null;
   }
 }
