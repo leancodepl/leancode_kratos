@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:leancode_kratos_client/src/utils/async_queue.dart';
+import 'package:meta/meta.dart';
 
 abstract interface class CredentialsStorage {
   Future<String?> read();
@@ -65,6 +66,7 @@ class FlutterSecureCredentialsStorage implements CredentialsStorage {
   }
 }
 
+@internal
 class CachedItemStorage {
   CachedItemStorage({
     required this.key,
@@ -74,15 +76,18 @@ class CachedItemStorage {
   final FlutterSecureStorage _storage;
 
   final String key;
-  _CacheState _state = const _CacheUninitialized();
+  CacheState _state = const CacheUninitialized();
+
+  @visibleForTesting
+  CacheState get state => _state;
 
   Future<String?> read() async {
     switch (_state) {
-      case _CacheUninitialized():
+      case CacheUninitialized():
         final value = await _storage.read(key: key);
-        _state = _CacheInitialized(value);
+        _state = CacheInitialized(value);
         return value;
-      case _CacheInitialized(:final value):
+      case CacheInitialized(:final value):
         return value;
     }
   }
@@ -91,25 +96,28 @@ class CachedItemStorage {
     required String? value,
   }) async {
     await _storage.write(key: key, value: value);
-    _state = _CacheInitialized(value);
+    _state = CacheInitialized(value);
   }
 
   Future<void> clear() async {
     await _storage.delete(key: key);
-    _state = const _CacheInitialized(null);
+    _state = const CacheInitialized(null);
   }
 }
 
-sealed class _CacheState {
-  const _CacheState();
+@internal
+sealed class CacheState {
+  const CacheState();
 }
 
-class _CacheInitialized extends _CacheState {
-  const _CacheInitialized(this.value);
+@internal
+class CacheInitialized extends CacheState {
+  const CacheInitialized(this.value);
 
   final String? value;
 }
 
-class _CacheUninitialized extends _CacheState {
-  const _CacheUninitialized();
+@internal
+class CacheUninitialized extends CacheState {
+  const CacheUninitialized();
 }
