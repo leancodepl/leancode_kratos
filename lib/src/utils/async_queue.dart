@@ -1,5 +1,8 @@
 import 'dart:async';
 
+/// A queue that executes actions sequentially.
+///
+/// This is useful to avoid race conditions when accessing shared resources.
 class AsyncQueue<T> {
   Completer<T>? _completer;
 
