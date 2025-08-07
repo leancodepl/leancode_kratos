@@ -92,7 +92,7 @@ RegistrationResult mapRegistrationSuccessResponse(
     orElse: () => const RegistrationUnknownErrorResult(),
   );
 
-  return result ?? const RegistrationUnknownErrorResult();
+  return result ?? const RegistrationSuccessResult();
 }
 
 RegistrationResult mapRegistrationErrorResponse(AuthFlowDto response) {
