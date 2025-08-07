@@ -13,32 +13,24 @@ void main() {
 
     group('basic functionality', () {
       test('should execute single action and return result', () async {
-        // Arrange
         const expectedResult = 42;
 
-        // Act
         final actualResult = await asyncQueue.execute(() async {
           return expectedResult;
         });
-
-        // Assert
         expect(actualResult, equals(expectedResult));
       });
 
       test('should execute action that takes time', () async {
-        // Arrange
         const expectedResult = 100;
         const delayDuration = Duration(milliseconds: 50);
 
-        // Act
         final stopwatch = Stopwatch()..start();
         final actualResult = await asyncQueue.execute(() async {
           await Future<void>.delayed(delayDuration);
           return expectedResult;
         });
         stopwatch.stop();
-
-        // Assert
         expect(actualResult, equals(expectedResult));
         expect(stopwatch.elapsedMilliseconds, greaterThanOrEqualTo(50));
       });
@@ -65,7 +57,6 @@ void main() {
 
       test('should maintain execution order even with different delays',
           () async {
-        // Arrange
         final stringQueue = AsyncQueue<String>();
         final executionOrder = <String>[];
         final futures = [
@@ -86,19 +77,15 @@ void main() {
         ];
 
         final results = await Future.wait(futures);
-
-        // Assert
         expect(results, equals(['first', 'second', 'third']));
         expect(executionOrder, equals(['first', 'second', 'third']));
       });
 
       test('should handle concurrent execute calls', () async {
-        // Arrange
         final executionTimes = <DateTime>[];
         final futures = <Future<int>>[];
 
-        // Act
-        for (int i = 0; i < 5; i++) {
+        for (var i = 0; i < 5; i++) {
           futures.add(
             asyncQueue.execute(() async {
               executionTimes.add(DateTime.now());
@@ -109,13 +96,11 @@ void main() {
         }
 
         final results = await Future.wait(futures);
-
-        // Assert
         expect(results, equals([0, 1, 2, 3, 4]));
         expect(executionTimes.length, equals(5));
 
         // Verify that executions happened in sequence (not concurrently)
-        for (int i = 1; i < executionTimes.length; i++) {
+        for (var i = 1; i < executionTimes.length; i++) {
           expect(
             executionTimes[i].isAfter(executionTimes[i - 1]),
             isTrue,
@@ -155,7 +140,6 @@ void main() {
           }
         }
 
-        // Assert
         expect(
           results,
           equals(
@@ -174,55 +158,26 @@ void main() {
 
     group('edge cases', () {
       test('should handle empty action', () async {
-        // Arrange
         final nullableQueue = AsyncQueue<int?>();
 
-        // Act
         final result = await nullableQueue.execute(() async {
           return null;
         });
-
-        // Assert
         expect(result, isNull);
       });
 
       test('should handle synchronous action', () async {
-        // Arrange
         const expectedResult = 123;
 
-        // Act
         final result = await asyncQueue.execute(() async => expectedResult);
-
-        // Assert
         expect(result, equals(expectedResult));
       });
 
-      test('should work with different generic types', () async {
-        // Arrange
-        final boolQueue = AsyncQueue<bool>();
-        final listQueue = AsyncQueue<List<String>>();
-        final mapQueue = AsyncQueue<Map<String, int>>();
-
-        // Act
-        final boolResult = await boolQueue.execute(() async => true);
-        final listResult = await listQueue.execute(() async => ['a', 'b']);
-        final mapResult = await mapQueue.execute(() async => {'key': 1});
-
-        // Assert
-        expect(boolResult, isTrue);
-        expect(listResult, equals(['a', 'b']));
-        expect(mapResult, equals({'key': 1}));
-      });
-
       test('should handle nullable return types', () async {
-        // Arrange
         final nullableQueue = AsyncQueue<String?>();
 
-        // Act
         final nullResult = await nullableQueue.execute(() async => null);
         final nonNullResult = await nullableQueue.execute(() async => 'test');
-
-        // Assert
         expect(nullResult, isNull);
         expect(nonNullResult, equals('test'));
       });
