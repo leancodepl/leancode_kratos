@@ -66,7 +66,7 @@ class FlutterSecureCredentialsStorage implements CredentialsStorage {
   }
 }
 
-@internal
+@visibleForTesting
 class CachedItemStorage {
   CachedItemStorage({
     required this.key,
@@ -105,19 +105,19 @@ class CachedItemStorage {
   }
 }
 
-@internal
+@visibleForTesting
 sealed class CacheState {
   const CacheState();
 }
 
-@internal
+@visibleForTesting
 class CacheInitialized extends CacheState {
   const CacheInitialized(this.value);
 
   final String? value;
 }
 
-@internal
+@visibleForTesting
 class CacheUninitialized extends CacheState {
   const CacheUninitialized();
 }
