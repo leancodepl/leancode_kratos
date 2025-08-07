@@ -5,10 +5,10 @@ import 'package:leancode_kratos_client/src/utils/async_queue.dart';
 
 void main() {
   group('AsyncQueue', () {
-    late AsyncQueue<int> asyncQueue;
+    late AsyncQueue asyncQueue;
 
     setUp(() {
-      asyncQueue = AsyncQueue<int>();
+      asyncQueue = AsyncQueue();
     });
 
     group('basic functionality', () {
@@ -57,7 +57,7 @@ void main() {
 
       test('should maintain execution order even with different delays',
           () async {
-        final stringQueue = AsyncQueue<String>();
+        final stringQueue = AsyncQueue();
         final executionOrder = <String>[];
         final futures = [
           stringQueue.execute(() async {
@@ -158,7 +158,7 @@ void main() {
 
     group('edge cases', () {
       test('should handle empty action', () async {
-        final nullableQueue = AsyncQueue<int?>();
+        final nullableQueue = AsyncQueue();
 
         final result = await nullableQueue.execute(() async {
           return null;
@@ -174,7 +174,7 @@ void main() {
       });
 
       test('should handle nullable return types', () async {
-        final nullableQueue = AsyncQueue<String?>();
+        final nullableQueue = AsyncQueue();
 
         final nullResult = await nullableQueue.execute(() async => null);
         final nonNullResult = await nullableQueue.execute(() async => 'test');
@@ -202,7 +202,7 @@ void main() {
 class _MultipleActionsTest {
   _MultipleActionsTest();
 
-  final AsyncQueue<int?> asyncQueue = AsyncQueue<int?>();
+  final asyncQueue = AsyncQueue();
 
   int? value = 0;
 

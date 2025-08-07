@@ -18,19 +18,22 @@ abstract interface class CredentialsStorage {
 }
 
 class FlutterSecureCredentialsStorage implements CredentialsStorage {
-  FlutterSecureCredentialsStorage();
+  FlutterSecureCredentialsStorage({
+    FlutterSecureStorage storage = const FlutterSecureStorage(),
+  }) : _storage = storage;
 
-  static const _key = 'kratos_login_token';
-  static const _expirationKey = 'kratos_token_expiration';
+  final FlutterSecureStorage _storage;
 
-  final _queue = AsyncQueue<String?>();
+  final _queue = AsyncQueue();
 
-  final _loginToken = _FlutterSecureCredentialsStorageCacheItem(
-    key: _key,
+  late final _loginToken = CachedItemStorage(
+    key: 'kratos_login_token',
+    storage: _storage,
   );
 
-  final _expirationDate = _FlutterSecureCredentialsStorageCacheItem(
-    key: _expirationKey,
+  late final _expirationDate = CachedItemStorage(
+    key: 'kratos_token_expiration',
+    storage: _storage,
   );
 
   @override
@@ -44,14 +47,12 @@ class FlutterSecureCredentialsStorage implements CredentialsStorage {
       _queue.execute(() async {
         await _loginToken.save(value: credentials);
         await _expirationDate.save(value: expirationDate);
-        return null;
       });
 
   @override
   Future<void> clear() => _queue.execute(() async {
         await _loginToken.clear();
         await _expirationDate.clear();
-        return null;
       });
 
   @override
@@ -64,37 +65,51 @@ class FlutterSecureCredentialsStorage implements CredentialsStorage {
   }
 }
 
-class _FlutterSecureCredentialsStorageCacheItem {
-  _FlutterSecureCredentialsStorageCacheItem({
+class CachedItemStorage {
+  CachedItemStorage({
     required this.key,
-  });
+    required FlutterSecureStorage storage,
+  }) : _storage = storage;
+
+  final FlutterSecureStorage _storage;
 
   final String key;
-  bool _isInitialized = false;
-  String? value;
-
-  FlutterSecureStorage get _storage => const FlutterSecureStorage();
+  _CacheState _state = const _CacheUninitialized();
 
   Future<String?> read() async {
-    if (_isInitialized) {
-      return value;
+    switch (_state) {
+      case _CacheUninitialized():
+        final value = await _storage.read(key: key);
+        _state = _CacheInitialized(value);
+        return value;
+      case _CacheInitialized(:final value):
+        return value;
     }
-    value = await _storage.read(key: key);
-    _isInitialized = true;
-    return value;
   }
 
   Future<void> save({
     required String? value,
   }) async {
     await _storage.write(key: key, value: value);
-    this.value = value;
-    _isInitialized = true;
+    _state = _CacheInitialized(value);
   }
 
   Future<void> clear() async {
     await _storage.delete(key: key);
-    value = null;
-    _isInitialized = true;
+    _state = const _CacheInitialized(null);
   }
+}
+
+sealed class _CacheState {
+  const _CacheState();
+}
+
+class _CacheInitialized extends _CacheState {
+  const _CacheInitialized(this.value);
+
+  final String? value;
+}
+
+class _CacheUninitialized extends _CacheState {
+  const _CacheUninitialized();
 }

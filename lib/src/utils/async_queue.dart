@@ -3,27 +3,20 @@ import 'dart:async';
 /// A queue that executes actions sequentially.
 ///
 /// This is useful to avoid race conditions when accessing shared resources.
-class AsyncQueue<T> {
-  Completer<T>? _completer;
+class AsyncQueue {
+  Completer<void>? _completer;
 
-  Future<T> execute(Future<T> Function() action) async {
+  Future<T> execute<T>(Future<T> Function() action) async {
     while (_completer != null) {
-      try {
-        await _completer!.future;
-      } catch (_) {
-        // Ignores caught errors because it is handled below
-      }
+      await _completer?.future;
     }
-    try {
-      _completer = Completer<T>();
 
-      final result = await action();
-      _completer!.complete(result);
-      return result;
-    } catch (error, stackTrace) {
-      _completer?.completeError(error, stackTrace);
-      rethrow;
+    try {
+      _completer = Completer<void>();
+
+      return await action();
     } finally {
+      _completer?.complete();
       _completer = null;
     }
   }
