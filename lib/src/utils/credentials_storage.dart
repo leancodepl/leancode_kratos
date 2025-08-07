@@ -95,6 +95,6 @@ class _FlutterSecureCredentialsStorageCacheItem {
   Future<void> clear() async {
     await _storage.delete(key: key);
     value = null;
-    _isInitialized = false;
+    _isInitialized = true;
   }
 }
