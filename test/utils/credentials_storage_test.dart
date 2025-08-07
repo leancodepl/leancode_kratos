@@ -218,7 +218,9 @@ void main() {
       expect(temporaryStorage.values, hasLength(2));
       expect(temporaryStorage.values['kratos_login_token'], 'token99');
       expect(
-          temporaryStorage.values['kratos_token_expiration'], 'expiration99');
+        temporaryStorage.values['kratos_token_expiration'],
+        'expiration99',
+      );
     });
   });
 }

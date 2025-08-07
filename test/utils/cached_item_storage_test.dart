@@ -102,7 +102,8 @@ void main() {
       verify(() => mockStorage.read(key: testKey)).called(1);
       verify(() => mockStorage.delete(key: testKey)).called(1);
       verifyNever(
-          () => mockStorage.write(key: testKey, value: any(named: 'value')));
+        () => mockStorage.write(key: testKey, value: any(named: 'value')),
+      );
     });
 
     test('cache is updated after save', () async {
@@ -144,7 +145,8 @@ void main() {
 
       verify(() => mockStorage.read(key: testKey)).called(1);
       verifyNever(
-          () => mockStorage.write(key: testKey, value: any(named: 'value')));
+        () => mockStorage.write(key: testKey, value: any(named: 'value')),
+      );
       verifyNever(() => mockStorage.delete(key: testKey));
     });
 
@@ -164,7 +166,8 @@ void main() {
       expect(result, isA<CacheUninitialized>());
       verify(() => mockStorage.read(key: testKey)).called(1);
       verifyNever(
-          () => mockStorage.write(key: testKey, value: any(named: 'value')));
+        () => mockStorage.write(key: testKey, value: any(named: 'value')),
+      );
       verifyNever(() => mockStorage.delete(key: testKey));
     });
 

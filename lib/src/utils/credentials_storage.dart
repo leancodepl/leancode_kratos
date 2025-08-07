@@ -1,8 +1,8 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:leancode_kratos_client/src/utils/async_queue.dart';
-import 'package:meta/meta.dart';
 
 abstract interface class CredentialsStorage {
   Future<String?> read();
