@@ -66,7 +66,7 @@ RegistrationResult mapRegistrationSuccessResponse(
   final continueWith = response.continueWith;
 
   if (continueWith == null) {
-    // The registration is finished and the user is logged in.
+    // The registration is finished.
     return const RegistrationSuccessResult();
   }
 
