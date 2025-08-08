@@ -76,18 +76,15 @@ class CachedItemStorage {
   final FlutterSecureStorage _storage;
 
   final String key;
-  CacheState _state = const CacheUninitialized();
-
-  @visibleForTesting
-  CacheState get state => _state;
+  _CacheState _state = const _CacheUninitialized();
 
   Future<String?> read() async {
     switch (_state) {
-      case CacheUninitialized():
+      case _CacheUninitialized():
         final value = await _storage.read(key: key);
-        _state = CacheInitialized(value);
+        _state = _CacheInitialized(value);
         return value;
-      case CacheInitialized(:final value):
+      case _CacheInitialized(:final value):
         return value;
     }
   }
@@ -96,28 +93,25 @@ class CachedItemStorage {
     required String? value,
   }) async {
     await _storage.write(key: key, value: value);
-    _state = CacheInitialized(value);
+    _state = _CacheInitialized(value);
   }
 
   Future<void> clear() async {
     await _storage.delete(key: key);
-    _state = const CacheInitialized(null);
+    _state = const _CacheInitialized(null);
   }
 }
 
-@visibleForTesting
-sealed class CacheState {
-  const CacheState();
+sealed class _CacheState {
+  const _CacheState();
 }
 
-@visibleForTesting
-class CacheInitialized extends CacheState {
-  const CacheInitialized(this.value);
+class _CacheInitialized extends _CacheState {
+  const _CacheInitialized(this.value);
 
   final String? value;
 }
 
-@visibleForTesting
-class CacheUninitialized extends CacheState {
-  const CacheUninitialized();
+class _CacheUninitialized extends _CacheState {
+  const _CacheUninitialized();
 }

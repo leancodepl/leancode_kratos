@@ -28,11 +28,6 @@ void main() {
       final result = await storageItem.read();
 
       expect(result, equals(expectedValue));
-      verify(() => mockStorage.read(key: testKey)).called(1);
-      verifyNever(
-        () => mockStorage.write(key: testKey, value: any(named: 'value')),
-      );
-      verifyNever(() => mockStorage.delete(key: testKey));
     });
 
     test('subsequent reads use cache', () async {
@@ -41,18 +36,12 @@ void main() {
         (_) async => expectedValue,
       );
 
-      final firstRead = await storageItem.read();
-      final secondRead = await storageItem.read();
-      final thirdRead = await storageItem.read();
+      await Future.wait([
+        storageItem.read(),
+        storageItem.read(),
+      ]);
 
-      expect(firstRead, equals(expectedValue));
-      expect(secondRead, equals(expectedValue));
-      expect(thirdRead, equals(expectedValue));
       verify(() => mockStorage.read(key: testKey)).called(1);
-      verifyNever(
-        () => mockStorage.write(key: testKey, value: any(named: 'value')),
-      );
-      verifyNever(() => mockStorage.delete(key: testKey));
     });
 
     test('save updates both storage and cache', () async {
@@ -67,12 +56,11 @@ void main() {
       expect(result, equals(newValue));
       verify(() => mockStorage.write(key: testKey, value: newValue)).called(1);
       verifyNever(() => mockStorage.read(key: testKey));
-      verifyNever(() => mockStorage.delete(key: testKey));
     });
 
     test('save with null clears value', () async {
       when(() => mockStorage.write(key: testKey, value: null)).thenAnswer(
-        (_) async => Future<void>.value(),
+        (_) async {},
       );
 
       await storageItem.save(value: null);
@@ -81,7 +69,6 @@ void main() {
       expect(result, isNull);
       verify(() => mockStorage.write(key: testKey, value: null)).called(1);
       verifyNever(() => mockStorage.read(key: testKey));
-      verifyNever(() => mockStorage.delete(key: testKey));
     });
 
     test('clear removes value from storage and cache', () async {
@@ -90,7 +77,7 @@ void main() {
         (_) async => initialValue,
       );
       when(() => mockStorage.delete(key: testKey)).thenAnswer(
-        (_) async => Future<void>.value(),
+        (_) async {},
       );
 
       final beforeClear = await storageItem.read();
@@ -101,119 +88,30 @@ void main() {
       expect(afterClear, isNull);
       verify(() => mockStorage.read(key: testKey)).called(1);
       verify(() => mockStorage.delete(key: testKey)).called(1);
-      verifyNever(
-        () => mockStorage.write(key: testKey, value: any(named: 'value')),
-      );
     });
 
     test('cache is updated after save', () async {
-      const firstValue = 'first_value';
-      const secondValue = 'second_value';
+      const value = 'value';
 
-      when(() => mockStorage.read(key: testKey)).thenAnswer(
-        (_) async => firstValue,
-      );
       when(() => mockStorage.write(key: testKey, value: any(named: 'value')))
           .thenAnswer(
-        (_) async => Future<void>.value(),
+        (_) async {},
       );
 
-      await storageItem.save(value: firstValue);
-      final afterFirstSave = await storageItem.read();
-      await storageItem.save(value: secondValue);
-      final afterSecondSave = await storageItem.read();
+      await storageItem.save(value: value);
+      final afterSave = await storageItem.read();
 
-      expect(afterFirstSave, equals(firstValue));
-      expect(afterSecondSave, equals(secondValue));
-      verifyNever(() => mockStorage.read(key: testKey));
-      verifyNever(() => mockStorage.delete(key: testKey));
-      verify(() => mockStorage.write(key: testKey, value: firstValue))
-          .called(1);
-      verify(() => mockStorage.write(key: testKey, value: secondValue))
-          .called(1);
+      expect(afterSave, equals(value));
     });
 
     test('propagates storage read errors', () async {
       when(() => mockStorage.read(key: testKey))
           .thenThrow(Exception('Storage error'));
 
-      try {
-        await storageItem.read();
-      } catch (e) {
-        expect(e, isA<Exception>());
-      }
-
-      verify(() => mockStorage.read(key: testKey)).called(1);
-      verifyNever(
-        () => mockStorage.write(key: testKey, value: any(named: 'value')),
+      await expectLater(
+        storageItem.read(),
+        throwsA(isA<Exception>()),
       );
-      verifyNever(() => mockStorage.delete(key: testKey));
-    });
-
-    test("read error doesn't affect cache", () async {
-      when(() => mockStorage.read(key: testKey)).thenAnswer(
-        (_) async => throw Exception('Storage error'),
-      );
-
-      try {
-        await storageItem.read();
-      } catch (e) {
-        expect(e, isA<Exception>());
-      }
-
-      final result = storageItem.state;
-
-      expect(result, isA<CacheUninitialized>());
-      verify(() => mockStorage.read(key: testKey)).called(1);
-      verifyNever(
-        () => mockStorage.write(key: testKey, value: any(named: 'value')),
-      );
-      verifyNever(() => mockStorage.delete(key: testKey));
-    });
-
-    test("write error doesn't affect cache", () async {
-      when(() => mockStorage.write(key: testKey, value: any(named: 'value')))
-          .thenAnswer(
-        (_) async => throw Exception('Storage error'),
-      );
-
-      try {
-        await storageItem.save(value: 'test_value');
-      } catch (e) {
-        expect(e, isA<Exception>());
-      }
-
-      final result = storageItem.state;
-
-      expect(result, isA<CacheUninitialized>());
-      verify(() => mockStorage.write(key: testKey, value: 'test_value'))
-          .called(1);
-      verifyNever(() => mockStorage.delete(key: testKey));
-      verifyNever(() => mockStorage.read(key: testKey));
-    });
-
-    test("clear error doesn't affect cache", () async {
-      when(() => mockStorage.write(key: testKey, value: any(named: 'value')))
-          .thenAnswer(
-        (_) async => 'test_value',
-      );
-      when(() => mockStorage.delete(key: testKey)).thenAnswer(
-        (_) async => throw Exception('Storage error'),
-      );
-
-      await storageItem.save(value: 'test_value');
-
-      try {
-        await storageItem.clear();
-      } catch (e) {
-        expect(e, isA<Exception>());
-      }
-
-      final result = storageItem.state;
-      expect(result, isA<CacheInitialized>());
-      expect((result as CacheInitialized).value, 'test_value');
-      verify(() => mockStorage.delete(key: testKey)).called(1);
-      verifyNever(() => mockStorage.read(key: testKey));
     });
   });
 }

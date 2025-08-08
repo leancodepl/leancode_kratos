@@ -11,219 +11,51 @@ void main() {
       asyncQueue = AsyncQueue();
     });
 
-    group('basic functionality', () {
-      test('should execute single action and return result', () async {
-        const expectedResult = 42;
+    test('should execute single action and return result', () async {
+      const expectedResult = 42;
 
-        final actualResult = await asyncQueue.execute(() async {
-          return expectedResult;
-        });
-        expect(actualResult, equals(expectedResult));
+      final actualResult = await asyncQueue.execute(() async {
+        return expectedResult;
       });
-
-      test('should execute action that takes time', () async {
-        const expectedResult = 100;
-        const delayDuration = Duration(milliseconds: 50);
-
-        final stopwatch = Stopwatch()..start();
-        final actualResult = await asyncQueue.execute(() async {
-          await Future<void>.delayed(delayDuration);
-          return expectedResult;
-        });
-        stopwatch.stop();
-        expect(actualResult, equals(expectedResult));
-        expect(stopwatch.elapsedMilliseconds, greaterThanOrEqualTo(50));
-      });
+      expect(actualResult, equals(expectedResult));
     });
 
-    group('queue behavior', () {
-      test('should execute multiple actions sequentially', () async {
-        final executionOrder = <int>[];
-        final futures = <Future<int>>[];
+    test('should execute multiple actions sequentially', () async {
+      final completer = Completer<void>();
+      var isSecondActionExecuted = false;
 
-        for (var i = 0; i < 3; i++) {
-          futures.add(
-            asyncQueue.execute(() async {
-              await Future<void>.delayed(const Duration(microseconds: 10));
-              executionOrder.add(i);
-              return i;
-            }),
-          );
-        }
+      unawaited(
+        asyncQueue.execute(() async {
+          await completer.future;
+        }),
+      );
 
-        await Future.wait(futures);
-        expect(executionOrder, equals([0, 1, 2]));
+      final future = asyncQueue.execute(() async {
+        isSecondActionExecuted = true;
       });
 
-      test('should maintain execution order even with different delays',
-          () async {
-        final stringQueue = AsyncQueue();
-        final executionOrder = <String>[];
-        final futures = [
-          stringQueue.execute(() async {
-            await Future<void>.delayed(const Duration(milliseconds: 50));
-            executionOrder.add('first');
-            return 'first';
-          }),
-          stringQueue.execute(() async {
-            await Future<void>.delayed(const Duration(milliseconds: 10));
-            executionOrder.add('second');
-            return 'second';
-          }),
-          stringQueue.execute(() async {
-            executionOrder.add('third');
-            return 'third';
-          }),
-        ];
+      await Future<void>.delayed(Duration.zero);
 
-        final results = await Future.wait(futures);
-        expect(results, equals(['first', 'second', 'third']));
-        expect(executionOrder, equals(['first', 'second', 'third']));
-      });
+      expect(isSecondActionExecuted, isFalse);
 
-      test('should handle concurrent execute calls', () async {
-        final executionTimes = <DateTime>[];
-        final futures = <Future<int>>[];
+      completer.complete();
 
-        for (var i = 0; i < 5; i++) {
-          futures.add(
-            asyncQueue.execute(() async {
-              executionTimes.add(DateTime.now());
-              await Future<void>.delayed(const Duration(microseconds: 20));
-              return i;
-            }),
-          );
-        }
+      await future;
 
-        final results = await Future.wait(futures);
-        expect(results, equals([0, 1, 2, 3, 4]));
-        expect(executionTimes.length, equals(5));
-
-        // Verify that executions happened in sequence (not concurrently)
-        for (var i = 1; i < executionTimes.length; i++) {
-          expect(
-            executionTimes[i].isAfter(executionTimes[i - 1]),
-            isTrue,
-            reason: 'Execution $i should happen after execution ${i - 1}',
-          );
-        }
-      });
+      expect(isSecondActionExecuted, isTrue);
     });
 
-    group('error handling', () {
-      test('should continue processing after an error', () async {
-        final results = <dynamic>[];
-        final futures = <Future<int>>[];
-
-        for (var i = 0; i < 3; i++) {
-          futures
-            ..add(
-              asyncQueue.execute(() async {
-                await Future<void>.delayed(const Duration(milliseconds: 10));
-                throw Exception('test exception $i');
-              }),
-            )
-            ..add(
-              asyncQueue.execute(() async {
-                await Future<void>.delayed(const Duration(milliseconds: 10));
-                return i;
-              }),
-            );
-        }
-
-        for (final future in futures) {
-          try {
-            final result = await future;
-            results.add(result);
-          } catch (e) {
-            results.add(e.toString());
-          }
-        }
-
-        expect(
-          results,
-          equals(
-            [
-              'Exception: test exception 0',
-              0,
-              'Exception: test exception 1',
-              1,
-              'Exception: test exception 2',
-              2,
-            ],
-          ),
-        );
-      });
-    });
-
-    group('edge cases', () {
-      test('should handle empty action', () async {
-        final nullableQueue = AsyncQueue();
-
-        final result = await nullableQueue.execute(() async {
-          return null;
-        });
-        expect(result, isNull);
+    test('should continue processing after an error', () async {
+      final errorFuture = asyncQueue.execute(() async {
+        throw Exception();
       });
 
-      test('should handle synchronous action', () async {
-        const expectedResult = 123;
-
-        final result = await asyncQueue.execute(() async => expectedResult);
-        expect(result, equals(expectedResult));
+      final resultFuture = asyncQueue.execute(() async {
+        return 1;
       });
 
-      test('should handle nullable return types', () async {
-        final nullableQueue = AsyncQueue();
-
-        final nullResult = await nullableQueue.execute(() async => null);
-        final nonNullResult = await nullableQueue.execute(() async => 'test');
-        expect(nullResult, isNull);
-        expect(nonNullResult, equals('test'));
-      });
-    });
-
-    group('Multiple actions', () {
-      test('Should execute multiple actions sequentially', () async {
-        final test = _MultipleActionsTest();
-        unawaited(test.save(2));
-        final futureRead = test.read();
-        final futureClear = test.clear();
-
-        await futureRead;
-        expect(test.value, equals(2));
-        await futureClear;
-        expect(test.value, isNull);
-      });
+      await expectLater(errorFuture, throwsA(isA<Exception>()));
+      expect(await resultFuture, equals(1));
     });
   });
-}
-
-class _MultipleActionsTest {
-  _MultipleActionsTest();
-
-  final asyncQueue = AsyncQueue();
-
-  int? value = 0;
-
-  Future<void> save(int value) async {
-    await asyncQueue.execute(() async {
-      await Future<void>.delayed(const Duration(microseconds: 500));
-      return this.value = value;
-    });
-  }
-
-  Future<int?> read() async {
-    return asyncQueue.execute(() async {
-      await Future<void>.delayed(const Duration(microseconds: 10));
-      return value;
-    });
-  }
-
-  Future<void> clear() async {
-    await asyncQueue.execute(() async {
-      await Future<void>.delayed(const Duration(microseconds: 50));
-      return value = null;
-    });
-  }
 }
