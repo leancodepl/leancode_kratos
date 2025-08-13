@@ -95,6 +95,8 @@ void main() {
 
       final completer = Completer<void>();
 
+      var isToken2Completed = false;
+
       when(
         () => mockStorage.write(
           key: any(named: 'key'),
@@ -116,7 +118,11 @@ void main() {
           ),
         ),
       ).thenAnswer(
-        (_) async => {},
+        (invocation) async {
+          if (invocation.namedArguments[const Symbol('value')] == token2) {
+            isToken2Completed = true;
+          }
+        },
       );
 
       unawaited(
@@ -133,22 +139,13 @@ void main() {
 
       await Future<void>.delayed(Duration.zero);
 
+      expect(isToken2Completed, isFalse);
+
       completer.complete();
 
       await future;
 
-      verifyInOrder([
-        () => mockStorage.write(key: 'kratos_login_token', value: token1),
-        () => mockStorage.write(
-              key: 'kratos_token_expiration',
-              value: expiration1,
-            ),
-        () => mockStorage.write(key: 'kratos_login_token', value: token2),
-        () => mockStorage.write(
-              key: 'kratos_token_expiration',
-              value: expiration2,
-            ),
-      ]);
+      expect(isToken2Completed, isTrue);
     });
   });
 }
