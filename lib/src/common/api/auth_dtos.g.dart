@@ -25,12 +25,13 @@ abstract class _$AuthFlowDtoCWProxy {
 
   AuthFlowDto sessionTokenExchangeCode(String? sessionTokenExchangeCode);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `AuthFlowDto(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `AuthFlowDto(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// AuthFlowDto(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   AuthFlowDto call({
     String id,
     String? oauth2LoginChallenge,
@@ -44,49 +45,51 @@ abstract class _$AuthFlowDtoCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfAuthFlowDto.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfAuthFlowDto.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfAuthFlowDto.copyWith(...)` or call `instanceOfAuthFlowDto.copyWith.fieldName(value)` for a single field.
 class _$AuthFlowDtoCWProxyImpl implements _$AuthFlowDtoCWProxy {
   const _$AuthFlowDtoCWProxyImpl(this._value);
 
   final AuthFlowDto _value;
 
   @override
-  AuthFlowDto id(String id) => this(id: id);
+  AuthFlowDto id(String id) => call(id: id);
 
   @override
   AuthFlowDto oauth2LoginChallenge(String? oauth2LoginChallenge) =>
-      this(oauth2LoginChallenge: oauth2LoginChallenge);
+      call(oauth2LoginChallenge: oauth2LoginChallenge);
 
   @override
-  AuthFlowDto type(String type) => this(type: type);
+  AuthFlowDto type(String type) => call(type: type);
 
   @override
-  AuthFlowDto expiresAt(DateTime expiresAt) => this(expiresAt: expiresAt);
+  AuthFlowDto expiresAt(DateTime expiresAt) => call(expiresAt: expiresAt);
 
   @override
-  AuthFlowDto issuedAt(DateTime issuedAt) => this(issuedAt: issuedAt);
+  AuthFlowDto issuedAt(DateTime issuedAt) => call(issuedAt: issuedAt);
 
   @override
-  AuthFlowDto requestUrl(String requestUrl) => this(requestUrl: requestUrl);
+  AuthFlowDto requestUrl(String requestUrl) => call(requestUrl: requestUrl);
 
   @override
-  AuthFlowDto returnTo(String? returnTo) => this(returnTo: returnTo);
+  AuthFlowDto returnTo(String? returnTo) => call(returnTo: returnTo);
 
   @override
-  AuthFlowDto ui(UiDto ui) => this(ui: ui);
+  AuthFlowDto ui(UiDto ui) => call(ui: ui);
 
   @override
   AuthFlowDto sessionTokenExchangeCode(String? sessionTokenExchangeCode) =>
-      this(sessionTokenExchangeCode: sessionTokenExchangeCode);
+      call(sessionTokenExchangeCode: sessionTokenExchangeCode);
 
   @override
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `AuthFlowDto(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `AuthFlowDto(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// AuthFlowDto(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   AuthFlowDto call({
     Object? id = const $CopyWithPlaceholder(),
     Object? oauth2LoginChallenge = const $CopyWithPlaceholder(),
@@ -99,7 +102,7 @@ class _$AuthFlowDtoCWProxyImpl implements _$AuthFlowDtoCWProxy {
     Object? sessionTokenExchangeCode = const $CopyWithPlaceholder(),
   }) {
     return AuthFlowDto(
-      id: id == const $CopyWithPlaceholder()
+      id: id == const $CopyWithPlaceholder() || id == null
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
           : id as String,
@@ -107,27 +110,28 @@ class _$AuthFlowDtoCWProxyImpl implements _$AuthFlowDtoCWProxy {
           ? _value.oauth2LoginChallenge
           // ignore: cast_nullable_to_non_nullable
           : oauth2LoginChallenge as String?,
-      type: type == const $CopyWithPlaceholder()
+      type: type == const $CopyWithPlaceholder() || type == null
           ? _value.type
           // ignore: cast_nullable_to_non_nullable
           : type as String,
-      expiresAt: expiresAt == const $CopyWithPlaceholder()
+      expiresAt: expiresAt == const $CopyWithPlaceholder() || expiresAt == null
           ? _value.expiresAt
           // ignore: cast_nullable_to_non_nullable
           : expiresAt as DateTime,
-      issuedAt: issuedAt == const $CopyWithPlaceholder()
+      issuedAt: issuedAt == const $CopyWithPlaceholder() || issuedAt == null
           ? _value.issuedAt
           // ignore: cast_nullable_to_non_nullable
           : issuedAt as DateTime,
-      requestUrl: requestUrl == const $CopyWithPlaceholder()
-          ? _value.requestUrl
-          // ignore: cast_nullable_to_non_nullable
-          : requestUrl as String,
+      requestUrl:
+          requestUrl == const $CopyWithPlaceholder() || requestUrl == null
+              ? _value.requestUrl
+              // ignore: cast_nullable_to_non_nullable
+              : requestUrl as String,
       returnTo: returnTo == const $CopyWithPlaceholder()
           ? _value.returnTo
           // ignore: cast_nullable_to_non_nullable
           : returnTo as String?,
-      ui: ui == const $CopyWithPlaceholder()
+      ui: ui == const $CopyWithPlaceholder() || ui == null
           ? _value.ui
           // ignore: cast_nullable_to_non_nullable
           : ui as UiDto,
@@ -141,7 +145,8 @@ class _$AuthFlowDtoCWProxyImpl implements _$AuthFlowDtoCWProxy {
 }
 
 extension $AuthFlowDtoCopyWith on AuthFlowDto {
-  /// Returns a callable class that can be used as follows: `instanceOfAuthFlowDto.copyWith(...)` or like so:`instanceOfAuthFlowDto.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfAuthFlowDto.copyWith(...)` or `instanceOfAuthFlowDto.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$AuthFlowDtoCWProxy get copyWith => _$AuthFlowDtoCWProxyImpl(this);
 }

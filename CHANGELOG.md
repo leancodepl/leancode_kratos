@@ -1,3 +1,7 @@
+## 0.2.3
+
+* **chore**: Upgrade dependencies. Support `build: ^3.0.0` and `build_runner: ^2.7.0`.
+
 ## 0.2.2
 
 * **feat**: Add translation parameters to `KratosMessage`
@@ -5,7 +9,7 @@
 
 ## 0.2.1
 
-* Upgrade packages (allow analyzer `7.x`)
+* **chore**: Upgrade packages (allow analyzer `7.x`)
 
 ## 0.2.0
 

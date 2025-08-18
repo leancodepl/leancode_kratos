@@ -38,7 +38,7 @@ class KratosClient {
   final Uri _baseUri;
   final CredentialsStorage _credentialsStorage;
   final http.Client _client;
-  final Logger _logger = Logger('KratosClientLogger');
+  final _logger = Logger('KratosClientLogger');
   static const _commonHeaders = {
     'Accept': 'application/json',
     'Content-Type': 'application/json',
@@ -49,7 +49,7 @@ class KratosClient {
   Future<AuthFlowDto?> _initRegistrationFlow({
     required bool returnSessionTokenExchangeCode,
     String? returnTo,
-  }) async {
+  }) {
     return _initAuthFlow(
       path: 'self-service/registration/$_flowType',
       returnSessionTokenExchangeCode: returnSessionTokenExchangeCode,
@@ -62,7 +62,7 @@ class KratosClient {
     bool returnSessionTokenExchangeCode = true,
     required String? returnTo,
     required bool refresh,
-  }) async {
+  }) {
     return _initAuthFlow(
       path: 'self-service/login/$_flowType',
       returnSessionTokenExchangeCode: returnSessionTokenExchangeCode,
@@ -98,7 +98,7 @@ class KratosClient {
     }
   }
 
-  Future<AuthFlowDto?> _getRegistrationFlow(String id) async {
+  Future<AuthFlowDto?> _getRegistrationFlow(String id) {
     return _getAuthFlow(
       path: 'self-service/registration/flows',
       id: id,
