@@ -84,7 +84,7 @@ class KratosClient {
           queryParameters: {
             if (returnSessionTokenExchangeCode)
               'return_session_token_exchange_code': 'true',
-            if (returnTo != null) 'return_to': returnTo,
+            'return_to': ?returnTo,
             if (refresh) 'refresh': 'true',
           },
         ),
@@ -501,8 +501,7 @@ class KratosClient {
             'method': 'password',
             'identifier': email,
             'password': password,
-            if (effectiveFlowInfo.csrfToken case final csrfToken?)
-              'csrf_token': csrfToken,
+            'csrf_token': ?effectiveFlowInfo.csrfToken,
           },
         ),
       );
@@ -879,7 +878,7 @@ class KratosClient {
           _buildUri(
             path: path,
             queryParameters: {
-              if (flowId != null) 'flow': flowId,
+              'flow': ?flowId,
             },
           ),
         )
@@ -1207,7 +1206,7 @@ class KratosClient {
         _buildUri(
           path: path,
           queryParameters: {
-            if (flowId != null) 'flow': flowId,
+            'flow': ?flowId,
           },
         ),
         headers: _buildHeaders({'X-Session-Token': kratosToken}),
