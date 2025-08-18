@@ -1,6 +1,7 @@
-## 0.2.3
+## 0.3.0
 
 * **chore**: Upgrade dependencies. Support `build: ^3.0.0` and `build_runner: ^2.7.0`.
+* **breaking**: Bump minimum Dart SDK to 3.8.
 
 ## 0.2.2
 
