@@ -38,7 +38,7 @@ class KratosClient {
   final Uri _baseUri;
   final CredentialsStorage _credentialsStorage;
   final http.Client _client;
-  final Logger _logger = Logger('KratosClientLogger');
+  final _logger = Logger('KratosClientLogger');
   static const _commonHeaders = {
     'Accept': 'application/json',
     'Content-Type': 'application/json',
@@ -49,7 +49,7 @@ class KratosClient {
   Future<AuthFlowDto?> _initRegistrationFlow({
     required bool returnSessionTokenExchangeCode,
     String? returnTo,
-  }) async {
+  }) {
     return _initAuthFlow(
       path: 'self-service/registration/$_flowType',
       returnSessionTokenExchangeCode: returnSessionTokenExchangeCode,
@@ -62,7 +62,7 @@ class KratosClient {
     bool returnSessionTokenExchangeCode = true,
     required String? returnTo,
     required bool refresh,
-  }) async {
+  }) {
     return _initAuthFlow(
       path: 'self-service/login/$_flowType',
       returnSessionTokenExchangeCode: returnSessionTokenExchangeCode,
@@ -84,7 +84,7 @@ class KratosClient {
           queryParameters: {
             if (returnSessionTokenExchangeCode)
               'return_session_token_exchange_code': 'true',
-            if (returnTo != null) 'return_to': returnTo,
+            'return_to': ?returnTo,
             if (refresh) 'refresh': 'true',
           },
         ),
@@ -98,7 +98,7 @@ class KratosClient {
     }
   }
 
-  Future<AuthFlowDto?> _getRegistrationFlow(String id) async {
+  Future<AuthFlowDto?> _getRegistrationFlow(String id) {
     return _getAuthFlow(
       path: 'self-service/registration/flows',
       id: id,
@@ -501,8 +501,7 @@ class KratosClient {
             'method': 'password',
             'identifier': email,
             'password': password,
-            if (effectiveFlowInfo.csrfToken case final csrfToken?)
-              'csrf_token': csrfToken,
+            'csrf_token': ?effectiveFlowInfo.csrfToken,
           },
         ),
       );
@@ -879,7 +878,7 @@ class KratosClient {
           _buildUri(
             path: path,
             queryParameters: {
-              if (flowId != null) 'flow': flowId,
+              'flow': ?flowId,
             },
           ),
         )
@@ -1207,7 +1206,7 @@ class KratosClient {
         _buildUri(
           path: path,
           queryParameters: {
-            if (flowId != null) 'flow': flowId,
+            'flow': ?flowId,
           },
         ),
         headers: _buildHeaders({'X-Session-Token': kratosToken}),

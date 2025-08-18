@@ -136,7 +136,7 @@ void main() {
           body: any(named: 'body'),
         ),
       ).thenAnswer(
-        (_) async => Future.value(http.Response('', 204)),
+        (_) => Future.value(http.Response('', 204)),
       );
 
       final result = await kratosClient.logout();
