@@ -808,6 +808,10 @@ class KratosClient {
     }
   }
 
+  Future<String?> getAccessToken() {
+    return _credentialsStorage.read();
+  }
+
   Future<void> refreshSessionToken() async {
     final sessionToken = await _credentialsStorage.read();
     final expirationTime = await _credentialsStorage.readExpirationDate();
