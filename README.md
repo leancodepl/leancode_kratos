@@ -57,6 +57,7 @@ final client = KratosClient(
 
 - `logout` - Logout user
 - `refreshSessionToken` - Refresh session token
+- `getAccessToken` - Get access token
 - `isSessionValid` - Check if session is valid
 - `getSession` - Get session
 
