@@ -1,3 +1,7 @@
+## 0.3.1
+
+* **fix**: Fix Logout flow on mobile
+
 ## 0.3.0
 
 * **chore**: Upgrade dependencies. Support `build: ^3.0.0` and `build_runner: ^2.7.0`.
