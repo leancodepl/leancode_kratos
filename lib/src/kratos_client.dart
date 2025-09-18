@@ -681,18 +681,11 @@ class KratosClient {
   }
 
   Future<LogoutResult> _logoutNative(String token) async {
-    final sessionToken = await _credentialsStorage.read();
-    await _credentialsStorage.clear();
-
-    if (!kIsWeb && sessionToken == null) {
-      return const LogoutUnknownErrorResult();
-    }
-
     final logoutResult = await _client.delete(
       _buildUri(path: 'self-service/logout/$_flowType'),
       headers: _commonHeaders,
       body: jsonEncode({
-        'session_token': sessionToken,
+        'session_token': token,
       }),
     );
 
