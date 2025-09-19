@@ -106,7 +106,7 @@ void main() {
           ),
         ),
       ).thenAnswer(
-        (_) async => completer.future,
+        (_) => completer.future,
       );
 
       when(

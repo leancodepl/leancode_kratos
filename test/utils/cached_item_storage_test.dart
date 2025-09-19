@@ -45,7 +45,7 @@ void main() {
     test('save updates both storage and cache', () async {
       const newValue = 'new_value';
       when(() => mockStorage.write(key: testKey, value: newValue)).thenAnswer(
-        (_) async => Future<void>.value(),
+        (_) => Future<void>.value(),
       );
 
       await storageItem.save(value: newValue);

@@ -46,7 +46,7 @@ void main() {
     });
 
     test('should continue processing after an error', () async {
-      final errorFuture = asyncQueue.execute(() async {
+      final errorFuture = asyncQueue.execute<void>(() {
         throw Exception();
       });
 
