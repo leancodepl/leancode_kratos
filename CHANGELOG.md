@@ -1,3 +1,8 @@
+## 0.4.0
+
+* **feat**: Add local credentials caching
+* **breaking**: Remove const constructor in `FlutterSecureCredentialsStorage`
+
 ## 0.3.1
 
 * **fix**: Fix Logout flow on mobile
