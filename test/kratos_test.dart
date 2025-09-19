@@ -49,8 +49,12 @@ void main() {
         () {
           setUp(
             () {
-              when<Future<http.Response>>(() => mockHttpClient.get(any()))
-                  .thenAnswer(
+              when<Future<http.Response>>(
+                () => mockHttpClient.get(
+                  any(),
+                  headers: any(named: 'headers'),
+                ),
+              ).thenAnswer(
                 (_) async => http.Response(registrationFlowResponse, 200),
               );
             },
@@ -61,9 +65,12 @@ void main() {
             () async {
               await kratosClient.registerWithPassword(password: password);
 
-              final uri = verify(() => mockHttpClient.get(captureAny<Uri>()))
-                  .captured
-                  .single as Uri;
+              final uri = verify(
+                () => mockHttpClient.get(
+                  captureAny(),
+                  headers: any(named: 'headers'),
+                ),
+              ).captured.single as Uri;
               expect(
                 uri.path,
                 '/self-service/registration/api',
