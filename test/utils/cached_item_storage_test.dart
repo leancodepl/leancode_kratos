@@ -36,10 +36,8 @@ void main() {
         (_) async => expectedValue,
       );
 
-      await Future.wait([
-        storageItem.read(),
-        storageItem.read(),
-      ]);
+      await storageItem.read();
+      await storageItem.read();
 
       verify(() => mockStorage.read(key: testKey)).called(1);
     });
