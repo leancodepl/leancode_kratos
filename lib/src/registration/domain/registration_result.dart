@@ -65,7 +65,12 @@ RegistrationResult mapRegistrationSuccessResponse(
 
   final continueWith = response.continueWith;
 
-  final result = continueWith?.map(
+  if (continueWith == null) {
+    // The registration is finished.
+    return const RegistrationSuccessResult();
+  }
+
+  final result = continueWith.map(
     (element) {
       return switch (element) {
         ContinueWith(
@@ -92,7 +97,7 @@ RegistrationResult mapRegistrationSuccessResponse(
     orElse: () => const RegistrationUnknownErrorResult(),
   );
 
-  return result ?? const RegistrationUnknownErrorResult();
+  return result;
 }
 
 RegistrationResult mapRegistrationErrorResponse(AuthFlowDto response) {
