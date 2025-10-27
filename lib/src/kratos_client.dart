@@ -798,9 +798,8 @@ class KratosClient {
       final decodedResult =
           jsonDecode(refreshResult.body) as Map<String, dynamic>;
 
-      final dynamic newExpirationDate = decodedResult['expires_at'];
-      switch (newExpirationDate) {
-        case String _:
+      switch (decodedResult['expires_at']) {
+        case final String newExpirationDate:
           await _credentialsStorage.save(
             credentials: sessionToken,
             expirationDate: newExpirationDate,
