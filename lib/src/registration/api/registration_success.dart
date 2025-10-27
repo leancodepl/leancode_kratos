@@ -52,15 +52,14 @@ class RegistrationSuccessResponse with EquatableMixin {
   Map<String, dynamic> toJson() => _$RegistrationSuccessResponseToJson(this);
 
   AuthFlowDto? get flow {
-    if (this
-        case RegistrationSuccessResponse(
-          id: final id?,
-          type: final type?,
-          expiresAt: final expiresAt?,
-          issuedAt: final issuedAt?,
-          requestUrl: final requestUrl?,
-          ui: final ui?,
-        )) {
+    if (this case RegistrationSuccessResponse(
+      id: final id?,
+      type: final type?,
+      expiresAt: final expiresAt?,
+      issuedAt: final issuedAt?,
+      requestUrl: final requestUrl?,
+      ui: final ui?,
+    )) {
       return AuthFlowDto(
         id: id,
         type: type,
@@ -76,20 +75,20 @@ class RegistrationSuccessResponse with EquatableMixin {
 
   @override
   List<Object?> get props => [
-        continueWith,
-        identity,
-        session,
-        sessionToken,
-        id,
-        oauth2LoginChallenge,
-        type,
-        expiresAt,
-        issuedAt,
-        requestUrl,
-        returnTo,
-        ui,
-        sessionTokenExchangeCode,
-      ];
+    continueWith,
+    identity,
+    session,
+    sessionToken,
+    id,
+    oauth2LoginChallenge,
+    type,
+    expiresAt,
+    issuedAt,
+    requestUrl,
+    returnTo,
+    ui,
+    sessionTokenExchangeCode,
+  ];
 }
 
 @JsonSerializable()
@@ -100,8 +99,7 @@ class RegistrationBrowserLocationChangeRequiredResponse with EquatableMixin {
 
   factory RegistrationBrowserLocationChangeRequiredResponse.fromJson(
     Map<String, dynamic> json,
-  ) =>
-      _$RegistrationBrowserLocationChangeRequiredResponseFromJson(json);
+  ) => _$RegistrationBrowserLocationChangeRequiredResponseFromJson(json);
 
   factory RegistrationBrowserLocationChangeRequiredResponse.fromString(
     String string,
@@ -122,10 +120,7 @@ class RegistrationBrowserLocationChangeRequiredResponse with EquatableMixin {
 
 @JsonSerializable()
 class ContinueWith with EquatableMixin {
-  const ContinueWith({
-    this.action,
-    this.flow,
-  });
+  const ContinueWith({this.action, this.flow});
 
   factory ContinueWith.fromJson(Map<String, dynamic> json) =>
       _$ContinueWithFromJson(json);
@@ -141,10 +136,7 @@ class ContinueWith with EquatableMixin {
 
 @JsonSerializable()
 class Flow with EquatableMixin {
-  const Flow({
-    this.id,
-    this.verifiableAddress,
-  });
+  const Flow({this.id, this.verifiableAddress});
 
   factory Flow.fromJson(Map<String, dynamic> json) => _$FlowFromJson(json);
 
@@ -192,18 +184,18 @@ class Identity with EquatableMixin {
 
   @override
   List<Object?> get props => [
-        id,
-        schemaId,
-        schemaUrl,
-        state,
-        stateChangedAt,
-        traits,
-        verifiableAddresses,
-        recoveryAddresses,
-        metadataPublic,
-        createdAt,
-        updatedAt,
-      ];
+    id,
+    schemaId,
+    schemaUrl,
+    state,
+    stateChangedAt,
+    traits,
+    verifiableAddresses,
+    recoveryAddresses,
+    metadataPublic,
+    createdAt,
+    updatedAt,
+  ];
 }
 
 @JsonSerializable()
@@ -258,12 +250,12 @@ class VerifiableAddress with EquatableMixin {
 
   @override
   List<Object?> get props => [
-        id,
-        value,
-        verified,
-        via,
-        status,
-        createdAt,
-        updatedAt,
-      ];
+    id,
+    value,
+    verified,
+    via,
+    status,
+    createdAt,
+    updatedAt,
+  ];
 }

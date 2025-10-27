@@ -28,18 +28,13 @@ class RecoveryFlowDto with EquatableMixin {
 
   Map<String, dynamic> toJson() => _$RecoveryFlowDtoToJson(this);
 
-  String? get csrfToken => ui.nodes
-      .firstWhereOrNull((node) => node.attributes.name == 'csrf_token')
-      ?.attributes
-      .value as String?;
+  String? get csrfToken =>
+      ui.nodes
+              .firstWhereOrNull((node) => node.attributes.name == 'csrf_token')
+              ?.attributes
+              .value
+          as String?;
 
   @override
-  List<Object?> get props => [
-        id,
-        type,
-        expiresAt,
-        issuedAt,
-        requestUrl,
-        ui,
-      ];
+  List<Object?> get props => [id, type, expiresAt, issuedAt, requestUrl, ui];
 }

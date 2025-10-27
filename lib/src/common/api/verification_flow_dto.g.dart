@@ -24,15 +24,15 @@ VerificationFlowDto _$VerificationFlowDtoFromJson(Map<String, dynamic> json) =>
     );
 
 Map<String, dynamic> _$VerificationFlowDtoToJson(
-        VerificationFlowDto instance) =>
-    <String, dynamic>{
-      'active': instance.active,
-      'expires_at': instance.expiresAt?.toIso8601String(),
-      'id': instance.id,
-      'issued_at': instance.issuedAt?.toIso8601String(),
-      'request_url': instance.requestUrl,
-      'return_to': instance.returnTo,
-      'state': instance.state,
-      'type': instance.type,
-      'ui': instance.ui.toJson(),
-    };
+  VerificationFlowDto instance,
+) => <String, dynamic>{
+  'active': instance.active,
+  'expires_at': instance.expiresAt?.toIso8601String(),
+  'id': instance.id,
+  'issued_at': instance.issuedAt?.toIso8601String(),
+  'request_url': instance.requestUrl,
+  'return_to': instance.returnTo,
+  'state': instance.state,
+  'type': instance.type,
+  'ui': instance.ui.toJson(),
+};

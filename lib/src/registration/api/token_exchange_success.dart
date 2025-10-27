@@ -8,10 +8,7 @@ part 'token_exchange_success.g.dart';
 
 @JsonSerializable()
 class TokenExchangeSuccess with EquatableMixin {
-  const TokenExchangeSuccess({
-    this.sessionToken,
-    required this.session,
-  });
+  const TokenExchangeSuccess({this.sessionToken, required this.session});
 
   factory TokenExchangeSuccess.fromJson(Map<String, dynamic> json) =>
       _$TokenExchangeSuccessFromJson(json);

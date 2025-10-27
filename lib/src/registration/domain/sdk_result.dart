@@ -3,10 +3,7 @@ sealed class SdkResult {
 }
 
 class SdkSuccessResult extends SdkResult {
-  const SdkSuccessResult({
-    required this.idToken,
-    required this.traits,
-  });
+  const SdkSuccessResult({required this.idToken, required this.traits});
 
   final String idToken;
   final Map<String, dynamic> traits;

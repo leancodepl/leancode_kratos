@@ -5,9 +5,7 @@ sealed class SessionResult {
 }
 
 final class SessionSuccessResult extends SessionResult {
-  const SessionSuccessResult(
-    this.session,
-  );
+  const SessionSuccessResult(this.session);
 
   final Session session;
 }

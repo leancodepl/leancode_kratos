@@ -44,17 +44,16 @@ class FlutterSecureCredentialsStorage implements CredentialsStorage {
   Future<void> save({
     required String? credentials,
     required String expirationDate,
-  }) =>
-      _queue.execute(() async {
-        await _loginToken.save(value: credentials);
-        await _expirationDate.save(value: expirationDate);
-      });
+  }) => _queue.execute(() async {
+    await _loginToken.save(value: credentials);
+    await _expirationDate.save(value: expirationDate);
+  });
 
   @override
   Future<void> clear() => _queue.execute(() async {
-        await _loginToken.clear();
-        await _expirationDate.clear();
-      });
+    await _loginToken.clear();
+    await _expirationDate.clear();
+  });
 
   @override
   Future<DateTime?> readExpirationDate() async {
@@ -68,10 +67,8 @@ class FlutterSecureCredentialsStorage implements CredentialsStorage {
 
 @visibleForTesting
 class CachedItemStorage {
-  CachedItemStorage({
-    required this.key,
-    required FlutterSecureStorage storage,
-  }) : _storage = storage;
+  CachedItemStorage({required this.key, required FlutterSecureStorage storage})
+    : _storage = storage;
 
   final FlutterSecureStorage _storage;
 
@@ -89,9 +86,7 @@ class CachedItemStorage {
     }
   }
 
-  Future<void> save({
-    required String? value,
-  }) async {
+  Future<void> save({required String? value}) async {
     await _storage.write(key: key, value: value);
     _state = _CacheInitialized(value);
   }

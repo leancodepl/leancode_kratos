@@ -17,9 +17,7 @@ final class AddPasskeyCancelledResult extends AddPasskeyResult {
 }
 
 final class AddPasskeyErrorResult extends AddPasskeyResult {
-  const AddPasskeyErrorResult({
-    this.message,
-  });
+  const AddPasskeyErrorResult({this.message});
 
   final KratosMessage? message;
 }

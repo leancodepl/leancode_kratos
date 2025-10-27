@@ -21,19 +21,20 @@ import 'package:logging/logging.dart';
 
 typedef BrowserCallback = Future<String> Function(String url);
 typedef SdkCallback = Future<SdkResult> Function();
-typedef PasskeyCallback = Future<PasskeyCallbackResult> Function(
-  Map<String, dynamic> creationOptions,
-);
+typedef PasskeyCallback =
+    Future<PasskeyCallbackResult> Function(
+      Map<String, dynamic> creationOptions,
+    );
 
 class KratosClient {
   KratosClient({
     required Uri baseUri,
     CredentialsStorage? credentialsStorage,
     http.Client? httpClient,
-  })  : _baseUri = baseUri,
-        _credentialsStorage =
-            credentialsStorage ?? FlutterSecureCredentialsStorage(),
-        _client = httpClient ?? createHttpClient();
+  }) : _baseUri = baseUri,
+       _credentialsStorage =
+           credentialsStorage ?? FlutterSecureCredentialsStorage(),
+       _client = httpClient ?? createHttpClient();
 
   final Uri _baseUri;
   final CredentialsStorage _credentialsStorage;
@@ -99,10 +100,7 @@ class KratosClient {
   }
 
   Future<AuthFlowDto?> _getRegistrationFlow(String id) {
-    return _getAuthFlow(
-      path: 'self-service/registration/flows',
-      id: id,
-    );
+    return _getAuthFlow(path: 'self-service/registration/flows', id: id);
   }
 
   Future<AuthFlowDto?> _getAuthFlow({
@@ -111,10 +109,7 @@ class KratosClient {
   }) async {
     try {
       final registrationFlow = await _client.get(
-        _buildUri(
-          path: path,
-          queryParameters: {'id': id},
-        ),
+        _buildUri(path: path, queryParameters: {'id': id}),
       );
       return AuthFlowDto.fromString(registrationFlow.body);
     } catch (e, st) {
@@ -127,8 +122,9 @@ class KratosClient {
     required String password,
     Map<String, dynamic> traits = const <String, dynamic>{},
   }) async {
-    final flow =
-        await _initRegistrationFlow(returnSessionTokenExchangeCode: false);
+    final flow = await _initRegistrationFlow(
+      returnSessionTokenExchangeCode: false,
+    );
 
     if (flow == null) {
       return const RegistrationUnknownErrorResult();
@@ -141,14 +137,12 @@ class KratosClient {
           queryParameters: {'flow': flow.id},
         ),
         headers: _commonHeaders,
-        body: jsonEncode(
-          {
-            'method': 'password',
-            'csrf_token': flow.csrfToken,
-            'password': password,
-            'traits': traits,
-          },
-        ),
+        body: jsonEncode({
+          'method': 'password',
+          'csrf_token': flow.csrfToken,
+          'password': password,
+          'traits': traits,
+        }),
       );
 
       if (response.statusCode == 400) {
@@ -229,22 +223,20 @@ class KratosClient {
     try {
       final streamedResponse = await _client.send(
         http.Request(
-          'POST',
-          _buildUri(
-            path: 'self-service/registration',
-            queryParameters: {'flow': effectiveFlowInfo.id},
-          ),
-        )
-          ..headers.addAll(_commonHeaders)
-          ..body = jsonEncode(
-            {
-              'method': 'oidc',
-              'provider': provider.name,
-              'id_token': effectiveIdToken,
-              'csrf_token': effectiveFlowInfo.csrfToken,
-              'traits': effectiveTraits,
-            },
+            'POST',
+            _buildUri(
+              path: 'self-service/registration',
+              queryParameters: {'flow': effectiveFlowInfo.id},
+            ),
           )
+          ..headers.addAll(_commonHeaders)
+          ..body = jsonEncode({
+            'method': 'oidc',
+            'provider': provider.name,
+            'id_token': effectiveIdToken,
+            'csrf_token': effectiveFlowInfo.csrfToken,
+            'traits': effectiveTraits,
+          })
           ..followRedirects = false,
       );
 
@@ -282,8 +274,9 @@ class KratosClient {
   Future<RegistrationResult> registerWithProfile({
     Map<String, dynamic> traits = const <String, dynamic>{},
   }) async {
-    final flow =
-        await _initRegistrationFlow(returnSessionTokenExchangeCode: false);
+    final flow = await _initRegistrationFlow(
+      returnSessionTokenExchangeCode: false,
+    );
 
     if (flow == null) {
       return const RegistrationUnknownErrorResult();
@@ -296,13 +289,11 @@ class KratosClient {
           queryParameters: {'flow': flow.id},
         ),
         headers: _commonHeaders,
-        body: jsonEncode(
-          {
-            'method': 'profile',
-            'csrf_token': flow.csrfToken,
-            'traits': traits,
-          },
-        ),
+        body: jsonEncode({
+          'method': 'profile',
+          'csrf_token': flow.csrfToken,
+          'traits': traits,
+        }),
       );
 
       if (response.statusCode == 410 || response.statusCode == 422) {
@@ -331,13 +322,10 @@ class KratosClient {
           return switch ((node.attributes.name, node.messages)) {
             (
               final attributeName?,
-              [MessageDto(:final id, :final context), ...]
+              [MessageDto(:final id, :final context), ...],
             ) =>
-              (
-                attributeName,
-                KratosMessage.forId(id, context),
-              ),
-            _ => null
+              (attributeName, KratosMessage.forId(id, context)),
+            _ => null,
           };
         })
         .nonNulls
@@ -348,13 +336,15 @@ class KratosClient {
   Future<RegistrationResult> _handleSuccessResponse(
     http.Response response,
   ) async {
-    final decodedResponse =
-        RegistrationSuccessResponse.fromString(response.body);
+    final decodedResponse = RegistrationSuccessResponse.fromString(
+      response.body,
+    );
     final result = mapRegistrationSuccessResponse(decodedResponse);
 
-    if ((decodedResponse.sessionToken, decodedResponse.session)
-        case (final sessionToken?, final session?)
-        when result is RegistrationSuccessResult) {
+    if ((decodedResponse.sessionToken, decodedResponse.session) case (
+      final sessionToken?,
+      final session?,
+    ) when result is RegistrationSuccessResult) {
       await _credentialsStorage.save(
         credentials: sessionToken,
         expirationDate: session.expiresAt.toString(),
@@ -371,8 +361,8 @@ class KratosClient {
   }) async {
     final browserLocationChangeRequiredResponse =
         RegistrationBrowserLocationChangeRequiredResponse.fromString(
-      response.body,
-    );
+          response.body,
+        );
 
     final redirectBrowserTo =
         browserLocationChangeRequiredResponse.redirectBrowserTo;
@@ -496,14 +486,12 @@ class KratosClient {
           queryParameters: {'flow': effectiveFlowInfo.id},
         ),
         headers: _commonHeaders,
-        body: jsonEncode(
-          {
-            'method': 'password',
-            'identifier': email,
-            'password': password,
-            'csrf_token': ?effectiveFlowInfo.csrfToken,
-          },
-        ),
+        body: jsonEncode({
+          'method': 'password',
+          'identifier': email,
+          'password': password,
+          'csrf_token': ?effectiveFlowInfo.csrfToken,
+        }),
       );
 
       if (loginFlowResult.statusCode == 200) {
@@ -514,12 +502,14 @@ class KratosClient {
         );
         return const LoginSuccessResult();
       } else if (loginFlowResult.statusCode == 400) {
-        final errorLoginResult =
-            login_error.loginErrorResponseFromJson(loginFlowResult.body);
+        final errorLoginResult = login_error.loginErrorResponseFromJson(
+          loginFlowResult.body,
+        );
         final generalErrors = errorLoginResult.ui.getGeneralMessages();
 
-        if (generalErrors
-            .any((error) => error is ErrorValidationAddressNotVerified)) {
+        if (generalErrors.any(
+          (error) => error is ErrorValidationAddressNotVerified,
+        )) {
           return LoginVerifyEmailResult(
             flowId: effectiveFlowInfo.id,
             emailToVerify: email,
@@ -566,9 +556,7 @@ class KratosClient {
         return const PasskeyLoginUnknownErrorResult();
       }
 
-      final credentialResult = await passkeyCallback(
-        passkeyRequestOptions,
-      );
+      final credentialResult = await passkeyCallback(passkeyRequestOptions);
 
       String credentialJson;
       switch (credentialResult) {
@@ -586,13 +574,11 @@ class KratosClient {
           queryParameters: {'flow': flow.id},
         ),
         headers: _commonHeaders,
-        body: jsonEncode(
-          {
-            'method': 'passkey',
-            'csrf_token': flow.csrfToken,
-            'passkey_login': credentialJson,
-          },
-        ),
+        body: jsonEncode({
+          'method': 'passkey',
+          'csrf_token': flow.csrfToken,
+          'passkey_login': credentialJson,
+        }),
       );
 
       switch (loginResponse.statusCode) {
@@ -604,21 +590,19 @@ class KratosClient {
           );
           return const PasskeyLoginSuccessResult();
         case 400:
-          final errorLoginResult =
-              login_error.loginErrorResponseFromJson(loginResponse.body);
+          final errorLoginResult = login_error.loginErrorResponseFromJson(
+            loginResponse.body,
+          );
           final generalErrors = errorLoginResult.ui.getGeneralMessages();
 
-          if (generalErrors
-              .any((error) => error is ErrorValidationAddressNotVerified)) {
-            return PasskeyLoginVerifyEmailResult(
-              flowId: flow.id,
-            );
+          if (generalErrors.any(
+            (error) => error is ErrorValidationAddressNotVerified,
+          )) {
+            return PasskeyLoginVerifyEmailResult(flowId: flow.id);
           }
 
           if (generalErrors.isNotEmpty) {
-            return PasskeyLoginErrorResult(
-              generalErrors: generalErrors,
-            );
+            return PasskeyLoginErrorResult(generalErrors: generalErrors);
           }
 
           return const PasskeyLoginUnknownErrorResult();
@@ -684,9 +668,7 @@ class KratosClient {
     final logoutResult = await _client.delete(
       _buildUri(path: 'self-service/logout/$_flowType'),
       headers: _commonHeaders,
-      body: jsonEncode({
-        'session_token': token,
-      }),
+      body: jsonEncode({'session_token': token}),
     );
 
     return switch (logoutResult.statusCode) {
@@ -703,10 +685,7 @@ class KratosClient {
       final response = await _client.post(
         _buildUri(
           path: 'self-service/verification',
-          queryParameters: {
-            'code': code,
-            'flow': flowId,
-          },
+          queryParameters: {'code': code, 'flow': flowId},
         ),
         headers: _commonHeaders,
         body: jsonEncode({'method': 'code'}),
@@ -755,20 +734,16 @@ class KratosClient {
           queryParameters: {'flow': verificationFlow.id},
         ),
         headers: _commonHeaders,
-        body: jsonEncode(
-          {
-            'email': email,
-            'method': 'code',
-          },
-        ),
+        body: jsonEncode({'email': email, 'method': 'code'}),
       );
 
       if (response.statusCode != 200) {
         return null;
       }
 
-      final postedVerificationFlow =
-          VerificationFlowDto.fromString(response.body);
+      final postedVerificationFlow = VerificationFlowDto.fromString(
+        response.body,
+      );
 
       if (postedVerificationFlow.state != 'sent_email') {
         return null;
@@ -815,16 +790,13 @@ class KratosClient {
       final refreshResult = await http.get(
         _buildUri(
           path: 'self-service/login/$_flowType',
-          queryParameters: {
-            'refresh': 'true',
-          },
+          queryParameters: {'refresh': 'true'},
         ),
         headers: _buildHeaders({'X-Session-Token': sessionToken}),
       );
 
-      final decodedResult = jsonDecode(
-        refreshResult.body,
-      ) as Map<String, dynamic>;
+      final decodedResult =
+          jsonDecode(refreshResult.body) as Map<String, dynamic>;
 
       final dynamic newExpirationDate = decodedResult['expires_at'];
       switch (newExpirationDate) {
@@ -867,14 +839,9 @@ class KratosClient {
 
       final streamedResponse = await _client.send(
         http.Request(
-          'GET',
-          _buildUri(
-            path: path,
-            queryParameters: {
-              'flow': ?flowId,
-            },
-          ),
-        )
+            'GET',
+            _buildUri(path: path, queryParameters: {'flow': ?flowId}),
+          )
           ..headers.addAll(_commonHeaders)
           ..followRedirects = false,
       );
@@ -883,8 +850,8 @@ class KratosClient {
 
       return switch (response.statusCode) {
         200 => RecoveryFlowDto.fromJson(
-            json.decode(response.body) as Map<String, dynamic>,
-          ),
+          json.decode(response.body) as Map<String, dynamic>,
+        ),
         _ => null,
       };
     } catch (e, st) {
@@ -897,9 +864,7 @@ class KratosClient {
     required String flowId,
     required String email,
   }) async {
-    final recoveryFlow = await _getRecoveryFlow(
-      flowId: flowId,
-    );
+    final recoveryFlow = await _getRecoveryFlow(flowId: flowId);
 
     if (recoveryFlow == null) {
       return false;
@@ -908,9 +873,7 @@ class KratosClient {
     final recoveryResponse = await _client.post(
       _buildUri(
         path: 'self-service/recovery',
-        queryParameters: {
-          'flow': flowId,
-        },
+        queryParameters: {'flow': flowId},
       ),
       headers: _commonHeaders,
       body: jsonEncode({
@@ -926,9 +889,7 @@ class KratosClient {
     required String flowId,
     required String code,
   }) async {
-    final recoveryFlow = await _getRecoveryFlow(
-      flowId: flowId,
-    );
+    final recoveryFlow = await _getRecoveryFlow(flowId: flowId);
 
     if (recoveryFlow == null) {
       return SettingsFlowResultError();
@@ -937,9 +898,7 @@ class KratosClient {
     final recoveryResponse = await _client.post(
       _buildUri(
         path: 'self-service/recovery',
-        queryParameters: {
-          'flow': flowId,
-        },
+        queryParameters: {'flow': flowId},
       ),
       body: jsonEncode({
         'code': code,
@@ -951,25 +910,22 @@ class KratosClient {
     if (recoveryResponse.statusCode == 200) {
       final decodedResult =
           jsonDecode(recoveryResponse.body) as Map<String, dynamic>;
-      if (decodedResult
-          case {
-            'state': 'passed_challenge',
-            'continue_with': final List<dynamic> continueWith
-          }) {
+      if (decodedResult case {
+        'state': 'passed_challenge',
+        'continue_with': final List<dynamic> continueWith,
+      }) {
         String? settingsFlowId;
         String? sessionToken;
         for (final cw in continueWith) {
-          if (cw
-              case {
-                'action': 'set_ory_session_token',
-                'ory_session_token': final String value
-              }) {
+          if (cw case {
+            'action': 'set_ory_session_token',
+            'ory_session_token': final String value,
+          }) {
             sessionToken = value;
-          } else if (cw
-              case {
-                'action': 'show_settings_ui',
-                'flow': {'id': final String value}
-              }) {
+          } else if (cw case {
+            'action': 'show_settings_ui',
+            'flow': {'id': final String value},
+          }) {
             settingsFlowId = value;
           }
         }
@@ -1036,9 +992,7 @@ class KratosClient {
         return const AddPasskeyErrorResult();
       }
 
-      final credentialResult = await passkeyCallback(
-        passkeyCreationOptions,
-      );
+      final credentialResult = await passkeyCallback(passkeyCreationOptions);
 
       String credentialJson;
       switch (credentialResult) {
@@ -1066,8 +1020,8 @@ class KratosClient {
       return switch (passkeyAddResponse.statusCode) {
         200 => const AddPasskeySuccessResult(),
         400 => AddPasskeyErrorResult(
-            message: _getSettingsFlowError(passkeyAddResponse),
-          ),
+          message: _getSettingsFlowError(passkeyAddResponse),
+        ),
         403 => const AddPasskeyReauthenticationRequiredResult(),
         _ => const AddPasskeyErrorResult(),
       };
@@ -1077,9 +1031,7 @@ class KratosClient {
     }
   }
 
-  Future<RemovePasskeyResult> removePasskey({
-    required String passkeyId,
-  }) async {
+  Future<RemovePasskeyResult> removePasskey({required String passkeyId}) async {
     try {
       final kratosToken = await _credentialsStorage.read();
       if (!kIsWeb && kratosToken == null) {
@@ -1104,8 +1056,8 @@ class KratosClient {
       return switch (removePasskeyResponse.statusCode) {
         200 => const RemovePasskeySuccessResult(),
         400 => RemovePasskeyErrorResult(
-            message: _getSettingsFlowError(removePasskeyResponse),
-          ),
+          message: _getSettingsFlowError(removePasskeyResponse),
+        ),
         403 => const RemovePasskeyReauthenticationRequiredResult(),
         _ => const RemovePasskeyErrorResult(),
       };
@@ -1118,9 +1070,9 @@ class KratosClient {
   KratosMessage? _getSettingsFlowError(http.Response response) {
     final dto = SettingsFlowDto.fromString(response.body);
 
-    final messages = dto.ui.nodes.expand((node) => node.messages).map(
-          (msg) => KratosMessage.forId(msg.id, msg.context),
-        );
+    final messages = dto.ui.nodes
+        .expand((node) => node.messages)
+        .map((msg) => KratosMessage.forId(msg.id, msg.context));
 
     return messages.firstOrNull;
   }
@@ -1158,14 +1110,12 @@ class KratosClient {
           queryParameters: {'flow': flowInfo.id},
         ),
         headers: _commonHeaders,
-        body: jsonEncode(
-          {
-            'method': 'passkey',
-            'csrf_token': flowInfo.csrfToken,
-            'passkey_register': credentialJson,
-            'traits': traits,
-          },
-        ),
+        body: jsonEncode({
+          'method': 'passkey',
+          'csrf_token': flowInfo.csrfToken,
+          'passkey_register': credentialJson,
+          'traits': traits,
+        }),
       );
 
       return switch (response.statusCode) {
@@ -1196,12 +1146,7 @@ class KratosClient {
       }
 
       final settingsFlow = await _client.get(
-        _buildUri(
-          path: path,
-          queryParameters: {
-            'flow': ?flowId,
-          },
-        ),
+        _buildUri(path: path, queryParameters: {'flow': ?flowId}),
         headers: _buildHeaders({'X-Session-Token': kratosToken}),
       );
 
@@ -1248,9 +1193,7 @@ class KratosClient {
     };
   }
 
-  Future<UpdatePassword> updatePassword({
-    required String password,
-  }) async {
+  Future<UpdatePassword> updatePassword({required String password}) async {
     final settingsFlow = await _getSettingsFlow();
     final kratosToken = await _credentialsStorage.read();
 
@@ -1317,17 +1260,9 @@ class KratosClient {
     final userId = session.identity.id;
     final traits = session.identity.traits;
     final profileTraits = traits.entries
-        .map(
-          (e) => ProfileTrait(
-            traitName: e.key,
-            value: e.value,
-          ),
-        )
+        .map((e) => ProfileTrait(traitName: e.key, value: e.value))
         .toList();
-    return UserProfileData(
-      traits: profileTraits,
-      userId: userId,
-    );
+    return UserProfileData(traits: profileTraits, userId: userId);
   }
 
   Future<SessionValidityResult> isSessionValid() async {
@@ -1335,17 +1270,14 @@ class KratosClient {
 
     return switch (sessionResult) {
       SessionSuccessResult(:final session) => SessionValiditySuccessResult(
-          isValid: session.expiresAt.isAfter(DateTime.now()),
-          expiresAt: session.expiresAt,
-        ),
+        isValid: session.expiresAt.isAfter(DateTime.now()),
+        expiresAt: session.expiresAt,
+      ),
       _ => const SessionValidityErrorResult(),
     };
   }
 
-  Uri _buildUri({
-    required String path,
-    Map<String, String>? queryParameters,
-  }) =>
+  Uri _buildUri({required String path, Map<String, String>? queryParameters}) =>
       Uri(
         scheme: _baseUri.scheme,
         host: _baseUri.host,

@@ -40,14 +40,14 @@ class VerificationFlowDto with EquatableMixin {
 
   @override
   List<Object?> get props => [
-        active,
-        expiresAt,
-        id,
-        issuedAt,
-        requestUrl,
-        returnTo,
-        state,
-        type,
-        ui,
-      ];
+    active,
+    expiresAt,
+    id,
+    issuedAt,
+    requestUrl,
+    returnTo,
+    state,
+    type,
+    ui,
+  ];
 }
