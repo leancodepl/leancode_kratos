@@ -1,3 +1,7 @@
+## 0.4.1
+
+* **feat**: Add methods for secure credentials storage access 
+
 ## 0.4.0
 
 * **feat**: Add local credentials caching

@@ -632,11 +632,13 @@ class KratosClient {
     }
   }
 
+  Future<void> clearStorage() => _credentialsStorage.clear();
+
   /// NOTE: logout always clears credential storage. The result is regarding the
   /// server logout notification which is executed on a best effort basis
   Future<LogoutResult> logout() async {
     final sessionToken = await _credentialsStorage.read();
-    await _credentialsStorage.clear();
+    await clearStorage();
 
     if (!kIsWeb && sessionToken == null) {
       return const LogoutUnknownErrorResult();
@@ -1278,6 +1280,11 @@ class KratosClient {
       _ => UpdateFailure(error: null),
     };
   }
+
+  Future<String?> getAccessToken() => _credentialsStorage.read();
+
+  Future<DateTime?> getAccessTokenExpirationDate() =>
+    _credentialsStorage.readExpirationDate();
 
   Future<SessionResult> getSession() async {
     final kratosToken = await _credentialsStorage.read();
