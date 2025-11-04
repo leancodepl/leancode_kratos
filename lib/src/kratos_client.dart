@@ -1283,6 +1283,9 @@ class KratosClient {
 
   Future<String?> getAccessToken() => _credentialsStorage.read();
 
+  Future<DateTime?> getAccessTokenExpirationDate() =>
+    _credentialsStorage.readExpirationDate();
+
   Future<SessionResult> getSession() async {
     final kratosToken = await _credentialsStorage.read();
     if (!kIsWeb && kratosToken == null) {
