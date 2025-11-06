@@ -3,6 +3,10 @@
 * **chore**: Upgrade dependencies. Support `build: ^4.0.0` and `build_runner: ^2.10.0`.
 * **breaking**: Bump minimum Dart SDK to 3.9.
 
+## 0.4.1
+
+* **feat**: Add methods for secure credentials storage access 
+
 ## 0.4.0
 
 * **feat**: Add local credentials caching
