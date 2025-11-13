@@ -18,26 +18,26 @@ void main() {
 
     setUp(() {
       mockStorage = _MockFlutterSecureStorage();
-      mockCredentialsStorage =
-          FlutterSecureCredentialsStorage(storage: mockStorage);
+      mockCredentialsStorage = FlutterSecureCredentialsStorage(
+        storage: mockStorage,
+      );
     });
 
     test('clears all stored data', () async {
-      when(() => mockStorage.delete(key: any(named: 'key')))
-          .thenAnswer((_) async => {});
+      when(
+        () => mockStorage.delete(key: any(named: 'key')),
+      ).thenAnswer((_) async => {});
 
       await mockCredentialsStorage.clear();
-      verify(
-        () => mockStorage.delete(key: any(named: 'key')),
-      ).called(2);
+      verify(() => mockStorage.delete(key: any(named: 'key'))).called(2);
     });
 
     test('reads expiration date', () async {
       const expirationDateStr = '2024-03-21T12:00:00Z';
 
-      when(() => mockStorage.read(key: 'kratos_token_expiration')).thenAnswer(
-        (_) async => expirationDateStr,
-      );
+      when(
+        () => mockStorage.read(key: 'kratos_token_expiration'),
+      ).thenAnswer((_) async => expirationDateStr);
 
       final result = await mockCredentialsStorage.readExpirationDate();
 
@@ -72,19 +72,17 @@ void main() {
       const token = 'cached_token';
       const expirationDateStr = '2024-03-21T12:00:00Z';
 
-      when(() => mockStorage.read(key: 'kratos_login_token')).thenAnswer(
-        (_) async => token,
-      );
-      when(() => mockStorage.read(key: 'kratos_token_expiration')).thenAnswer(
-        (_) async => expirationDateStr,
-      );
+      when(
+        () => mockStorage.read(key: 'kratos_login_token'),
+      ).thenAnswer((_) async => token);
+      when(
+        () => mockStorage.read(key: 'kratos_token_expiration'),
+      ).thenAnswer((_) async => expirationDateStr);
 
       await mockCredentialsStorage.read();
       await mockCredentialsStorage.read();
 
-      verify(
-        () => mockStorage.read(key: any(named: 'key')),
-      ).called(1);
+      verify(() => mockStorage.read(key: any(named: 'key'))).called(1);
     });
 
     test('handles concurrent operations using queue', () async {
@@ -100,30 +98,20 @@ void main() {
       when(
         () => mockStorage.write(
           key: any(named: 'key'),
-          value: any(
-            named: 'value',
-            that: isIn([token1, expiration1]),
-          ),
+          value: any(named: 'value', that: isIn([token1, expiration1])),
         ),
-      ).thenAnswer(
-        (_) => completer.future,
-      );
+      ).thenAnswer((_) => completer.future);
 
       when(
         () => mockStorage.write(
           key: any(named: 'key'),
-          value: any(
-            named: 'value',
-            that: isIn([token2, expiration2]),
-          ),
+          value: any(named: 'value', that: isIn([token2, expiration2])),
         ),
-      ).thenAnswer(
-        (invocation) async {
-          if (invocation.namedArguments[const Symbol('value')] == token2) {
-            isToken2Completed = true;
-          }
-        },
-      );
+      ).thenAnswer((invocation) async {
+        if (invocation.namedArguments[const Symbol('value')] == token2) {
+          isToken2Completed = true;
+        }
+      });
 
       unawaited(
         mockCredentialsStorage.save(

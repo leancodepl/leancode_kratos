@@ -4,10 +4,7 @@ part 'logout_flow_dto.g.dart';
 
 @JsonSerializable()
 class LogoutFlowDto with EquatableMixin {
-  const LogoutFlowDto({
-    required this.logoutUrl,
-    required this.logoutToken,
-  });
+  const LogoutFlowDto({required this.logoutUrl, required this.logoutToken});
 
   factory LogoutFlowDto.fromJson(Map<String, dynamic> json) =>
       _$LogoutFlowDtoFromJson(json);

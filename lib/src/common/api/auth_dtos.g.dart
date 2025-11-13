@@ -82,7 +82,6 @@ class _$AuthFlowDtoCWProxyImpl implements _$AuthFlowDtoCWProxy {
       call(sessionTokenExchangeCode: sessionTokenExchangeCode);
 
   @override
-
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `AuthFlowDto(...).copyWith.fieldName(value)`.
   ///
@@ -124,9 +123,9 @@ class _$AuthFlowDtoCWProxyImpl implements _$AuthFlowDtoCWProxy {
           : issuedAt as DateTime,
       requestUrl:
           requestUrl == const $CopyWithPlaceholder() || requestUrl == null
-              ? _value.requestUrl
-              // ignore: cast_nullable_to_non_nullable
-              : requestUrl as String,
+          ? _value.requestUrl
+          // ignore: cast_nullable_to_non_nullable
+          : requestUrl as String,
       returnTo: returnTo == const $CopyWithPlaceholder()
           ? _value.returnTo
           // ignore: cast_nullable_to_non_nullable
@@ -137,9 +136,9 @@ class _$AuthFlowDtoCWProxyImpl implements _$AuthFlowDtoCWProxy {
           : ui as UiDto,
       sessionTokenExchangeCode:
           sessionTokenExchangeCode == const $CopyWithPlaceholder()
-              ? _value.sessionTokenExchangeCode
-              // ignore: cast_nullable_to_non_nullable
-              : sessionTokenExchangeCode as String?,
+          ? _value.sessionTokenExchangeCode
+          // ignore: cast_nullable_to_non_nullable
+          : sessionTokenExchangeCode as String?,
     );
   }
 }
@@ -156,16 +155,16 @@ extension $AuthFlowDtoCopyWith on AuthFlowDto {
 // **************************************************************************
 
 AuthFlowDto _$AuthFlowDtoFromJson(Map<String, dynamic> json) => AuthFlowDto(
-      id: json['id'] as String,
-      oauth2LoginChallenge: json['oauth2_login_challenge'] as String?,
-      type: json['type'] as String,
-      expiresAt: DateTime.parse(json['expires_at'] as String),
-      issuedAt: DateTime.parse(json['issued_at'] as String),
-      requestUrl: json['request_url'] as String,
-      returnTo: json['return_to'] as String?,
-      ui: UiDto.fromJson(json['ui'] as Map<String, dynamic>),
-      sessionTokenExchangeCode: json['session_token_exchange_code'] as String?,
-    );
+  id: json['id'] as String,
+  oauth2LoginChallenge: json['oauth2_login_challenge'] as String?,
+  type: json['type'] as String,
+  expiresAt: DateTime.parse(json['expires_at'] as String),
+  issuedAt: DateTime.parse(json['issued_at'] as String),
+  requestUrl: json['request_url'] as String,
+  returnTo: json['return_to'] as String?,
+  ui: UiDto.fromJson(json['ui'] as Map<String, dynamic>),
+  sessionTokenExchangeCode: json['session_token_exchange_code'] as String?,
+);
 
 Map<String, dynamic> _$AuthFlowDtoToJson(AuthFlowDto instance) =>
     <String, dynamic>{
@@ -181,41 +180,42 @@ Map<String, dynamic> _$AuthFlowDtoToJson(AuthFlowDto instance) =>
     };
 
 UiDto _$UiDtoFromJson(Map<String, dynamic> json) => UiDto(
-      action: json['action'] as String,
-      method: json['method'] as String,
-      nodes: (json['nodes'] as List<dynamic>)
-          .map((e) => NodeDto.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      messages: (json['messages'] as List<dynamic>?)
-          ?.map((e) => MessageDto.fromJson(e as Map<String, dynamic>))
-          .toList(),
-    );
+  action: json['action'] as String,
+  method: json['method'] as String,
+  nodes: (json['nodes'] as List<dynamic>)
+      .map((e) => NodeDto.fromJson(e as Map<String, dynamic>))
+      .toList(),
+  messages: (json['messages'] as List<dynamic>?)
+      ?.map((e) => MessageDto.fromJson(e as Map<String, dynamic>))
+      .toList(),
+);
 
 Map<String, dynamic> _$UiDtoToJson(UiDto instance) => <String, dynamic>{
-      'action': instance.action,
-      'method': instance.method,
-      'nodes': instance.nodes.map((e) => e.toJson()).toList(),
-      'messages': instance.messages?.map((e) => e.toJson()).toList(),
-    };
+  'action': instance.action,
+  'method': instance.method,
+  'nodes': instance.nodes.map((e) => e.toJson()).toList(),
+  'messages': instance.messages?.map((e) => e.toJson()).toList(),
+};
 
 NodeDto _$NodeDtoFromJson(Map<String, dynamic> json) => NodeDto(
-      type: json['type'] as String,
-      group: json['group'] as String,
-      attributes:
-          AttributesDto.fromJson(json['attributes'] as Map<String, dynamic>),
-      messages: (json['messages'] as List<dynamic>)
-          .map((e) => MessageDto.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      meta: MetaDto.fromJson(json['meta'] as Map<String, dynamic>),
-    );
+  type: json['type'] as String,
+  group: json['group'] as String,
+  attributes: AttributesDto.fromJson(
+    json['attributes'] as Map<String, dynamic>,
+  ),
+  messages: (json['messages'] as List<dynamic>)
+      .map((e) => MessageDto.fromJson(e as Map<String, dynamic>))
+      .toList(),
+  meta: MetaDto.fromJson(json['meta'] as Map<String, dynamic>),
+);
 
 Map<String, dynamic> _$NodeDtoToJson(NodeDto instance) => <String, dynamic>{
-      'type': instance.type,
-      'group': instance.group,
-      'attributes': instance.attributes.toJson(),
-      'messages': instance.messages.map((e) => e.toJson()).toList(),
-      'meta': instance.meta.toJson(),
-    };
+  'type': instance.type,
+  'group': instance.group,
+  'attributes': instance.attributes.toJson(),
+  'messages': instance.messages.map((e) => e.toJson()).toList(),
+  'meta': instance.meta.toJson(),
+};
 
 AttributesDto _$AttributesDtoFromJson(Map<String, dynamic> json) =>
     AttributesDto(
@@ -240,11 +240,11 @@ Map<String, dynamic> _$AttributesDtoToJson(AttributesDto instance) =>
     };
 
 MessageDto _$MessageDtoFromJson(Map<String, dynamic> json) => MessageDto(
-      id: (json['id'] as num).toInt(),
-      text: json['text'] as String,
-      type: json['type'] as String,
-      context: json['context'] as Map<String, dynamic>?,
-    );
+  id: (json['id'] as num).toInt(),
+  text: json['text'] as String,
+  type: json['type'] as String,
+  context: json['context'] as Map<String, dynamic>?,
+);
 
 Map<String, dynamic> _$MessageDtoToJson(MessageDto instance) =>
     <String, dynamic>{
@@ -255,25 +255,25 @@ Map<String, dynamic> _$MessageDtoToJson(MessageDto instance) =>
     };
 
 MetaDto _$MetaDtoFromJson(Map<String, dynamic> json) => MetaDto(
-      label: json['label'] == null
-          ? null
-          : LabelDto.fromJson(json['label'] as Map<String, dynamic>),
-    );
+  label: json['label'] == null
+      ? null
+      : LabelDto.fromJson(json['label'] as Map<String, dynamic>),
+);
 
 Map<String, dynamic> _$MetaDtoToJson(MetaDto instance) => <String, dynamic>{
-      'label': instance.label?.toJson(),
-    };
+  'label': instance.label?.toJson(),
+};
 
 LabelDto _$LabelDtoFromJson(Map<String, dynamic> json) => LabelDto(
-      id: (json['id'] as num).toInt(),
-      text: json['text'] as String,
-      type: json['type'] as String,
-      context: json['context'] as Map<String, dynamic>?,
-    );
+  id: (json['id'] as num).toInt(),
+  text: json['text'] as String,
+  type: json['type'] as String,
+  context: json['context'] as Map<String, dynamic>?,
+);
 
 Map<String, dynamic> _$LabelDtoToJson(LabelDto instance) => <String, dynamic>{
-      'id': instance.id,
-      'text': instance.text,
-      'type': instance.type,
-      'context': instance.context,
-    };
+  'id': instance.id,
+  'text': instance.text,
+  'type': instance.type,
+  'context': instance.context,
+};

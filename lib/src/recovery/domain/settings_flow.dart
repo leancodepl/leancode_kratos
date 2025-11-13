@@ -1,10 +1,7 @@
 sealed class SettingsFlowResult {}
 
 class SettingsFlowResultData extends SettingsFlowResult {
-  SettingsFlowResultData({
-    required this.flowId,
-    required this.sessionToken,
-  });
+  SettingsFlowResultData({required this.flowId, required this.sessionToken});
 
   final String flowId;
   final String? sessionToken;

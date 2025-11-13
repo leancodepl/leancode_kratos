@@ -43,23 +43,31 @@ class AuthFlowDto with EquatableMixin {
 
   Map<String, dynamic> toJson() => _$AuthFlowDtoToJson(this);
 
-  String? get csrfToken => ui.nodes
-      .firstWhereOrNull((node) => node.attributes.name == 'csrf_token')
-      ?.attributes
-      .value as String?;
+  String? get csrfToken =>
+      ui.nodes
+              .firstWhereOrNull((node) => node.attributes.name == 'csrf_token')
+              ?.attributes
+              .value
+          as String?;
 
   AuthFlowInfo get info {
-    final passkeyRequest = ui.nodes
-        .firstWhereOrNull((node) => node.attributes.name == 'passkey_challenge')
-        ?.attributes
-        .value as String?;
+    final passkeyRequest =
+        ui.nodes
+                .firstWhereOrNull(
+                  (node) => node.attributes.name == 'passkey_challenge',
+                )
+                ?.attributes
+                .value
+            as String?;
 
-    final passkeyCreation = ui.nodes
-        .firstWhereOrNull(
-          (node) => node.attributes.name == 'passkey_create_data',
-        )
-        ?.attributes
-        .value as String?;
+    final passkeyCreation =
+        ui.nodes
+                .firstWhereOrNull(
+                  (node) => node.attributes.name == 'passkey_create_data',
+                )
+                ?.attributes
+                .value
+            as String?;
 
     return AuthFlowInfo(
       id: id,
@@ -77,16 +85,16 @@ class AuthFlowDto with EquatableMixin {
 
   @override
   List<Object?> get props => [
-        id,
-        oauth2LoginChallenge,
-        type,
-        expiresAt,
-        issuedAt,
-        requestUrl,
-        returnTo,
-        ui,
-        sessionTokenExchangeCode,
-      ];
+    id,
+    oauth2LoginChallenge,
+    type,
+    expiresAt,
+    issuedAt,
+    requestUrl,
+    returnTo,
+    ui,
+    sessionTokenExchangeCode,
+  ];
 }
 
 @JsonSerializable()
@@ -184,8 +192,15 @@ class AttributesDto with EquatableMixin {
   Map<String, dynamic> toJson() => _$AttributesDtoToJson(this);
 
   @override
-  List<Object?> get props =>
-      [name, type, value, required, disabled, nodeType, autocomplete];
+  List<Object?> get props => [
+    name,
+    type,
+    value,
+    required,
+    disabled,
+    nodeType,
+    autocomplete,
+  ];
 }
 
 @JsonSerializable()
@@ -215,9 +230,7 @@ class MessageDto with EquatableMixin {
 
 @JsonSerializable()
 class MetaDto with EquatableMixin {
-  const MetaDto({
-    this.label,
-  });
+  const MetaDto({this.label});
 
   factory MetaDto.fromJson(Map<String, dynamic> json) =>
       _$MetaDtoFromJson(json);

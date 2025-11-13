@@ -13,17 +13,13 @@ final class PasskeyLoginCancelledResult extends PasskeyLoginResult {
 }
 
 final class PasskeyLoginVerifyEmailResult extends PasskeyLoginResult {
-  const PasskeyLoginVerifyEmailResult({
-    required this.flowId,
-  });
+  const PasskeyLoginVerifyEmailResult({required this.flowId});
 
   final String flowId;
 }
 
 final class PasskeyLoginErrorResult extends PasskeyLoginResult {
-  const PasskeyLoginErrorResult({
-    required this.generalErrors,
-  });
+  const PasskeyLoginErrorResult({required this.generalErrors});
 
   final List<KratosMessage> generalErrors;
 }

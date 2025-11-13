@@ -5,9 +5,7 @@ sealed class GetPasskeysResult {
 }
 
 final class GetPasskeysSuccessResult extends GetPasskeysResult {
-  const GetPasskeysSuccessResult(
-    this.passkeys,
-  );
+  const GetPasskeysSuccessResult(this.passkeys);
 
   final List<Passkey> passkeys;
 }

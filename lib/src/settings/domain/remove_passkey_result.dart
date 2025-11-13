@@ -14,9 +14,7 @@ final class RemovePasskeyReauthenticationRequiredResult
 }
 
 final class RemovePasskeyErrorResult extends RemovePasskeyResult {
-  const RemovePasskeyErrorResult({
-    this.message,
-  });
+  const RemovePasskeyErrorResult({this.message});
 
   final KratosMessage? message;
 }

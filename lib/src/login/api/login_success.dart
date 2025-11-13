@@ -59,16 +59,16 @@ class Session with EquatableMixin {
 
   @override
   List<Object?> get props => [
-        id,
-        active,
-        expiresAt,
-        authenticatedAt,
-        authenticatorAssuranceLevel,
-        authenticationMethods,
-        issuedAt,
-        identity,
-        devices,
-      ];
+    id,
+    active,
+    expiresAt,
+    authenticatedAt,
+    authenticatorAssuranceLevel,
+    authenticationMethods,
+    issuedAt,
+    identity,
+    devices,
+  ];
 }
 
 @JsonSerializable()
@@ -149,18 +149,18 @@ class Identity with EquatableMixin {
 
   @override
   List<Object?> get props => [
-        id,
-        schemaId,
-        schemaUrl,
-        state,
-        stateChangedAt,
-        traits,
-        verifiableAddresses,
-        recoveryAddresses,
-        metadataPublic,
-        createdAt,
-        updatedAt,
-      ];
+    id,
+    schemaId,
+    schemaUrl,
+    state,
+    stateChangedAt,
+    traits,
+    verifiableAddresses,
+    recoveryAddresses,
+    metadataPublic,
+    createdAt,
+    updatedAt,
+  ];
 }
 
 @JsonSerializable()
@@ -217,13 +217,13 @@ class VerifiableAddress with EquatableMixin {
 
   @override
   List<Object?> get props => [
-        id,
-        value,
-        verified,
-        via,
-        status,
-        verifiedAt,
-        createdAt,
-        updatedAt,
-      ];
+    id,
+    value,
+    verified,
+    via,
+    status,
+    verifiedAt,
+    createdAt,
+    updatedAt,
+  ];
 }

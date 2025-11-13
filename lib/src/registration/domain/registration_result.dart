@@ -65,32 +65,29 @@ RegistrationResult mapRegistrationSuccessResponse(
 
   final continueWith = response.continueWith;
 
-  final result = continueWith?.map(
-    (element) {
-      return switch (element) {
-        ContinueWith(
-          action: 'show_verification_ui',
-          flow: Flow(
-            id: final flowId?,
-            verifiableAddress: final emailToVerify?,
-          )
-        ) =>
-          RegistrationVerifyEmailResult(
-            flowId: flowId,
-            emailToVerify: emailToVerify,
-          ),
-        ContinueWith(
-          action: 'set_ory_session_token',
-          flow: null,
-        ) =>
-          const RegistrationSuccessResult(),
-        _ => const RegistrationUnknownErrorResult(),
-      };
-    },
-  ).firstWhere(
-    (element) => element is! RegistrationUnknownErrorResult,
-    orElse: () => const RegistrationUnknownErrorResult(),
-  );
+  final result = continueWith
+      ?.map((element) {
+        return switch (element) {
+          ContinueWith(
+            action: 'show_verification_ui',
+            flow: Flow(
+              id: final flowId?,
+              verifiableAddress: final emailToVerify?,
+            ),
+          ) =>
+            RegistrationVerifyEmailResult(
+              flowId: flowId,
+              emailToVerify: emailToVerify,
+            ),
+          ContinueWith(action: 'set_ory_session_token', flow: null) =>
+            const RegistrationSuccessResult(),
+          _ => const RegistrationUnknownErrorResult(),
+        };
+      })
+      .firstWhere(
+        (element) => element is! RegistrationUnknownErrorResult,
+        orElse: () => const RegistrationUnknownErrorResult(),
+      );
 
   return result ?? const RegistrationUnknownErrorResult();
 }
@@ -102,18 +99,16 @@ RegistrationResult mapRegistrationErrorResponse(AuthFlowDto response) {
     (node) => node.meta.label?.id == InfoSelfServiceRegistrationContinue.id,
   )) {
     final values = nodes
-        .map(
-          (node) {
-            final name = node.attributes.name;
-            final dynamic value = node.attributes.value;
+        .map((node) {
+          final name = node.attributes.name;
+          final dynamic value = node.attributes.value;
 
-            if (name == null || value == null) {
-              return null;
-            }
+          if (name == null || value == null) {
+            return null;
+          }
 
-            return (name, value);
-          },
-        )
+          return (name, value);
+        })
         .nonNulls
         .toList();
 

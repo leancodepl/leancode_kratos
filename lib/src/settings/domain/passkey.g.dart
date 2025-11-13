@@ -7,13 +7,13 @@ part of 'passkey.dart';
 // **************************************************************************
 
 Passkey _$PasskeyFromJson(Map<String, dynamic> json) => Passkey(
-      id: json['id'] as String,
-      addedAt: DateTime.parse(json['added_at'] as String),
-      displayName: json['display_name'] as String,
-    );
+  id: json['id'] as String,
+  addedAt: DateTime.parse(json['added_at'] as String),
+  displayName: json['display_name'] as String,
+);
 
 Map<String, dynamic> _$PasskeyToJson(Passkey instance) => <String, dynamic>{
-      'id': instance.id,
-      'added_at': instance.addedAt.toIso8601String(),
-      'display_name': instance.displayName,
-    };
+  'id': instance.id,
+  'added_at': instance.addedAt.toIso8601String(),
+  'display_name': instance.displayName,
+};

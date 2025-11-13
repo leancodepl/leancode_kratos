@@ -38,18 +38,22 @@ class SettingsFlowDto with EquatableMixin {
 
   Map<String, dynamic> toJson() => _$SettingsFlowDtoToJson(this);
 
-  String? get csrfToken => ui.nodes
-      .firstWhereOrNull((node) => node.attributes.name == 'csrf_token')
-      ?.attributes
-      .value as String?;
+  String? get csrfToken =>
+      ui.nodes
+              .firstWhereOrNull((node) => node.attributes.name == 'csrf_token')
+              ?.attributes
+              .value
+          as String?;
 
   Map<String, dynamic>? get passkeyCreationOptions {
-    final passkeyCreation = ui.nodes
-        .firstWhereOrNull(
-          (node) => node.attributes.name == 'passkey_create_data',
-        )
-        ?.attributes
-        .value as String?;
+    final passkeyCreation =
+        ui.nodes
+                .firstWhereOrNull(
+                  (node) => node.attributes.name == 'passkey_create_data',
+                )
+                ?.attributes
+                .value
+            as String?;
 
     return passkeyCreation != null
         ? getPasskeyOptionsFromString(passkeyCreation)
@@ -58,13 +62,13 @@ class SettingsFlowDto with EquatableMixin {
 
   @override
   List<Object?> get props => [
-        id,
-        type,
-        expiresAt,
-        issuedAt,
-        requestUrl,
-        returnTo,
-        ui,
-        sessionTokenExchangeCode,
-      ];
+    id,
+    type,
+    expiresAt,
+    issuedAt,
+    requestUrl,
+    returnTo,
+    ui,
+    sessionTokenExchangeCode,
+  ];
 }

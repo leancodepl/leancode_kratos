@@ -44,16 +44,16 @@ class LoginErrorResponse with EquatableMixin {
 
   @override
   List<Object?> get props => [
-        id,
-        oauth2LoginChallenge,
-        type,
-        expiresAt,
-        issuedAt,
-        requestUrl,
-        ui,
-        createdAt,
-        updatedAt,
-        refresh,
-        requestedAal,
-      ];
+    id,
+    oauth2LoginChallenge,
+    type,
+    expiresAt,
+    issuedAt,
+    requestUrl,
+    ui,
+    createdAt,
+    updatedAt,
+    refresh,
+    requestedAal,
+  ];
 }

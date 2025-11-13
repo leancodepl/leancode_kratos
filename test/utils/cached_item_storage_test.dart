@@ -13,17 +13,14 @@ void main() {
 
     setUp(() {
       mockStorage = _MockFlutterSecureStorage();
-      storageItem = CachedItemStorage(
-        key: testKey,
-        storage: mockStorage,
-      );
+      storageItem = CachedItemStorage(key: testKey, storage: mockStorage);
     });
 
     test('initial read fetches from storage', () async {
       const expectedValue = 'test_value';
-      when(() => mockStorage.read(key: testKey)).thenAnswer(
-        (_) async => expectedValue,
-      );
+      when(
+        () => mockStorage.read(key: testKey),
+      ).thenAnswer((_) async => expectedValue);
 
       final result = await storageItem.read();
 
@@ -32,9 +29,9 @@ void main() {
 
     test('subsequent reads use cache', () async {
       const expectedValue = 'test_value';
-      when(() => mockStorage.read(key: testKey)).thenAnswer(
-        (_) async => expectedValue,
-      );
+      when(
+        () => mockStorage.read(key: testKey),
+      ).thenAnswer((_) async => expectedValue);
 
       await storageItem.read();
       await storageItem.read();
@@ -44,9 +41,9 @@ void main() {
 
     test('save updates both storage and cache', () async {
       const newValue = 'new_value';
-      when(() => mockStorage.write(key: testKey, value: newValue)).thenAnswer(
-        (_) => Future<void>.value(),
-      );
+      when(
+        () => mockStorage.write(key: testKey, value: newValue),
+      ).thenAnswer((_) => Future<void>.value());
 
       await storageItem.save(value: newValue);
       final result = await storageItem.read();
@@ -57,9 +54,9 @@ void main() {
     });
 
     test('save with null clears value', () async {
-      when(() => mockStorage.write(key: testKey, value: null)).thenAnswer(
-        (_) async {},
-      );
+      when(
+        () => mockStorage.write(key: testKey, value: null),
+      ).thenAnswer((_) async {});
 
       await storageItem.save(value: null);
       final result = await storageItem.read();
@@ -71,12 +68,10 @@ void main() {
 
     test('clear removes value from storage and cache', () async {
       const initialValue = 'initial_value';
-      when(() => mockStorage.read(key: testKey)).thenAnswer(
-        (_) async => initialValue,
-      );
-      when(() => mockStorage.delete(key: testKey)).thenAnswer(
-        (_) async {},
-      );
+      when(
+        () => mockStorage.read(key: testKey),
+      ).thenAnswer((_) async => initialValue);
+      when(() => mockStorage.delete(key: testKey)).thenAnswer((_) async {});
 
       final beforeClear = await storageItem.read();
       await storageItem.clear();
@@ -91,10 +86,12 @@ void main() {
     test('cache is updated after save', () async {
       const value = 'value';
 
-      when(() => mockStorage.write(key: testKey, value: any(named: 'value')))
-          .thenAnswer(
-        (_) async {},
-      );
+      when(
+        () => mockStorage.write(
+          key: testKey,
+          value: any(named: 'value'),
+        ),
+      ).thenAnswer((_) async {});
 
       await storageItem.save(value: value);
       final afterSave = await storageItem.read();
@@ -103,13 +100,11 @@ void main() {
     });
 
     test('propagates storage read errors', () async {
-      when(() => mockStorage.read(key: testKey))
-          .thenThrow(Exception('Storage error'));
+      when(
+        () => mockStorage.read(key: testKey),
+      ).thenThrow(Exception('Storage error'));
 
-      await expectLater(
-        storageItem.read(),
-        throwsA(isA<Exception>()),
-      );
+      await expectLater(storageItem.read(), throwsA(isA<Exception>()));
     });
   });
 }

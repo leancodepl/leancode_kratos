@@ -3,9 +3,7 @@ sealed class PasskeyCallbackResult {
 }
 
 final class PasskeyCallbackSuccessResult extends PasskeyCallbackResult {
-  const PasskeyCallbackSuccessResult(
-    this.publicKeyJson,
-  );
+  const PasskeyCallbackSuccessResult(this.publicKeyJson);
 
   final String publicKeyJson;
 }

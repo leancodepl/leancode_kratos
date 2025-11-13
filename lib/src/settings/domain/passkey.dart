@@ -18,8 +18,9 @@ class Passkey with EquatableMixin {
   factory Passkey.fromUiNode(NodeDto node) {
     return Passkey(
       id: node.attributes.value as String,
-      addedAt: DateTime.parse(node.meta.label!.context!['added_at'] as String)
-          .toLocal(),
+      addedAt: DateTime.parse(
+        node.meta.label!.context!['added_at'] as String,
+      ).toLocal(),
       displayName: node.meta.label!.context!['display_name'] as String,
     );
   }
