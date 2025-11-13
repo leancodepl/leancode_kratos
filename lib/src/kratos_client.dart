@@ -352,8 +352,8 @@ class KratosClient {
         RegistrationSuccessResponse.fromString(response.body);
     final result = mapRegistrationSuccessResponse(decodedResponse);
 
-    if ((decodedResponse.sessionToken, decodedResponse.session)
-        case (final sessionToken?, final session?)
+    if (decodedResponse
+        case RegistrationSuccessResponse(:final sessionToken?, :final session?)
         when result is RegistrationSuccessResult) {
       await _credentialsStorage.save(
         credentials: sessionToken,
