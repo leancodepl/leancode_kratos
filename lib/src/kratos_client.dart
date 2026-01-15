@@ -1265,10 +1265,15 @@ class KratosClient {
 
     final userId = session.identity.id;
     final traits = session.identity.traits;
+    final metadataPublic = session.identity.metadataPublic;
     final profileTraits = traits.entries
         .map((e) => ProfileTrait(traitName: e.key, value: e.value))
         .toList();
-    return UserProfileData(traits: profileTraits, userId: userId);
+    return UserProfileData(
+      traits: profileTraits,
+      userId: userId,
+      metadataPublic: metadataPublic,
+    );
   }
 
   Future<SessionValidityResult> isSessionValid() async {
