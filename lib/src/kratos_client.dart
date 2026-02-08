@@ -93,8 +93,8 @@ class KratosClient {
       );
 
       return AuthFlowDto.fromString(registrationFlow.body);
-    } catch (e, st) {
-      _logger.warning('Error initializing auth flow', e, st);
+    } catch (err, st) {
+      _logger.warning('Error initializing auth flow', err, st);
       return null;
     }
   }
@@ -112,8 +112,8 @@ class KratosClient {
         _buildUri(path: path, queryParameters: {'id': id}),
       );
       return AuthFlowDto.fromString(registrationFlow.body);
-    } catch (e, st) {
-      _logger.warning('Error getting auth flow', e, st);
+    } catch (err, st) {
+      _logger.warning('Error getting auth flow', err, st);
       return null;
     }
   }
@@ -152,8 +152,8 @@ class KratosClient {
       }
 
       return const RegistrationUnknownErrorResult();
-    } catch (e, st) {
-      _logger.severe('Error completing registration flow', e, st);
+    } catch (err, st) {
+      _logger.severe('Error completing registration flow', err, st);
       return const RegistrationUnknownErrorResult();
     }
   }
@@ -262,8 +262,8 @@ class KratosClient {
       }
 
       return const RegistrationUnknownErrorResult();
-    } catch (e, st) {
-      _logger.severe('Error completing registration flow', e, st);
+    } catch (err, st) {
+      _logger.severe('Error completing registration flow', err, st);
       return const RegistrationUnknownErrorResult();
     }
   }
@@ -303,8 +303,8 @@ class KratosClient {
       }
 
       return const RegistrationUnknownErrorResult();
-    } catch (e, st) {
-      _logger.severe('Error completing registration flow', e, st);
+    } catch (err, st) {
+      _logger.severe('Error completing registration flow', err, st);
       return const RegistrationUnknownErrorResult();
     }
   }
@@ -529,8 +529,8 @@ class KratosClient {
       }
 
       return const LoginUnknownErrorResult();
-    } catch (e, st) {
-      _logger.warning('Login failed.', e, st);
+    } catch (err, st) {
+      _logger.warning('Login failed.', err, st);
 
       return const LoginUnknownErrorResult();
     }
@@ -609,8 +609,8 @@ class KratosClient {
         default:
           return const PasskeyLoginUnknownErrorResult();
       }
-    } catch (e, st) {
-      _logger.warning('Login with passkey failed.', e, st);
+    } catch (err, st) {
+      _logger.warning('Login with passkey failed.', err, st);
 
       return const PasskeyLoginUnknownErrorResult();
     }
@@ -634,8 +634,8 @@ class KratosClient {
       } else {
         return await _logoutNative(sessionToken!);
       }
-    } catch (e, st) {
-      _logger.warning('Logout failed.', e, st);
+    } catch (err, st) {
+      _logger.warning('Logout failed.', err, st);
 
       return const LogoutUnknownErrorResult();
     }
@@ -713,8 +713,8 @@ class KratosClient {
       }
 
       return const VerificationUnknownErrorResult();
-    } catch (e, st) {
-      _logger.warning('Error completing verification', e, st);
+    } catch (err, st) {
+      _logger.warning('Error completing verification', err, st);
 
       return const VerificationUnknownErrorResult();
     }
@@ -752,8 +752,8 @@ class KratosClient {
       }
 
       return postedVerificationFlow;
-    } catch (e, st) {
-      _logger.warning('Error getting verification flow', e, st);
+    } catch (err, st) {
+      _logger.warning('Error getting verification flow', err, st);
 
       return null;
     }
@@ -771,8 +771,8 @@ class KratosClient {
       }
 
       return VerificationFlowDto.fromString(response.body);
-    } catch (e, st) {
-      _logger.warning('Error getting verification flow', e, st);
+    } catch (err, st) {
+      _logger.warning('Error getting verification flow', err, st);
 
       return null;
     }
@@ -809,8 +809,8 @@ class KratosClient {
         default:
           throw Exception('Flow id is invalid or empty.');
       }
-    } catch (e, st) {
-      _logger.warning('Could not refresh session token.', e, st);
+    } catch (err, st) {
+      _logger.warning('Could not refresh session token.', err, st);
     }
   }
 
@@ -822,8 +822,8 @@ class KratosClient {
         RecoveryFlowDto(:final id) => RecoveryFlow(id),
         _ => RecoveryFlowError(),
       };
-    } catch (e, st) {
-      _logger.warning('Error getting recovery flow', e, st);
+    } catch (err, st) {
+      _logger.warning('Error getting recovery flow', err, st);
       return RecoveryFlowError();
     }
   }
@@ -855,8 +855,8 @@ class KratosClient {
         ),
         _ => null,
       };
-    } catch (e, st) {
-      _logger.warning('Error getting recovery flow', e, st);
+    } catch (err, st) {
+      _logger.warning('Error getting recovery flow', err, st);
       return null;
     }
   }
@@ -1026,8 +1026,8 @@ class KratosClient {
         403 => const AddPasskeyReauthenticationRequiredResult(),
         _ => const AddPasskeyErrorResult(),
       };
-    } catch (e, st) {
-      _logger.warning('Error adding a passkey', e, st);
+    } catch (err, st) {
+      _logger.warning('Error adding a passkey', err, st);
       return const AddPasskeyErrorResult();
     }
   }
@@ -1062,8 +1062,8 @@ class KratosClient {
         403 => const RemovePasskeyReauthenticationRequiredResult(),
         _ => const RemovePasskeyErrorResult(),
       };
-    } catch (e, st) {
-      _logger.warning('Error removing a passkey', e, st);
+    } catch (err, st) {
+      _logger.warning('Error removing a passkey', err, st);
       return const RemovePasskeyErrorResult();
     }
   }
@@ -1092,8 +1092,8 @@ class KratosClient {
           .toList();
 
       return GetPasskeysSuccessResult(passkeys);
-    } catch (e, st) {
-      _logger.warning('Error getting passkeys', e, st);
+    } catch (err, st) {
+      _logger.warning('Error getting passkeys', err, st);
       return const GetPasskeysErrorResult();
     }
   }
@@ -1124,8 +1124,8 @@ class KratosClient {
         400 => _handleErrorResponse(response),
         _ => const RegistrationUnknownErrorResult(),
       };
-    } catch (e, st) {
-      _logger.severe('Error completing registration flow', e, st);
+    } catch (err, st) {
+      _logger.severe('Error completing registration flow', err, st);
       return const RegistrationUnknownErrorResult();
     }
   }
@@ -1152,8 +1152,8 @@ class KratosClient {
       );
 
       return SettingsFlowDto.fromString(settingsFlow.body);
-    } catch (e, st) {
-      _logger.warning('Error initializing settings flow', e, st);
+    } catch (err, st) {
+      _logger.warning('Error initializing settings flow', err, st);
       return null;
     }
   }
@@ -1226,7 +1226,7 @@ class KratosClient {
   Future<String?> getAccessToken() => _credentialsStorage.read();
 
   Future<DateTime?> getAccessTokenExpirationDate() =>
-    _credentialsStorage.readExpirationDate();
+      _credentialsStorage.readExpirationDate();
 
   Future<SessionResult> getSession() async {
     final kratosToken = await _credentialsStorage.read();
@@ -1249,8 +1249,8 @@ class KratosClient {
       }
 
       return const SessionErrorResult();
-    } catch (e, st) {
-      _logger.warning('Error getting session', e, st);
+    } catch (err, st) {
+      _logger.warning('Error getting session', err, st);
       return const SessionErrorResult();
     }
   }

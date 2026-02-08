@@ -1,3 +1,8 @@
+## 0.7.0
+
+* **chore**: Upgrade dependencies. Support `analyzer: ^10.0.0`.
+* **breaking**: Bump minimum Dart SDK to 3.10.
+
 ## 0.6.0
 
 * **feat**: Add `metadataPublic` property to `UserProfileData`
