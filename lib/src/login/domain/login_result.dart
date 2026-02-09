@@ -31,3 +31,9 @@ class LoginErrorResult extends LoginResult {
 class LoginUnknownErrorResult extends LoginResult {
   const LoginUnknownErrorResult();
 }
+
+class LoginIdentityDisabledResult extends LoginResult {
+  const LoginIdentityDisabledResult({this.identityId});
+
+  final String? identityId;
+}

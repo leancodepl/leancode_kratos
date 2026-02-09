@@ -31,3 +31,9 @@ final class PasskeyLoginPasskeyErrorResult extends PasskeyLoginResult {
 final class PasskeyLoginUnknownErrorResult extends PasskeyLoginResult {
   const PasskeyLoginUnknownErrorResult();
 }
+
+final class PasskeyLoginIdentityDisabledResult extends PasskeyLoginResult {
+  const PasskeyLoginIdentityDisabledResult({this.identityId});
+
+  final String? identityId;
+}

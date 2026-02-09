@@ -526,6 +526,12 @@ class KratosClient {
         }
 
         return const LoginUnknownErrorResult();
+      } else if (loginFlowResult.statusCode == 401) {
+        final disabledResult = _parseIdentityDisabledError(loginFlowResult);
+        if (disabledResult != null) {
+          return disabledResult;
+        }
+        return const LoginUnknownErrorResult();
       }
 
       return const LoginUnknownErrorResult();
@@ -605,6 +611,14 @@ class KratosClient {
             return PasskeyLoginErrorResult(generalErrors: generalErrors);
           }
 
+          return const PasskeyLoginUnknownErrorResult();
+        case 401:
+          final disabledResult = _parsePasskeyIdentityDisabledError(
+            loginResponse,
+          );
+          if (disabledResult != null) {
+            return disabledResult;
+          }
           return const PasskeyLoginUnknownErrorResult();
         default:
           return const PasskeyLoginUnknownErrorResult();
@@ -1286,6 +1300,50 @@ class KratosClient {
       ),
       _ => const SessionValidityErrorResult(),
     };
+  }
+
+  LoginIdentityDisabledResult? _parseIdentityDisabledError(
+    http.Response response,
+  ) {
+    try {
+      final body = jsonDecode(response.body) as Map<String, dynamic>;
+      if (body case {
+        'error': {
+          'message': 'identity is disabled',
+          'details': {'identity_id': final String identityId},
+        },
+      }) {
+        return LoginIdentityDisabledResult(identityId: identityId);
+      }
+      if (body case {'error': {'message': 'identity is disabled'}}) {
+        return const LoginIdentityDisabledResult();
+      }
+    } catch (_) {
+      // Ignore parsing errors
+    }
+    return null;
+  }
+
+  PasskeyLoginIdentityDisabledResult? _parsePasskeyIdentityDisabledError(
+    http.Response response,
+  ) {
+    try {
+      final body = jsonDecode(response.body) as Map<String, dynamic>;
+      if (body case {
+        'error': {
+          'message': 'identity is disabled',
+          'details': {'identity_id': final String identityId},
+        },
+      }) {
+        return PasskeyLoginIdentityDisabledResult(identityId: identityId);
+      }
+      if (body case {'error': {'message': 'identity is disabled'}}) {
+        return const PasskeyLoginIdentityDisabledResult();
+      }
+    } catch (_) {
+      // Ignore parsing errors
+    }
+    return null;
   }
 
   Uri _buildUri({required String path, Map<String, String>? queryParameters}) =>
