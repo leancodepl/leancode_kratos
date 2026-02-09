@@ -1,7 +1,11 @@
-## 0.7.0
+## 0.8.0
 
 * **chore**: Upgrade dependencies. Support `analyzer: ^10.0.0`.
 * **breaking**: Bump minimum Dart SDK to 3.10.
+
+## 0.7.0
+
+* **feat**: Add `LoginIdentityDisabledResult` and `PasskeyLoginIdentityDisabledResult`
 
 ## 0.6.0
 
@@ -14,7 +18,7 @@
 
 ## 0.4.1
 
-* **feat**: Add methods for secure credentials storage access 
+* **feat**: Add methods for secure credentials storage access
 
 ## 0.4.0
 
