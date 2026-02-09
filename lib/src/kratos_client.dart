@@ -542,6 +542,35 @@ class KratosClient {
     }
   }
 
+  /// Initializes a refresh login flow and extracts the available
+  /// authentication methods from the Kratos UI nodes.
+  ///
+  /// The returned [ReauthorizeFlowSuccess.flowInfo] can be passed to
+  /// [loginWithPassword] to reuse the same flow.
+  Future<ReauthorizeFlowResult> initReauthorizeFlow() async {
+    final flow = await _initLoginFlow(
+      returnSessionTokenExchangeCode: false,
+      returnTo: null,
+      refresh: true,
+    );
+
+    if (flow == null) {
+      return const ReauthorizeFlowError();
+    }
+
+    final groups = flow.ui.nodes.map((n) => n.group).toSet();
+    final oidcProviders = flow.ui.nodes
+        .where((n) => n.group == 'oidc' && n.attributes.name == 'provider')
+        .map((n) => n.attributes.value as String)
+        .toSet();
+
+    return ReauthorizeFlowSuccess(
+      flowInfo: flow.info,
+      availableGroups: groups,
+      oidcProviders: oidcProviders,
+    );
+  }
+
   Future<PasskeyLoginResult> loginWithPasskey({
     required PasskeyCallback passkeyCallback,
     bool refresh = false,
