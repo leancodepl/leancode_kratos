@@ -60,6 +60,20 @@ class SettingsFlowDto with EquatableMixin {
         : null;
   }
 
+  /// Returns the set of OIDC providers that are currently linked to the user.
+  /// These are identified by 'unlink' nodes in the settings flow.
+  Set<String> get linkedOidcProviders => ui.nodes
+      .where((n) => n.group == 'oidc' && n.attributes.name == 'unlink')
+      .map((n) => n.attributes.value as String)
+      .toSet();
+
+  /// Returns the set of OIDC providers that can be linked to the user.
+  /// These are identified by 'link' nodes in the settings flow.
+  Set<String> get linkableOidcProviders => ui.nodes
+      .where((n) => n.group == 'oidc' && n.attributes.name == 'link')
+      .map((n) => n.attributes.value as String)
+      .toSet();
+
   @override
   List<Object?> get props => [
     id,

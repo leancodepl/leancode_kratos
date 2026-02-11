@@ -21,6 +21,16 @@ import 'package:logging/logging.dart';
 
 typedef BrowserCallback = Future<String> Function(String url);
 typedef SdkCallback = Future<SdkResult> Function();
+
+/// Callback invoked when browser flow starts for OIDC linking.
+/// Receives the URL to open and the cookie to store for later use.
+/// Should open the browser with the URL and store the cookie.
+/// The cookie will be needed when handling the callback deep link.
+typedef BrowserFlowStartCallback = Future<void> Function({
+  required String url,
+  required String cookie,
+});
+
 typedef PasskeyCallback =
     Future<PasskeyCallbackResult> Function(
       Map<String, dynamic> creationOptions,
@@ -1108,6 +1118,255 @@ class KratosClient {
     } catch (e, st) {
       _logger.warning('Error removing a passkey', e, st);
       return const RemovePasskeyErrorResult();
+    }
+  }
+
+  /// Links an OIDC provider to the current user's account.
+  ///
+  /// On iOS with Apple provider, uses native Sign in with Apple SDK if
+  /// [appleSdkCallback] is provided.
+  /// On Android with Google provider, uses native Google Sign-In SDK if
+  /// [googleSdkCallback] is provided.
+  /// Otherwise, opens a browser flow to authenticate with the provider.
+  ///
+  /// For browser flow, [onBrowserFlowStart] is called with the URL to open
+  /// and the cookie to store. The cookie must be stored and passed to
+  /// [completeOidcLink] when the callback deep link is received.
+  ///
+  /// Returns [LinkOidcBrowserFlowStartedResult] when browser flow is started,
+  /// indicating that the caller should wait for the deep link callback.
+  Future<LinkOidcResult> linkOidc({
+    required OidcProvider provider,
+    required BrowserFlowStartCallback onBrowserFlowStart,
+    SdkCallback? appleSdkCallback,
+    SdkCallback? googleSdkCallback,
+  }) async {
+    try {
+      final kratosToken = await _credentialsStorage.read();
+      if (!kIsWeb && kratosToken == null) {
+        return const LinkOidcErrorResult();
+      }
+
+      final settingsFlow = await _getSettingsFlow();
+      if (settingsFlow == null) {
+        return const LinkOidcErrorResult();
+      }
+
+      // Try native SDK first for supported platforms
+      String? idToken;
+
+      if (!kIsWeb &&
+          Platform.isAndroid &&
+          provider == OidcProvider.google &&
+          googleSdkCallback != null) {
+        final sdkResult = await googleSdkCallback();
+        switch (sdkResult) {
+          case SdkCancelledResult():
+            return const LinkOidcCancelledResult();
+          case SdkErrorResult():
+            return const LinkOidcErrorResult();
+          case SdkSuccessResult():
+            idToken = sdkResult.idToken;
+        }
+      } else if (!kIsWeb &&
+          Platform.isIOS &&
+          provider == OidcProvider.apple &&
+          appleSdkCallback != null) {
+        final sdkResult = await appleSdkCallback();
+        switch (sdkResult) {
+          case SdkCancelledResult():
+            return const LinkOidcCancelledResult();
+          case SdkErrorResult():
+            return const LinkOidcErrorResult();
+          case SdkSuccessResult():
+            idToken = sdkResult.idToken;
+        }
+      }
+
+      final streamedResponse = await _client.send(
+        http.Request(
+            'POST',
+            _buildUri(
+              path: 'self-service/settings',
+              queryParameters: {'flow': settingsFlow.id},
+            ),
+          )
+          ..headers.addAll(_buildHeaders({'X-Session-Token': kratosToken}))
+          ..body = jsonEncode({
+            'csrf_token': settingsFlow.csrfToken,
+            'method': 'oidc',
+            'link': provider.name,
+            'id_token': idToken,
+          })
+          ..followRedirects = false,
+      );
+
+      final response = await http.Response.fromStream(streamedResponse);
+
+      return switch (response.statusCode) {
+        200 => const LinkOidcSuccessResult(),
+        400 => LinkOidcErrorResult(
+          message: _getSettingsFlowError(response),
+        ),
+        403 => const LinkOidcReauthenticationRequiredResult(),
+        422 => await _handleOidcLinkBrowserFlowStart(
+          response: response,
+          onBrowserFlowStart: onBrowserFlowStart,
+        ),
+        _ => const LinkOidcErrorResult(),
+      };
+    } catch (e, st) {
+      _logger.warning('Error linking OIDC provider', e, st);
+      return const LinkOidcErrorResult();
+    }
+  }
+
+  Future<LinkOidcResult> _handleOidcLinkBrowserFlowStart({
+    required http.Response response,
+    required BrowserFlowStartCallback onBrowserFlowStart,
+  }) async {
+    try {
+      final body = jsonDecode(response.body) as Map<String, dynamic>;
+      final redirectBrowserTo = body['redirect_browser_to'] as String?;
+
+      if (redirectBrowserTo == null) {
+        return const LinkOidcErrorResult();
+      }
+
+      // Extract cookie from Set-Cookie header - we need it for the final request
+      final setCookieHeader = response.headers['set-cookie'];
+
+      if (setCookieHeader == null) {
+        _logger.warning('No Set-Cookie header in OIDC link response');
+        return const LinkOidcErrorResult();
+      }
+
+      // Call the callback to store the cookie and open the browser
+      await onBrowserFlowStart(url: redirectBrowserTo, cookie: setCookieHeader);
+
+      // Return that browser flow has started - caller should wait for deep link
+      return const LinkOidcBrowserFlowStartedResult();
+    } catch (e, st) {
+      _logger.warning('Error starting OIDC link browser flow', e, st);
+      return const LinkOidcErrorResult();
+    }
+  }
+
+  /// Completes the OIDC link flow after receiving the callback deep link.
+  ///
+  /// This is used when the browser-based OIDC flow redirects back to the app
+  /// via a deep link. The [callbackUri] is the full callback URL received,
+  /// and [cookie] is the cookie that was stored before opening the browser.
+  Future<LinkOidcResult> completeOidcLink({
+    required Uri callbackUri,
+    required String cookie,
+  }) async {
+    try {
+      // Check for OAuth errors in the callback URL
+      final error = callbackUri.queryParameters['error'];
+      if (error != null) {
+        if (error == 'access_denied') {
+          return const LinkOidcCancelledResult();
+        }
+        return const LinkOidcErrorResult();
+      }
+
+      final kratosToken = await _credentialsStorage.read();
+      final callbackResponse = await _client.get(
+        callbackUri,
+        headers: _buildHeaders({
+          'X-Session-Token': kratosToken,
+          'Cookie': cookie,
+        }),
+      );
+
+      if (callbackResponse.statusCode == 200) {
+        // Parse the settings flow response to check for errors
+        final settingsFlow =
+            SettingsFlowDto.fromString(callbackResponse.body);
+        final hasOidcError = settingsFlow.ui.messages?.any(
+              (msg) => msg.type == 'error',
+            ) ??
+            false;
+
+        if (hasOidcError) {
+          final errorMessageDto = settingsFlow.ui.messages
+              ?.firstWhereOrNull((msg) => msg.type == 'error');
+          final errorMessage = errorMessageDto != null
+              ? KratosMessage.forId(errorMessageDto.id, errorMessageDto.context)
+              : null;
+          return LinkOidcErrorResult(message: errorMessage);
+        }
+
+        return const LinkOidcSuccessResult();
+      }
+
+      return const LinkOidcErrorResult();
+    } catch (e, st) {
+      _logger.warning('Error completing OIDC link', e, st);
+      return const LinkOidcErrorResult();
+    }
+  }
+
+  /// Unlinks an OIDC provider from the current user's account.
+  Future<UnlinkOidcResult> unlinkOidc({required OidcProvider provider}) async {
+    try {
+      final kratosToken = await _credentialsStorage.read();
+      if (!kIsWeb && kratosToken == null) {
+        return const UnlinkOidcErrorResult();
+      }
+
+      final settingsFlow = await _getSettingsFlow();
+      if (settingsFlow == null) {
+        return const UnlinkOidcErrorResult();
+      }
+
+      final response = await _client.post(
+        _buildUri(
+          path: 'self-service/settings',
+          queryParameters: {'flow': settingsFlow.id},
+        ),
+        body: jsonEncode({
+          'csrf_token': settingsFlow.csrfToken,
+          'method': 'oidc',
+          'unlink': provider.name,
+        }),
+        headers: _buildHeaders({'X-Session-Token': kratosToken}),
+      );
+
+      return switch (response.statusCode) {
+        200 => const UnlinkOidcSuccessResult(),
+        400 => UnlinkOidcErrorResult(
+          message: _getSettingsFlowError(response),
+        ),
+        403 => const UnlinkOidcReauthenticationRequiredResult(),
+        _ => const UnlinkOidcErrorResult(),
+      };
+    } catch (e, st) {
+      _logger.warning('Error unlinking OIDC provider', e, st);
+      return const UnlinkOidcErrorResult();
+    }
+  }
+
+  /// Gets the current OIDC provider status for the user.
+  ///
+  /// Returns information about which providers are currently linked
+  /// and which can be linked.
+  Future<GetOidcProvidersResult> getOidcProviders() async {
+    try {
+      final settingsFlow = await _getSettingsFlow();
+
+      if (settingsFlow == null) {
+        return const GetOidcProvidersErrorResult();
+      }
+
+      return GetOidcProvidersSuccessResult(
+        linkedProviders: settingsFlow.linkedOidcProviders,
+        linkableProviders: settingsFlow.linkableOidcProviders,
+      );
+    } catch (e, st) {
+      _logger.warning('Error getting OIDC providers', e, st);
+      return const GetOidcProvidersErrorResult();
     }
   }
 
