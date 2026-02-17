@@ -1,3 +1,7 @@
+<a href="https://leancode.co/?utm_source=github.com&utm_medium=referral&utm_campaign=leancode-kratos" align="center">
+  <img alt="leancode_kratos" src="https://github.com/user-attachments/assets/e9db5907-b431-4419-a923-3d0127528dc8" />
+</a>
+
 # KratosClient
 
 The KratosClient provides an API client for interacting with an Ory Kratos server.
