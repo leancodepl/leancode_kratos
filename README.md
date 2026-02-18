@@ -91,17 +91,17 @@ In Api flows token is stored in `CredentialsStorage`.
 ## 🛠️ Maintained by LeanCode
 
 <div align="center">
-  <a href="https://leancode.co/?utm_source=github.com&utm_medium=referral&utm_campaign=leancode-cratos">
+  <a href="https://leancode.co/?utm_source=github.com&utm_medium=referral&utm_campaign=leancode-kratos">
     <img src="https://leancodepublic.blob.core.windows.net/public/wide.png" alt="LeanCode Logo" height="100" />
   </a>
 </div>
 
-This package is built with 💙 by **[LeanCode](https://leancode.co?utm_source=github.com&utm_medium=referral&utm_campaign=leancode-cratos)**.
+This package is built with 💙 by **[LeanCode](https://leancode.co?utm_source=github.com&utm_medium=referral&utm_campaign=leancode-kratos)**.
 We are **top-tier experts** focused on Flutter Enterprise solutions.
 
 ### Why LeanCode?
 
-- **Creators of [Patrol](https://patrol.leancode.co/?utm_source=github.com&utm_medium=referral&utm_campaign=leancode-cratos)** – the next-gen testing framework for Flutter.
+- **Creators of [Patrol](https://patrol.leancode.co/?utm_source=github.com&utm_medium=referral&utm_campaign=leancode-kratos)** – the next-gen testing framework for Flutter.
 
 - **Production-Ready** – We use this package in apps with millions of users.
 - **Full-Cycle Product Development** – We take your product from scratch to long-term maintenance.
@@ -111,7 +111,7 @@ We are **top-tier experts** focused on Flutter Enterprise solutions.
 
   **Need help with your Flutter project?**
 
-  [**👉 Hire our team**](https://leancode.co/get-estimate?utm_source=github.com&utm_medium=referral&utm_campaign=leancode-cratos)
+  [**👉 Hire our team**](https://leancode.co/get-estimate?utm_source=github.com&utm_medium=referral&utm_campaign=leancode-kratos)
   &nbsp;&nbsp;•&nbsp;&nbsp;
   [Check our other packages](https://pub.dev/packages?q=publisher%3Aleancode.co&sort=downloads)
 
