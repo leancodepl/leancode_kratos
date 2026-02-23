@@ -56,6 +56,12 @@ class RegistrationUnknownErrorResult extends RegistrationResult {
   const RegistrationUnknownErrorResult();
 }
 
+/// Indicates that the browser flow has been started via deep link mechanism.
+/// The actual result will come through the deep link callback handler.
+class RegistrationBrowserFlowStartedResult extends RegistrationResult {
+  const RegistrationBrowserFlowStartedResult();
+}
+
 RegistrationResult mapRegistrationSuccessResponse(
   RegistrationSuccessResponse response,
 ) {
