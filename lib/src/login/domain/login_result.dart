@@ -37,3 +37,7 @@ class LoginIdentityDisabledResult extends LoginResult {
 
   final String? identityId;
 }
+
+class LoginBrowserFlowStartedResult extends LoginResult {
+  const LoginBrowserFlowStartedResult();
+}

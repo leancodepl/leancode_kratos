@@ -25,11 +25,12 @@ typedef BrowserCallback = Future<String> Function(String url);
 /// Receives the URL to open, the flow info, and the cookie needed to complete the flow.
 /// Should store the flow info and cookie, then open the browser.
 /// The flow will be completed when the deep link callback is received.
-typedef BrowserFlowStartCallbackWithFlowInfo = Future<void> Function({
-  required String url,
-  required AuthFlowInfo flowInfo,
-  required String cookie,
-});
+typedef BrowserFlowStartCallbackWithFlowInfo =
+    Future<void> Function({
+      required String url,
+      required AuthFlowInfo flowInfo,
+      required String cookie,
+    });
 
 typedef SdkCallback = Future<SdkResult> Function();
 
@@ -37,10 +38,8 @@ typedef SdkCallback = Future<SdkResult> Function();
 /// Receives the URL to open and the cookie to store for later use.
 /// Should open the browser with the URL and store the cookie.
 /// The cookie will be needed when handling the callback deep link.
-typedef BrowserFlowStartCallback = Future<void> Function({
-  required String url,
-  required String cookie,
-});
+typedef BrowserFlowStartCallback =
+    Future<void> Function({required String url, required String cookie});
 
 typedef PasskeyCallback =
     Future<PasskeyCallbackResult> Function(
@@ -188,8 +187,9 @@ class KratosClient {
     Map<String, dynamic> traits = const <String, dynamic>{},
     AuthFlowInfo? flowInfo,
     String? idToken,
+
     /// Optional callback for deep link based browser flow.
-    /// If provided, this will be called instead of [browserCallback] when
+    /// If provided, this will be called instead of browserCallback when
     /// a browser redirect is required. Use this for mobile apps that handle
     /// OIDC callbacks via deep links instead of FlutterWebAuth2.
     BrowserFlowStartCallbackWithFlowInfo? onBrowserFlowStart,
@@ -632,6 +632,292 @@ class KratosClient {
       availableGroups: groups,
       oidcProviders: oidcProviders,
     );
+  }
+
+  /// Logs in with an OIDC provider using an existing login flow.
+  ///
+  /// Pass [flowInfo] to reuse an existing login flow (e.g. from
+  /// [initReauthorizeFlow]) — this avoids an extra HTTP request when native
+  /// SDK (Google, Apple) is used. For browser-based providers (Facebook,
+  /// Instagram) a new login flow is always initialised internally so that it
+  /// includes a session token exchange code.
+  Future<LoginResult> loginWithOidc({
+    required OidcProvider provider,
+    required String returnTo,
+    bool refresh = false,
+    AuthFlowInfo? flowInfo,
+    SdkCallback? appleSdkCallback,
+    SdkCallback? googleSdkCallback,
+    BrowserFlowStartCallbackWithFlowInfo? onBrowserFlowStart,
+    required BrowserCallback browserCallback,
+  }) async {
+    try {
+      String? effectiveIdToken;
+
+      // Try native SDK first (Google on Android, Apple on iOS).
+      // When native SDK succeeds we reuse the provided flowInfo to avoid
+      // an extra network round-trip.
+      if (!kIsWeb &&
+          Platform.isAndroid &&
+          provider == OidcProvider.google &&
+          googleSdkCallback != null) {
+        final sdkResult = await googleSdkCallback();
+        switch (sdkResult) {
+          case SdkCancelledResult():
+            return const LoginUnknownErrorResult();
+          case SdkErrorResult():
+            return const LoginUnknownErrorResult();
+          case SdkSuccessResult():
+            effectiveIdToken = sdkResult.idToken;
+        }
+      } else if (!kIsWeb &&
+          Platform.isIOS &&
+          provider == OidcProvider.apple &&
+          appleSdkCallback != null) {
+        final sdkResult = await appleSdkCallback();
+        switch (sdkResult) {
+          case SdkCancelledResult():
+            return const LoginUnknownErrorResult();
+          case SdkErrorResult():
+            return const LoginUnknownErrorResult();
+          case SdkSuccessResult():
+            effectiveIdToken = sdkResult.idToken;
+        }
+      }
+
+      // Resolve flow info.  When native SDK provided an idToken we can reuse
+      // the caller-supplied flowInfo (no exchange code needed).  For browser
+      // providers we always need a fresh flow with exchange code support.
+      final AuthFlowInfo? effectiveFlowInfo;
+      if (effectiveIdToken != null && flowInfo != null) {
+        effectiveFlowInfo = flowInfo;
+      } else {
+        final newFlow = await _initLoginFlow(
+          returnTo: returnTo,
+          refresh: refresh,
+        );
+        effectiveFlowInfo = newFlow?.info;
+      }
+
+      if (effectiveFlowInfo == null) {
+        return const LoginUnknownErrorResult();
+      }
+
+      final streamedResponse = await _client.send(
+        http.Request(
+            'POST',
+            _buildUri(
+              path: 'self-service/login',
+              queryParameters: {'flow': effectiveFlowInfo.id},
+            ),
+          )
+          ..headers.addAll(_commonHeaders)
+          ..body = jsonEncode({
+            'method': 'oidc',
+            'provider': provider.name,
+            'id_token': effectiveIdToken,
+            'csrf_token': effectiveFlowInfo.csrfToken,
+          })
+          ..followRedirects = false,
+      );
+
+      final response = await http.Response.fromStream(streamedResponse);
+
+      if (response.statusCode == 200) {
+        final loginResult = loginSuccessResponseFromJson(response.body);
+        await _credentialsStorage.save(
+          credentials: loginResult.sessionToken,
+          expirationDate: loginResult.session.expiresAt.toString(),
+        );
+        return const LoginSuccessResult();
+      } else if (response.statusCode == 400) {
+        final errorResult = login_error.loginErrorResponseFromJson(
+          response.body,
+        );
+        final generalErrors = errorResult.ui.getGeneralMessages();
+        final fieldErrors = errorResult.ui.getFieldMessages();
+
+        if (generalErrors.isNotEmpty || fieldErrors.isNotEmpty) {
+          return LoginErrorResult(
+            generalErrors: generalErrors,
+            fieldErrors: fieldErrors,
+          );
+        }
+        return const LoginUnknownErrorResult();
+      } else if (response.statusCode == 422) {
+        return await _handleLoginOidcBrowserFlowStart(
+          response: response,
+          flowInfo: effectiveFlowInfo,
+          browserCallback: browserCallback,
+          onBrowserFlowStart: onBrowserFlowStart,
+        );
+      }
+
+      return const LoginUnknownErrorResult();
+    } catch (e, st) {
+      _logger.severe('Error completing OIDC login flow', e, st);
+      return const LoginUnknownErrorResult();
+    }
+  }
+
+  Future<LoginResult> _handleLoginOidcBrowserFlowStart({
+    required http.Response response,
+    required AuthFlowInfo flowInfo,
+    required BrowserCallback browserCallback,
+    BrowserFlowStartCallbackWithFlowInfo? onBrowserFlowStart,
+  }) async {
+    try {
+      final body = jsonDecode(response.body) as Map<String, dynamic>;
+      final redirectBrowserTo = body['redirect_browser_to'] as String?;
+
+      if (redirectBrowserTo == null) {
+        return const LoginUnknownErrorResult();
+      }
+
+      if (onBrowserFlowStart != null) {
+        final cookie = response.headers['set-cookie'];
+        if (cookie == null) {
+          _logger.warning('No cookie in 422 response for login browser flow');
+          return const LoginUnknownErrorResult();
+        }
+
+        await onBrowserFlowStart(
+          url: redirectBrowserTo,
+          flowInfo: flowInfo,
+          cookie: cookie,
+        );
+        return const LoginBrowserFlowStartedResult();
+      }
+
+      // Traditional FlutterWebAuth2 flow
+      final result = await browserCallback(redirectBrowserTo);
+      final returnToCode = Uri.parse(result).queryParameters['code'];
+      final initCode = flowInfo.sessionTokenExchangeCode;
+
+      if (initCode == null) {
+        return const LoginUnknownErrorResult();
+      }
+
+      if (returnToCode == null) {
+        return const LoginUnknownErrorResult();
+      }
+
+      final exchangeResult = await _exchangeSessionToken(
+        initCode,
+        returnToCode,
+      );
+      return exchangeResult is RegistrationSuccessResult
+          ? const LoginSuccessResult()
+          : const LoginUnknownErrorResult();
+    } catch (e, st) {
+      _logger.warning('Error starting OIDC login browser flow', e, st);
+      return const LoginUnknownErrorResult();
+    }
+  }
+
+  /// Completes an OIDC login flow after receiving the OAuth callback deep link.
+  ///
+  /// Call this from OidcBrowserFlowService once the browser redirects back
+  /// to the app via deep link.
+  Future<LoginResult> completeOidcLogin({
+    required Uri callbackUri,
+    required String flowId,
+    String? initCode,
+    required String cookie,
+  }) async {
+    try {
+      final error = callbackUri.queryParameters['error'];
+      if (error != null) {
+        return const LoginUnknownErrorResult();
+      }
+
+      _logger.fine('Making OIDC login callback request to: $callbackUri');
+      final streamedResponse = await _client.send(
+        http.Request('GET', callbackUri)
+          ..headers.addAll({..._commonHeaders, 'cookie': cookie})
+          ..followRedirects = false,
+      );
+
+      final callbackResponse = await http.Response.fromStream(streamedResponse);
+
+      _logger.fine(
+        'OIDC login callback response: ${callbackResponse.statusCode}',
+      );
+
+      // For Kratos API flows, a successful login returns 200 with the session
+      // token directly. This is the typical path for login/refresh flows.
+      if (callbackResponse.statusCode == 200) {
+        try {
+          final loginResult = loginSuccessResponseFromJson(
+            callbackResponse.body,
+          );
+          if (loginResult.sessionToken != null) {
+            await _credentialsStorage.save(
+              credentials: loginResult.sessionToken,
+              expirationDate: loginResult.session.expiresAt.toString(),
+            );
+          }
+          return const LoginSuccessResult();
+        } catch (_) {}
+
+        // Might be an error response with UI
+        try {
+          final errorResult = login_error.loginErrorResponseFromJson(
+            callbackResponse.body,
+          );
+          final generalErrors = errorResult.ui.getGeneralMessages();
+          final fieldErrors = errorResult.ui.getFieldMessages();
+          if (generalErrors.isNotEmpty || fieldErrors.isNotEmpty) {
+            return LoginErrorResult(
+              generalErrors: generalErrors,
+              fieldErrors: fieldErrors,
+            );
+          }
+        } catch (_) {}
+
+        return const LoginUnknownErrorResult();
+      }
+
+      if (callbackResponse.statusCode == 303) {
+        final location = callbackResponse.headers['location'];
+        if (location != null) {
+          final returnToCode = Uri.parse(location).queryParameters['code'];
+          if (returnToCode != null && initCode != null) {
+            final exchangeResult = await _exchangeSessionToken(
+              initCode,
+              returnToCode,
+            );
+            return exchangeResult is RegistrationSuccessResult
+                ? const LoginSuccessResult()
+                : const LoginUnknownErrorResult();
+          }
+          // 303 without exchange code — session was refreshed server-side.
+          return const LoginSuccessResult();
+        }
+      }
+
+      if (callbackResponse.statusCode == 400) {
+        try {
+          final errorResult = login_error.loginErrorResponseFromJson(
+            callbackResponse.body,
+          );
+          final generalErrors = errorResult.ui.getGeneralMessages();
+          final fieldErrors = errorResult.ui.getFieldMessages();
+          if (generalErrors.isNotEmpty || fieldErrors.isNotEmpty) {
+            return LoginErrorResult(
+              generalErrors: generalErrors,
+              fieldErrors: fieldErrors,
+            );
+          }
+        } catch (_) {}
+        return const LoginUnknownErrorResult();
+      }
+
+      return const LoginUnknownErrorResult();
+    } catch (e, st) {
+      _logger.warning('Error completing OIDC login', e, st);
+      return const LoginUnknownErrorResult();
+    }
   }
 
   Future<PasskeyLoginResult> loginWithPasskey({
@@ -1258,9 +1544,7 @@ class KratosClient {
 
       return switch (response.statusCode) {
         200 => const LinkOidcSuccessResult(),
-        400 => LinkOidcErrorResult(
-          message: _getSettingsFlowError(response),
-        ),
+        400 => LinkOidcErrorResult(message: _getSettingsFlowError(response)),
         403 => const LinkOidcReauthenticationRequiredResult(),
         422 => await _handleOidcLinkBrowserFlowStart(
           response: response,
@@ -1335,16 +1619,15 @@ class KratosClient {
 
       if (callbackResponse.statusCode == 200) {
         // Parse the settings flow response to check for errors
-        final settingsFlow =
-            SettingsFlowDto.fromString(callbackResponse.body);
-        final hasOidcError = settingsFlow.ui.messages?.any(
-              (msg) => msg.type == 'error',
-            ) ??
+        final settingsFlow = SettingsFlowDto.fromString(callbackResponse.body);
+        final hasOidcError =
+            settingsFlow.ui.messages?.any((msg) => msg.type == 'error') ??
             false;
 
         if (hasOidcError) {
-          final errorMessageDto = settingsFlow.ui.messages
-              ?.firstWhereOrNull((msg) => msg.type == 'error');
+          final errorMessageDto = settingsFlow.ui.messages?.firstWhereOrNull(
+            (msg) => msg.type == 'error',
+          );
           final errorMessage = errorMessageDto != null
               ? KratosMessage.forId(errorMessageDto.id, errorMessageDto.context)
               : null;
@@ -1393,15 +1676,11 @@ class KratosClient {
       _logger.fine('Making callback request to: $callbackUri');
       final streamedResponse = await _client.send(
         http.Request('GET', callbackUri)
-          ..headers.addAll({
-            ..._commonHeaders,
-            'cookie': cookie,
-          })
+          ..headers.addAll({..._commonHeaders, 'cookie': cookie})
           ..followRedirects = false,
       );
 
-      final callbackResponse =
-          await http.Response.fromStream(streamedResponse);
+      final callbackResponse = await http.Response.fromStream(streamedResponse);
 
       _logger.fine(
         'Callback response: ${callbackResponse.statusCode}, '
@@ -1494,9 +1773,7 @@ class KratosClient {
 
       return switch (response.statusCode) {
         200 => const UnlinkOidcSuccessResult(),
-        400 => UnlinkOidcErrorResult(
-          message: _getSettingsFlowError(response),
-        ),
+        400 => UnlinkOidcErrorResult(message: _getSettingsFlowError(response)),
         403 => const UnlinkOidcReauthenticationRequiredResult(),
         _ => const UnlinkOidcErrorResult(),
       };
@@ -1686,7 +1963,7 @@ class KratosClient {
   Future<String?> getAccessToken() => _credentialsStorage.read();
 
   Future<DateTime?> getAccessTokenExpirationDate() =>
-    _credentialsStorage.readExpirationDate();
+      _credentialsStorage.readExpirationDate();
 
   Future<SessionResult> getSession() async {
     final kratosToken = await _credentialsStorage.read();
