@@ -1,3 +1,7 @@
+## 0.8.1
+
+* Remove `copy_with_extension` and `copy_with_extension_gen` dependencies.
+
 ## 0.8.0
 
 * **chore**: Upgrade dependencies. Support `analyzer: ^10.0.0`.
