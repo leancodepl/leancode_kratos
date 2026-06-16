@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:collection/collection.dart';
-import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:leancode_kratos_client/src/common/domain/auth_flow_info.dart';
@@ -11,7 +10,6 @@ import 'package:leancode_kratos_client/src/utils/passkey_parsing.dart';
 part 'auth_dtos.g.dart';
 
 @JsonSerializable()
-@CopyWith()
 class AuthFlowDto with EquatableMixin {
   const AuthFlowDto({
     required this.id,
@@ -82,6 +80,20 @@ class AuthFlowDto with EquatableMixin {
           : null,
     );
   }
+
+  AuthFlowDto copyWithSessionTokenExchangeCode(
+    String? sessionTokenExchangeCode,
+  ) => AuthFlowDto(
+    id: id,
+    oauth2LoginChallenge: oauth2LoginChallenge,
+    type: type,
+    expiresAt: expiresAt,
+    issuedAt: issuedAt,
+    requestUrl: requestUrl,
+    returnTo: returnTo,
+    ui: ui,
+    sessionTokenExchangeCode: sessionTokenExchangeCode,
+  );
 
   @override
   List<Object?> get props => [

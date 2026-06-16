@@ -388,7 +388,7 @@ class KratosClient {
       }
 
       return mapRegistrationErrorResponse(
-        newFlow.copyWith(sessionTokenExchangeCode: initCode),
+        newFlow.copyWithSessionTokenExchangeCode(initCode),
       );
     }
 
