@@ -5,6 +5,7 @@ export 'src/login/api/login_success.dart' show Session;
 export 'src/login/domain/login_result.dart';
 export 'src/login/domain/passkey_callback_result.dart';
 export 'src/login/domain/passkey_login_result.dart';
+export 'src/login/domain/reauthorize_flow_result.dart';
 export 'src/logout/domain/logout_result.dart';
 export 'src/profile/domain/trait.dart';
 export 'src/profile/domain/update_password.dart';
