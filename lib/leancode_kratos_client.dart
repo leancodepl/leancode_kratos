@@ -20,6 +20,7 @@ export 'src/settings/domain/passkey.dart';
 export 'src/settings/domain/remove_passkey_result.dart';
 export 'src/utils/credentials_storage.dart';
 export 'src/utils/kratos_message.dart';
+export 'src/verification/domain/get_verification_flow_result.dart';
 export 'src/verification/domain/verification_result.dart';
 export 'src/whoami/domain/session_result.dart';
 export 'src/whoami/domain/session_validity_result.dart';

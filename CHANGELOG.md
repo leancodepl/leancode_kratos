@@ -1,3 +1,7 @@
+## 0.9.0
+
+* **feat**: Add `KratosClient.getVerificationFlowById` for fetching an existing verification flow (e.g. one opened from a verification deep link) together with the e-mail address the code was sent to.
+
 ## 0.8.1
 
 * Remove `copy_with_extension` and `copy_with_extension_gen` dependencies.

@@ -792,6 +792,44 @@ class KratosClient {
     }
   }
 
+  /// Fetches an existing verification flow by its id, e.g. one obtained from
+  /// a verification deep link. Does not require a session. Once the flow has
+  /// reached the `sent_email` state, the result carries the e-mail address the
+  /// code was sent to.
+  Future<GetVerificationFlowResult> getVerificationFlowById(
+    String flowId,
+  ) async {
+    try {
+      final response = await _client.get(
+        _buildUri(
+          path: 'self-service/verification/flows',
+          queryParameters: {'id': flowId},
+        ),
+        headers: _commonHeaders,
+      );
+
+      if (response.statusCode == 200) {
+        final flow = VerificationFlowDto.fromString(response.body);
+
+        return GetVerificationFlowSuccessResult(
+          flowId: flow.id,
+          state: VerificationFlowState.fromApiState(flow.state),
+          email: flow.email,
+        );
+      } else if (response.statusCode == 404) {
+        return const GetVerificationFlowNotFoundResult();
+      } else if (response.statusCode == 410) {
+        return const GetVerificationFlowExpiredResult();
+      }
+
+      return const GetVerificationFlowUnknownErrorResult();
+    } catch (err, st) {
+      _logger.warning('Error getting verification flow by id', err, st);
+
+      return const GetVerificationFlowUnknownErrorResult();
+    }
+  }
+
   Future<void> refreshSessionToken() async {
     final sessionToken = await _credentialsStorage.read();
     final expirationTime = await _credentialsStorage.readExpirationDate();

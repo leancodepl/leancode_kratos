@@ -248,6 +248,122 @@ void main() {
     });
   });
 
+  group('get verification flow by id', () {
+    const flowId = 'ed1efde6-8e5a-41df-93a9-caa7f76656ff';
+
+    late MockCredentialsStorage mockStorage;
+    late KratosClient kratosClient;
+    late MockHttpClient mockHttpClient;
+
+    setUpAll(() {
+      registerFallbackValue(MockUri());
+    });
+
+    setUp(() {
+      mockHttpClient = MockHttpClient();
+      mockStorage = MockCredentialsStorage();
+      kratosClient = KratosClient(
+        baseUri: Uri(host: 'test.pl', scheme: 'https'),
+        credentialsStorage: mockStorage,
+        httpClient: mockHttpClient,
+      );
+    });
+
+    test('should return the flow with the email it was sent to', () async {
+      when(
+        () => mockHttpClient.get(any(), headers: any(named: 'headers')),
+      ).thenAnswer(
+        (_) async => http.Response(sentEmailVerificationFlowFixture, 200),
+      );
+
+      final result = await kratosClient.getVerificationFlowById(flowId);
+
+      expect(
+        result,
+        isA<GetVerificationFlowSuccessResult>()
+            .having((result) => result.flowId, 'flowId', flowId)
+            .having(
+              (result) => result.state,
+              'state',
+              VerificationFlowState.sentEmail,
+            )
+            .having((result) => result.email, 'email', 'email@email.com'),
+      );
+
+      final uri =
+          verify(
+                () => mockHttpClient.get(
+                  captureAny(),
+                  headers: any(named: 'headers'),
+                ),
+              ).captured.single
+              as Uri;
+      expect(uri.path, '/self-service/verification/flows');
+      expect(uri.queryParameters['id'], flowId);
+    });
+
+    test(
+      'should return no email when the flow has not sent one yet',
+      () async {
+        when(
+          () => mockHttpClient.get(any(), headers: any(named: 'headers')),
+        ).thenAnswer((_) async => http.Response(verificationFlowFixture, 200));
+
+        final result = await kratosClient.getVerificationFlowById(flowId);
+
+        expect(
+          result,
+          isA<GetVerificationFlowSuccessResult>()
+              .having(
+                (result) => result.state,
+                'state',
+                VerificationFlowState.chooseMethod,
+              )
+              .having((result) => result.email, 'email', null),
+        );
+      },
+    );
+
+    test(
+      'should return GetVerificationFlowNotFoundResult when statusCode is 404',
+      () async {
+        when(
+          () => mockHttpClient.get(any(), headers: any(named: 'headers')),
+        ).thenAnswer((_) async => http.Response('', 404));
+
+        final result = await kratosClient.getVerificationFlowById(flowId);
+
+        expect(result, isA<GetVerificationFlowNotFoundResult>());
+      },
+    );
+
+    test(
+      'should return GetVerificationFlowExpiredResult when statusCode is 410',
+      () async {
+        when(
+          () => mockHttpClient.get(any(), headers: any(named: 'headers')),
+        ).thenAnswer((_) async => http.Response('', 410));
+
+        final result = await kratosClient.getVerificationFlowById(flowId);
+
+        expect(result, isA<GetVerificationFlowExpiredResult>());
+      },
+    );
+
+    test(
+      'should return GetVerificationFlowUnknownErrorResult on exception',
+      () async {
+        when(
+          () => mockHttpClient.get(any(), headers: any(named: 'headers')),
+        ).thenAnswer((_) async => http.Response('test', 200));
+
+        final result = await kratosClient.getVerificationFlowById(flowId);
+
+        expect(result, isA<GetVerificationFlowUnknownErrorResult>());
+      },
+    );
+  });
+
   group('Verify account', () {
     late MockCredentialsStorage mockStorage;
     late KratosClient kratosClient;
