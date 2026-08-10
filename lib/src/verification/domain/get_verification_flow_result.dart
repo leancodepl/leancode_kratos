@@ -1,3 +1,5 @@
+import 'package:leancode_kratos_client/src/verification/domain/verification_flow_state.dart';
+
 sealed class GetVerificationFlowResult {
   const GetVerificationFlowResult();
 }
@@ -10,7 +12,10 @@ final class GetVerificationFlowSuccessResult extends GetVerificationFlowResult {
   });
 
   final String flowId;
-  final VerificationFlowState state;
+
+  /// The state the flow is in, or `null` when it is one this package does not
+  /// know about.
+  final VerificationFlowState? state;
 
   /// The address the verification code was sent to. Available once the flow
   /// reaches [VerificationFlowState.sentEmail]; `null` before that.
@@ -30,18 +35,4 @@ final class GetVerificationFlowExpiredResult
 final class GetVerificationFlowUnknownErrorResult
     extends GetVerificationFlowResult {
   const GetVerificationFlowUnknownErrorResult();
-}
-
-enum VerificationFlowState {
-  chooseMethod,
-  sentEmail,
-  passedChallenge,
-  unknown;
-
-  static VerificationFlowState fromApiState(String state) => switch (state) {
-        'choose_method' => chooseMethod,
-        'sent_email' => sentEmail,
-        'passed_challenge' => passedChallenge,
-        _ => unknown,
-      };
 }
